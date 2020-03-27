@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="true">
+
+    <contextName>eveline-erp-test</contextName>
+
+    <property name="LOGS" value="./logs" />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{ISO8601} %contextName %-5level %logger{10} - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/eveline-erp.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOGS}/eveline-erp.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 7 days' worth of history -->
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <Pattern>%d{HH:mm:ss.SSS} | %-20.20thread | %-5level | %-50.50logger{50} | %X{traceId} %X{parentId} %X{spanId} %X{reqTagName} | %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <!--Keep ERROR and WARNING entries on a separate file for easier troubleshooting-->
+    <appender name="ERROR-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+
+        <file>${LOGS}/eveline-erp-errors.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOGS}/eveline-erp-errors.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 5 days' worth of history -->
+            <maxHistory>2</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <Pattern>%d{HH:mm:ss.SSS} | %-20.20thread | %-5level | %-50.50logger{50} | %X{traceId} %X{parentId} %X{spanId} %X{reqTagName} | %msg%n</Pattern>
+        </encoder>
+
+    </appender>
+
+    <!--The main Spring MVC Servlet informs when the application is up and running-->
+    <logger name="org.springframework.web.servlet.DispatcherServlet" level="INFO"/>
+
+    <!-- Raise SQL to DEBUG level in order to see SQL statements -->
+    <!-- Raise type to TRACE level in order to see query parameter values -->
+    <!--logger name="org.hibernate" level="INFO"/>
+
+    <logger name="org.hibernate.type" level="INFO"/>
+    <logger name="org.hibernate.engine.jdbc.spi.SqlExceptionHelper" level="ERROR"/>
+    <logger name="org.hibernate.validator" level="INFO"/-->
+
+    <logger name="org.hibernate.SQL" level="INFO"/>
+
+    <logger name="org.hibernate.engine.jdbc.spi.SqlExceptionHelper" level="OFF"/>
+    <logger name="org.hibernate.internal.ExceptionMapperStandardImpl" level="OFF"/>
+
+    <!-- Eveline logging -->
+    <logger name="net.erp.eveline" level="INFO"/>
+
+    <!-- NOTE: -->
+    <!-- The root level sets the default level for any loggers not explicitly configured above. -->
+    <!-- <logger> tag level settings will override the root level, even <root level="OFF">!     -->
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR-FILE"/>
+        <appender-ref ref="CONSOLE"/>
+
+    </root>
+</configuration>

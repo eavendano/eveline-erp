@@ -1,0 +1,76 @@
+info:
+  app:
+    name: &name Eveline ERP
+    decription: Backend application for Eveline ERP UI.
+    version: 1.0.0
+
+server:
+  port: 8080
+  servlet:
+    context-path: /eveline-erp
+  compression:
+    enabled: true
+  tomcat:
+    basedir: ./tomcat
+    accesslog:
+      enabled: true
+      directory: /dev
+      prefix: stdout
+      suffix:
+      buffered: false
+      pattern: "%a | %{yyyy-MM-dd'T'HH:mm:ss.SSSZ}t | \"%r\" | %s | %D ms | %{Content-Length}i | %B | %{X-Forwarded-For}i | %{X-FFD-TAG}i | %{User-Agent}i"
+      file-date-format:
+      max-days: 10
+      rotate: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+spring:
+  application:
+    name: *name
+  boot:
+    admin:
+      context-path: sba
+      client:
+        url: http://localhost:8080/eveline-erp/sba
+        username: "admin"                  #These two are needed so that the client
+        password: "26AROUNDyearSOFT4411"   #can register at the protected server api
+        instance:
+          metadata:
+            user.name: "admin"                    #These two are needed so that the server
+            user.password: "26AROUNDyearSOFT4411" #can access the protected client endpoints
+        period: 300000
+      monitor:
+        status-interval: 300000
+        status-lifetime: 300000
+      ui:
+        brand: '<img src="assets/img/icon-spring-boot-admin.svg"><span>Eveline ERP</span>'
+        title: "Eveline ERP"
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/evelinedb"
+    username: "eveline-erp"
+    password: "TEwZn;V#3?roLBA6i=2pw8Zo"
+    driver-class-name: org.postgresql.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+  jmx:
+    enabled: true
+  jpa:
+    database: postgresql
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.PostgreSQLDialect"
+    show-sql: true
+  security:
+    user:
+      name: "admin"
+      password: "26AROUNDyearSOFT4411"
