@@ -10,7 +10,7 @@
     </parent>
     <groupId>net.erp</groupId>
     <artifactId>eveline</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>eveline</name>
     <description>Eveline ERP Backend Application</description>
 
@@ -80,6 +80,11 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.10</version>
         </dependency>
     </dependencies>
 
