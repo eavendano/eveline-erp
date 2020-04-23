@@ -14,14 +14,15 @@ server:
     basedir: ./tomcat
     accesslog:
       enabled: true
-      directory: /dev
-      prefix: stdout
-      suffix:
+      prefix: access_log
       buffered: false
       pattern: "%a | %{yyyy-MM-dd'T'HH:mm:ss.SSSZ}t | \"%r\" | %s | %D ms | %{Content-Length}i | %B | %{X-Forwarded-For}i | %{X-FFD-TAG}i | %{User-Agent}i"
       file-date-format:
       max-days: 10
       rotate: true
+    max-threads: 100
+    min-spare-threads: 3
+    accept-count: 100
 
 management:
   endpoints:

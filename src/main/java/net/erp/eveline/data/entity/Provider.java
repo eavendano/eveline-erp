@@ -35,7 +35,7 @@ public class Provider {
     private OffsetDateTime lastModified;
 
     @Column(name = "last_user")
-    private String last_user;
+    private String lastUser;
 
     public String getProviderId() {
         return providerId;
@@ -69,8 +69,8 @@ public class Provider {
         return lastModified;
     }
 
-    public String getLast_user() {
-        return last_user;
+    public String getLastUser() {
+        return lastUser;
     }
 
     public Provider setDescription(final String description) {
@@ -98,8 +98,8 @@ public class Provider {
         return this;
     }
 
-    public Provider setLast_user(final String last_user) {
-        this.last_user = last_user;
+    public Provider setLastUser(final String lastUser) {
+        this.lastUser = lastUser;
         return this;
     }
 
@@ -115,7 +115,7 @@ public class Provider {
                 .append("telephone3", telephone3)
                 .append("createDate", createDate)
                 .append("lastModified", lastModified)
-                .append("last_user", last_user)
+                .append("lastUser", lastUser)
                 .toString();
     }
 }
