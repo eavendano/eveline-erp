@@ -6,6 +6,6 @@ import java.util.function.Predicate;
 
 public class BaseService {
     protected <T> void validate(final T object, final Predicate<T> predicate, final String invalidMessage) {
-        if (predicate.test(object)) throw new BadRequestException(invalidMessage);
+        if (!predicate.test(object)) throw new BadRequestException(invalidMessage);
     }
 }

@@ -192,6 +192,7 @@ For further reference, please consider the following sections:
 * [Spring Redis Reference](https://docs.spring.io/spring-data/data-redis/docs/current/reference/html/#reference)
 * [Redis Lettuce Integration](https://www.bytepitch.com/blog/redis-integration-spring-boot/)
 * [Thymeleaf](https://docs.spring.io/spring-boot/docs/2.2.5.RELEASE/reference/htmlsingle/#boot-features-spring-mvc-template-engines)
+* [HikariCP Config Knobs](https://github.com/brettwooldridge/HikariCP#configuration-knobs-baby)
 
 ### Guides
 The following guides illustrate how to use some features concretely:
