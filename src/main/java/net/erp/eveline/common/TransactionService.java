@@ -2,6 +2,7 @@ package net.erp.eveline.common;
 
 import net.erp.eveline.common.exception.NonRetryableException;
 import net.erp.eveline.common.exception.RetryableException;
+import net.erp.eveline.common.exception.ServiceException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.RetryCallback;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -45,18 +47,14 @@ public class TransactionService {
                     }
                 }
             });
-        } catch (RetryableException ex) {
-            var message = String.format("Transaction is throwing Retryable exception probably due to exhaust for: %s | Cause: %s", parameterSanitized, ex.getMessage());
+        } catch (RetryableException | NonRetryableException ex) {
+            var message = String.format("Unable to process request probably due to exhaust for: %s", parameterSanitized);
             logger.warn(message, ex);
-            throw ex;
-        } catch (NonRetryableException ex) {
-            var message = String.format("Transaction is throwing NonRetryable exception probably due to exhaust for: %s | Cause: %s", parameterSanitized, ex.getMessage());
-            logger.warn(message, ex);
-            throw ex;
+            throw new ServiceException(message, ex.getCause());
         } catch (Throwable ex) {
             var message = String.format("Unexpected exception occurred. Unable to perform transaction for: %s | Cause: %s", parameterSanitized, ex.getMessage());
             logger.warn(message, ex);
-            throw new NonRetryableException(message, ex);
+            throw new ServiceException(message, ex);
         }
     }
 
@@ -69,6 +67,7 @@ public class TransactionService {
         return (ex instanceof DataIntegrityViolationException && canRetry((DataIntegrityViolationException) ex)) ||
                 ex instanceof ObjectOptimisticLockingFailureException ||
                 ex instanceof OptimisticLockException ||
+                ex instanceof CannotCreateTransactionException ||
                 (ex instanceof ExecutionException && canRetry(ex.getCause()));
     }
 
