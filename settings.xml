@@ -17,25 +17,6 @@
     <profiles>
         <profile>
             <repositories>
-                <!-- <repository>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                    <id>central</id>
-                    <name>libs-release</name>
-                    <url>https://prod-artifactory-vip.bcinfra.net:443/artifactory/libs-release</url>
-                </repository>
-                <repository>
-                    <snapshots/>
-                    <id>snapshots</id>
-                    <name>libs-snapshot</name>
-                    <url>https://prod-artifactory-vip.bcinfra.net:443/artifactory/libs-snapshot</url>
-                </repository>
-                <repository>
-                    <id>artifactory01.bcinfra.net</id>
-                    <name>artifactory01.bcinfra.net-releases</name>
-                    <url>http://artifactory01.bcinfra.net:8081/artifactory/libs-release-local</url>
-                </repository> -->
                 <repository>
                     <id>mvnrepository</id>
                     <name>mvnrepository</name>
@@ -64,25 +45,9 @@
                 </repository>
             </repositories>
             <pluginRepositories>
-                <!-- <pluginRepository>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                    <id>central</id>
-                    <name>libs-release</name>
-                    <url>https://prod-artifactory-vip.bcinfra.net:443/artifactory/libs-release</url>
-                </pluginRepository>
-                <pluginRepository>
-                    <snapshots/>
-                    <id>snapshots</id>
-                    <name>libs-snapshot</name>
-                    <url>https://prod-artifactory-vip.bcinfra.net:443/artifactory/libs-snapshot</url>
-                </pluginRepository> -->
             </pluginRepositories>
-            <!-- <id>artifactory</id> -->
         </profile>
     </profiles>
     <activeProfiles>
-        <!-- <activeProfile>artifactory</activeProfile> -->
     </activeProfiles>
 </settings>

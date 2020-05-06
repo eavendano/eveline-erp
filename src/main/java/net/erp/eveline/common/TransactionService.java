@@ -27,7 +27,7 @@ public class TransactionService {
     private TransactionTemplate readOnlyTransactionTemplate;
     private RetryTemplate retryTemplate;
 
-    public <T, B> T performReadOnlyTransaction(final TransactionCallback<T> callback, final B parameter) throws RetryableException, NonRetryableException {
+    public <T, B> T performReadOnlyTransaction(final TransactionCallback<T> callback, final B parameter) throws ServiceException {
         String parameterSanitized = (parameter == null) ? "null" : parameter.toString();
         try {
             return retryTemplate.execute((RetryCallback<T, Throwable>) context -> {
@@ -50,7 +50,7 @@ public class TransactionService {
         } catch (RetryableException | NonRetryableException ex) {
             var message = String.format("Unable to process request probably due to exhaust for: %s", parameterSanitized);
             logger.warn(message, ex);
-            throw new ServiceException(message, ex.getCause());
+            throw (ServiceException) ex.getCause();
         } catch (Throwable ex) {
             var message = String.format("Unexpected exception occurred. Unable to perform transaction for: %s | Cause: %s", parameterSanitized, ex.getMessage());
             logger.warn(message, ex);

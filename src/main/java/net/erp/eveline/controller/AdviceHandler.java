@@ -29,7 +29,7 @@ public class AdviceHandler {
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseBody
-    public RestError handleNotFoundException(final BadRequestException bre, final HttpServletResponse response) {
+    public RestError handleBadRequestException(final BadRequestException bre, final HttpServletResponse response) {
         response.setStatus(400);
         return new RestError(400, bre.getMessage());
     }
