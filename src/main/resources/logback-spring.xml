@@ -3,7 +3,7 @@
 
     <contextName>eveline-erp-test</contextName>
 
-    <property name="LOGS" value="./logs" />
+    <property name="LOGS" value="./logs"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -21,7 +21,9 @@
         </rollingPolicy>
 
         <encoder>
-            <Pattern>%d{HH:mm:ss.SSS} | %-20.20thread | %-5level | %-50.50logger{50} | %X{traceId} %X{parentId} %X{spanId} %X{reqTagName} | %msg%n</Pattern>
+            <Pattern>%d{HH:mm:ss.SSS} | %-20.20thread | %-5level | %-50.50logger{50} | %X{traceId} %X{parentId}
+                %X{spanId} %X{reqTagName} | %msg%n
+            </Pattern>
         </encoder>
     </appender>
 
@@ -40,7 +42,9 @@
         </rollingPolicy>
 
         <encoder>
-            <Pattern>%d{HH:mm:ss.SSS} | %-20.20thread | %-5level | %-50.50logger{50} | %X{traceId} %X{parentId} %X{spanId} %X{reqTagName} | %msg%n</Pattern>
+            <Pattern>%d{HH:mm:ss.SSS} | %-20.20thread | %-5level | %-50.50logger{50} | %X{traceId} %X{parentId}
+                %X{spanId} %X{reqTagName} | %msg%n
+            </Pattern>
         </encoder>
 
     </appender>

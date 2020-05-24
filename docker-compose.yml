@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  eveline-erp-default:
+    build:
+      context: ../eveline
+      dockerfile: docker/Dockerfile
+    environment:
+      - "TZ=America/Costa_Rica"
+      - "JAVA_OPTIONS=-Dspring.profiles.active=default -Xms1g -Xmx1g -Xshare:off -XX:MinHeapFreeRatio=40 -XX:MaxHeapFreeRatio=70 -XX:+FlightRecorder -XX:+UseParallelGC -Dcom.sun.management.jmxremote.access.file=/root/jmc/jmxremote.access -Dcom.sun.management.jmxremote.password.file=/root/jmc/jmxremote.password -Djava.rmi.server.hostname=0.0.0.0 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.rmi.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=true -Dcom.sun.management.jmxremote.ssl=false"
+    expose:
+      - 8080
+      - 9010
+    ports:
+      - 8080:8080
+      - 9010:9010
+    networks:
+      - connections-backend
+networks:
+  connections-backend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.8.0.0/16

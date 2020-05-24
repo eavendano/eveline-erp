@@ -1,4 +1,7 @@
 package net.erp.eveline.data.repository;
 
-public interface ProviderRepository {
+import net.erp.eveline.data.entity.Provider;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProviderRepository extends JpaRepository<Provider, String> {
 }
