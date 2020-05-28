@@ -136,8 +136,8 @@ Temporary Items
 tomcat
 /package-lock.json
 /node_modules/
-/src/main/resources/static/built/bundle.js
 
 ### Logging
 logs
 *.log
+tomcat/logs/*

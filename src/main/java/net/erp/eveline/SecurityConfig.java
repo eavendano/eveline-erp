@@ -1,8 +1,6 @@
 package net.erp.eveline;
 
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
@@ -36,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 (authorizeRequests) ->
                         authorizeRequests
                                 .antMatchers("/docs/**").permitAll() // This is how a path can be white listed within the application
+                                .antMatchers("/provider/**").permitAll()
                                 .antMatchers(this.adminServer.path("/assets/**")).permitAll()
                                 .antMatchers(this.adminServer.path("/login")).permitAll()
                                 .anyRequest().authenticated()
