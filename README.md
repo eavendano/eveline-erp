@@ -1,7 +1,7 @@
 Eveline ERP
 ---
 
-[![Eveline ERP Version](https://img.shields.io/badge/version-1.1.0-blue?style=for-the-badge)](https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge)
+[![Eveline ERP Version](https://img.shields.io/badge/version-1.2.0-blue?style=for-the-badge)](https://img.shields.io/badge/version-1.2.0-blue?style=for-the-badge)
 
 ## Purpose
 Eveline ERP backend project. This project provides an interface for other Backend or Frontend internal 

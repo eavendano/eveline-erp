@@ -1,6 +1,15 @@
 Release Notes
 ---
 
+```bash
+Release [SEMANTIC_VERSION] (dd/mm/aaaa) [Responsible engineer name]
+* [User Story ID if possible] - First chage name or description.
+* [User Story ID if possible] - Second chage name or description.
+```
+
+Release 1.2.0 (04/06/2020) Emanuel Avendaño
+ * Increase Spring Boot and Spring Retry version.
+
 Release 1.1.0 (23/05/2020) Emanuel Avendaño
  * Support: Add Docker and Docker-Compose support including JMX monitoring outside the container. Added support for Java Cryptography Extension. Incremented Version. Documentation updated.
  * Updated Swagger to a basic form.

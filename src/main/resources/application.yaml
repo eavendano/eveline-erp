@@ -2,7 +2,7 @@ info:
   app:
     name: &name Eveline ERP
     decription: Backend application for Eveline ERP UI.
-    version: 1.1.0
+    version: 1.2.0
 
 server:
   port: 8080
@@ -23,9 +23,10 @@ server:
       file-date-format:
       max-days: 10
       rotate: true
-    max-threads: 100
-    min-spare-threads: 3
     accept-count: 100
+    threads:
+      max: 100
+      min-spare: 3
 
 management:
   endpoints:
