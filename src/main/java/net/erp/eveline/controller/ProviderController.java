@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -21,6 +23,13 @@ public class ProviderController {
     @ResponseBody
     public ProviderModel getProvider(@PathVariable final String providerId) {
         return providerService.getProviderModel(providerId);
+    }
+
+
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<ProviderModel> getProviders() {
+        return providerService.getProviderModels();
     }
 
     @Autowired

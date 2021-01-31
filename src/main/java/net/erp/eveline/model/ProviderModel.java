@@ -1,5 +1,7 @@
 package net.erp.eveline.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -96,6 +98,27 @@ public class ProviderModel {
     public ProviderModel setLastUser(final String lastUser) {
         this.lastUser = lastUser;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProviderModel that = (ProviderModel) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(description, that.description)
+                .append(email, that.email)
+                .append(telephone1, that.telephone1)
+                .append(telephone2, that.telephone2)
+                .append(telephone3, that.telephone3)
+                .append(createDate, that.createDate)
+                .append(lastModified, that.lastModified)
+                .append(lastUser, that.lastUser)
+                .isEquals();
     }
 
     @Override

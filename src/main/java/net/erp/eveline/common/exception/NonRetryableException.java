@@ -1,6 +1,6 @@
 package net.erp.eveline.common.exception;
 
-public class NonRetryableException extends RuntimeException {
+public class NonRetryableException extends ServiceException {
 
     public NonRetryableException(String message) {
         super(message);

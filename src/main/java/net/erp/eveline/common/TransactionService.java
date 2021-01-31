@@ -50,7 +50,7 @@ public class TransactionService {
         } catch (RetryableException | NonRetryableException ex) {
             var message = String.format("Unable to process request probably due to exhaust for: %s", parameterSanitized);
             logger.warn(message, ex);
-            throw (ServiceException) ex.getCause();
+            throw ex;
         } catch (Throwable ex) {
             var message = String.format("Unexpected exception occurred. Unable to perform transaction for: %s | Cause: %s", parameterSanitized, ex.getMessage());
             logger.warn(message, ex);
