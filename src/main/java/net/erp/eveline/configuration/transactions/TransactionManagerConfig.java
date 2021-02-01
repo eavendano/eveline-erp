@@ -16,18 +16,17 @@ public class TransactionManagerConfig {
     @Qualifier("writeTransactionTemplate")
     @Bean("writeTransactionTemplate")
     public TransactionTemplate getWriteTransactionTemplate() {
-
-        TransactionTemplate writeTransactionTemplate = new TransactionTemplate(transactionManager);
+        var writeTransactionTemplate = new TransactionTemplate(transactionManager);
         writeTransactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_REPEATABLE_READ);
         writeTransactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
         writeTransactionTemplate.setReadOnly(false);
         return writeTransactionTemplate;
     }
 
-    @Qualifier("readOnly")
+    @Qualifier("readOnlyTransactionTemplate")
     @Bean("readOnlyTransactionTemplate")
     public TransactionTemplate getReadOnlyTransactionTemplate() {
-        TransactionTemplate readOnlyTransactionTemplate = new TransactionTemplate(transactionManager);
+        var readOnlyTransactionTemplate = new TransactionTemplate(transactionManager);
         readOnlyTransactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_REPEATABLE_READ);
         readOnlyTransactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
         readOnlyTransactionTemplate.setReadOnly(true);

@@ -3,17 +3,14 @@ package net.erp.eveline.service.provider;
 import config.ServiceTestConfiguration;
 import net.erp.eveline.common.TransactionService;
 import net.erp.eveline.common.exception.RetryableException;
-import net.erp.eveline.common.exception.ServiceException;
 import net.erp.eveline.data.entity.Provider;
 import net.erp.eveline.data.repository.ProviderRepository;
 import net.erp.eveline.model.ProviderModel;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,9 +21,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static net.erp.eveline.common.mapper.ProviderMapper.toModel;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {ServiceTestConfiguration.class})
@@ -43,12 +42,12 @@ class ProviderServiceImplTest {
     private final ProviderServiceImpl service = new ProviderServiceImpl();
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         service.setTransactionService(transactionService);
     }
 
     @Test
-    void getProviderModelsSuccessful(){
+    void getProviderModelsSuccessful() {
         //Initialization
         final int expectedLength = 2;
 
@@ -61,12 +60,12 @@ class ProviderServiceImplTest {
         //Validation
         verify(providerRepository, times(1))
                 .findAll();
-        assertEquals(expectedLength ,actualProviderModels.size());
+        assertEquals(expectedLength, actualProviderModels.size());
         assertEquals(toModel(mockProviderList(expectedLength)), actualProviderModels);
     }
 
     @Test
-    void getProviderModelsSuccessfulWithEmptyList(){
+    void getProviderModelsSuccessfulWithEmptyList() {
         //Initialization
         final int expectedLength = 0;
 
@@ -79,12 +78,12 @@ class ProviderServiceImplTest {
         //Validation
         verify(providerRepository, times(1))
                 .findAll();
-        assertEquals(expectedLength ,actualProviderModels.size());
+        assertEquals(expectedLength, actualProviderModels.size());
         assertEquals(toModel(mockProviderList(expectedLength)), actualProviderModels);
     }
 
     @Test
-    void getProviderModelsThrowsServiceExceptionAfterRetries(){
+    void getProviderModelsThrowsServiceExceptionAfterRetries() {
         //Set up
         when(providerRepository.findAll()).thenThrow(new OptimisticLockException("Optimistic lock test"));
 
@@ -96,19 +95,18 @@ class ProviderServiceImplTest {
                 .findAll();
     }
 
-    List<Provider> mockProviderList(int length){
+    List<Provider> mockProviderList(int length) {
         return Stream.generate(this::mockProvider)
                 .limit(length)
                 .collect(Collectors.toList());
     }
 
-    Provider mockProvider(){
+    Provider mockProvider() {
         return new Provider()
                 .setDescription("description")
                 .setEmail("email")
                 .setLastUser("user");
     }
-
 
 
 }

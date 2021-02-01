@@ -1,12 +1,17 @@
 package net.erp.eveline.service.provider;
 
+import net.erp.eveline.model.ActiveProviderModel;
 import net.erp.eveline.model.ProviderModel;
 
-import java.util.List;
+import java.util.Set;
 
 public interface ProviderService {
 
+    Set<ProviderModel> findAll();
+
     ProviderModel getProviderModel(final String providerId);
 
-    List<ProviderModel> getProviderModels();
+    ProviderModel upsertProviderModel(final ProviderModel providerModel);
+
+    ProviderModel activateProvider(final ActiveProviderModel activeProviderModel);
 }

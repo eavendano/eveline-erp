@@ -13,6 +13,9 @@ public class Provider {
     @Id
     private String providerId;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "description")
     private String description;
 
@@ -37,8 +40,15 @@ public class Provider {
     @Column(name = "last_user")
     private String lastUser;
 
+    @Column(name = "enabled")
+    private Boolean enabled;
+
     public String getProviderId() {
         return providerId;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getDescription() {
@@ -73,6 +83,20 @@ public class Provider {
         return lastUser;
     }
 
+    public Boolean isEnabled() {
+        return enabled;
+    }
+
+    public Provider setProviderId(String providerId) {
+        this.providerId = providerId;
+        return this;
+    }
+
+    public Provider setName(String name) {
+        this.name = name;
+        return this;
+    }
+
     public Provider setDescription(final String description) {
         this.description = description;
         return this;
@@ -103,11 +127,17 @@ public class Provider {
         return this;
     }
 
+    public Provider setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+        return this;
+    }
+
     @Override
     public String toString() {
         return new org.apache.commons.lang3.builder.ToStringBuilder(this, org.apache.commons.lang3.builder.ToStringStyle.JSON_STYLE)
                 .append("__class__", this.getClass().getSimpleName())
                 .append("providerId", providerId)
+                .append("name", name)
                 .append("description", description)
                 .append("email", email)
                 .append("telephone1", telephone1)
@@ -116,6 +146,7 @@ public class Provider {
                 .append("createDate", createDate)
                 .append("lastModified", lastModified)
                 .append("lastUser", lastUser)
+                .append("enabled", enabled)
                 .toString();
     }
 }

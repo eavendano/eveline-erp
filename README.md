@@ -4,26 +4,30 @@ Eveline ERP
 [![Eveline ERP Version](https://img.shields.io/badge/version-1.2.0-blue?style=for-the-badge)](https://img.shields.io/badge/version-1.2.0-blue?style=for-the-badge)
 
 ## Purpose
-Eveline ERP backend project. This project provides an interface for other Backend or Frontend internal 
-projects to communicate with the ERP database and provide insights and operation contracts for a better
-user experience for our customers.
+
+Eveline ERP backend project. This project provides an interface for other Backend or Frontend internal projects to
+communicate with the ERP database and provide insights and operation contracts for a better user experience for our
+customers.
 
 ---
 
 ## Getting Started
 
 ### Technology Stack
-- [Java 13](https://www.oracle.com/technetwork/java/archive-139210.html)
-- [Spring Boot 2.2.5](https://spring.io/projects/spring-boot)
+
+- [Java 15](https://www.oracle.com/technetwork/java/archive-139210.html)
+- [Spring Boot 2.4.0](https://spring.io/projects/spring-boot)
 - [HikariCP](https://github.com/brettwooldridge/HikariCP)
 
 ### Installation Guide
 
 #### Local PosgreSQL installation
 
-Installation instructions for posgresql in MacOSX with Homebrew can be found [here.](https://wiki.postgresql.org/wiki/Homebrew)
+Installation instructions for posgresql in MacOSX with Homebrew can be
+found [here.](https://wiki.postgresql.org/wiki/Homebrew)
 
 ### Build
+
 ```bash
 ./mvnw clean compile test
 ```
@@ -42,6 +46,7 @@ java -Dspring.profiles.active=default -Xms1g -Xmx1g -Xshare:off -XX:MinHeapFreeR
 
 In the `Run/Debug Configurations` window add a new Spring Boot Configuration. When selecting the main class, brouse
 `EvelineApplication.java` and in the VMOptions section, add the following:
+
 ```bash
 -Dspring.profiles.active=default
 -Xms1g
@@ -61,11 +66,11 @@ In the `Run/Debug Configurations` window add a new Spring Boot Configuration. Wh
 
 #### Local Docker builds
 
-So far, there are a couple of strategies to run the project with docker. The first one which involves building the docker
-image manually which is written down bellow but is a bit cumbersome and involves specific knowledge of docker commands on
-docker network (even when there is no network command bellow ;]), build images, tagging, container information, JMX, volumes
-and running the images themselves which is tiring; if you're willing to try it and understand what is going on bellow, be
-my guest.
+So far, there are a couple of strategies to run the project with docker. The first one which involves building the
+docker image manually, which is written down bellow but is a bit cumbersome and involves specific knowledge of docker
+commands on docker network (even when there is no network command bellow ;]), build images, tagging, container
+information, JMX, volumes and running the images themselves, which is tiring; if you're willing to try it and understand
+what is going on bellow, be my guest.
 
 ```
 cd {projectdir}
@@ -75,17 +80,17 @@ docker run -e "JAVA_OPTIONS=-Dspring.profiles.active=default -Xms1g -Xmx1g -Xsha
 curl -X GET http://localhost:8080/eveline-erp/docs/index.html
 ```
 
-Before explaining the next strategy, let me explain some commands that might be helpful for the next steps with docker and
-could influence directly the development process. With the build command you create the image to run in the container, then
-you run it with the run command, once the image builds, some details don't change even when you build the image again,
+Before explaining the next strategy, let me explain some commands that might help the next steps with Docker and
+directly influence the development process. With the build command, you create the image to run in the container; then
+you run it with the `run` command; once the image builds, some details don't change even when you build the image again,
 meaning you should keep a good track of the current image you want to test.
 
-As a suggestion we recommend deleting dangling or unused images on your local machine, default or intentional created networks
-by Docker and containers as well. Be careful with volumes though, those might be actually very important for your testing
-sessions or for other Docker images.
+As a suggestion, we recommend deleting dangling or unused images on your local machine, default, or intentionally
+created networks by Docker and containers as well. Be careful with volumes, though; those might be very important for
+your testing sessions or other Docker images.
 
-You can check the official documentation for the following commands since they might change in the future but initially we
-suggest the following three:
+You can check the official documentation for the following commands since they might change in the future, but initially
+we suggest the following three:
 
 ```bash
 docker image ls
@@ -93,9 +98,9 @@ docker image rm [IMAGE]
 docker image prune
 ```
 
-With the `ls` command you can get a list of all the images in your machine. That way you can get the image name or ID to
-be deleted with the `rm` command. The `prune` command is awesome since it removes all the unused images in case you have
-a ton of them, check the options of the command, and the official documentation to use it the most efficiently possible.
+With the `ls` command, you can get a list of all the images in your machine. That way, you can get the image name or ID
+to delete it with the `rm` command. The `prune` command is fantastic since it removes all the unused images when you
+have a ton of them; check the command's options and the official documentation to use it the most efficiently possible.
 
 Then, we have the following:
 
@@ -106,24 +111,24 @@ docker network rm [NETWORK]
 docker network prune
 ```
 
-Docker can create a network where your containers can be attached and allows them to communicate. With the `ls` command
-you can check the existing networks, and the ones that are not being used as well. With the `inspect` command you can check
-details of a network including the list of containers, their respective image and even their IP inside the network. Sometimes
-you might require that the network is deleted and you can achieve it with the `rm` command for a specific network or the
+Docker can create a network where your containers can be attached and allow them to communicate. With the `ls` command,
+you can check the existing networks and those not used. With the `inspect` command, you can check details of a network,
+including the containers, their respective image, and even their IP inside the network. Sometimes you might require that
+the network be deleted and achieve it with the `rm` command for a specific network or the
 `prune` for multiple unused networks.
 
-There is one last command but this one is a bit dangerous:
+There is one last command, but this one is a bit dangerous:
 
 ```bash
 docker system prune -a
 ```
 
-This one will obliterate all the images and networks that are not being used. and I mean all of them, so if you're working
-with other images, or Docker processes you must be careful because this command doesn't care about anything previous you
-migh have been working on. 
+This one will obliterate all the images and networks not being used. and I mean all of them, so if you're working with
+other images or Docker processes, you must be careful because this command doesn't care about any other previous work
+you might have been doing.
 
-One last detail is the command `docker ps --no-trunc` which is going to show you the exact command that is being used to
-run your image in the container. This is in case you need to troubleshoot updated image settings like JVM parameters.
+One last detail is the command `docker ps --no-trunc`, which will show you the exact command being used to run your
+image in the container. Just in case you need to troubleshoot updated image settings like JVM parameters.
 
 All of these tools are important for the second option to do a docker build:
 
@@ -132,17 +137,18 @@ cd {projectdir}
 docker-compose up eveline-erp-default
 ```
 
-This command will do all that annoying work for you. Isn't that awesome? We've configured a file called docker-compose.yml,
-which is going to respond to the docker-compose command that comes along with any Docker installation. On that file you'll
-find the ERP service configured, the network configuration with the subnet and even gateways depending on the driver used.
-This will run the ERP with the default Spring profile on the application, but it can be extended to other environments as
-well as testing scenarios in order to not be annoyed by passing them along in the console with a high chance of making a
-mistake. In order to troubleshoot, remove, and update your images and networks with compose, the previous commands we discussed
-in detail will definitely help. Sometimes you just need to delete the default network docker-compose creates, use a different
-network, your container not connected to the right network, IPs don't match, ports are no open, and a lot of different issues
-that might arise when running the image locally.
+This command will do all that annoying work for you. Isn't that awesome? We've configured a file called
+docker-compose.yaml, which will respond to the docker-compose command that comes along with any Docker installation.
+You'll find the services configured on that file, the network configuration with the subnet, and even gateways depending
+on the driver used. This will run the project with the default Spring Profile on the application. The operation can be
+extended to other environments and testing scenarios not to be annoyed by passing them along in the console with a high
+chance of making a mistake. To troubleshoot, remove, and update your images and networks with compose, the previous
+commands we discussed in detail will help. Sometimes you need to delete the default network docker-compose creates, use
+a different network, your container is not connecting to the right network, IPs don't match, ports are no open, and many
+issues might arise when running the image locally.
 
 ### Deploy
+
 ```bash
 pending
 ```
@@ -154,51 +160,53 @@ pending
 > Architecture and external tools of the production and development environments and release processes.
 
 ### Branch naming convention.
-Regarding branches, `master` branch is the law and cannot be modified by anyone that is not authorized to do so. If you're
-going to create a `feature` branch, we recommend using dots to separate your branch name. Is just a suggestion but we find
-it less intrusive than hyphens (-) or underscores(_). Examples: `provider.implementation`, `fix.remote.db.configuration`,
+
+Regarding branches, `master` branch is the law and cannot be modified by anyone that is not authorized to do so. If
+you're going to create a `feature` branch, we recommend using dots to separate your branch name. Is just a suggestion,
+but we find it less intrusive than hyphens (-) or underscores(_). Examples: `provider.implementation`
+, `fix.remote.db.configuration`,
 `ui.integration`, etc.
 
 ### Release Notes process and Pull Requests.
-In order to do a release of the project, it is required for Release Notes to be updated and understand what changed and
-when. In this section we will specify the steps to perform a release while wrapping up the development process. The reason
-to do the steps we're suggesting and in that order is to prevent and minimize scenarios of cherry picking and do rollbacks
-easier in case that something goes wrong on production, so that we can go back to previous docker images, versions of the
-code, and troubleshoot changes faster to respond to our clients in the best way possible and high quality.
 
-* Initially we expect that your feature is a fork from the `master` branch.
-* While developing I bet you might do a lot of commits to your `feature` branch which is completely normal, and you can still
-do that as usual. Remember before ending your day to `commit` and `push`.
-* When you're sure you're completely done, please update the following files:
+When releasing, it's required for Release Notes to be updated and understand what changed and when. This section will
+specify the steps to perform a release while wrapping up the development process. The reason to do the steps we're
+suggesting and in that order is to prevent and minimize scenarios of cherry-picking and do rollbacks more comfortable in
+case that something goes wrong on production so that we can go back to previous docker images, versions of the code, and
+troubleshoot changes faster to respond to our clients in the best way possible and high quality.
+
+* Initially, we expect that your feature is a fork from the `master` branch.
+* While developing, I bet you might do many commits to your `feature` branch, which is completely normal, and you can
+  still do that as usual. Remember before ending your day to `commit` and `push`.
+* When you're sure to be done, please update the following files:
     1. Remember that we use `Semantic Versioning`. Go to the links at the bottom to read on how to update them. Comments
-    when doing the `pull request` will also be related on how to use it correctly.
+       when making the `pull request` will also be related to how to use it correctly.
     2. `README.md` update badge on line 4 with the right version.
-    3. `eveline-swagger.json` line 6.
-    4. `pom.xml` line 13.
-    5. `application.yml` line 5.
-    6. `Dockerfile` line 30.
+    3. `package.json` line 3.
     7. `RELEASE_NOTES.md` with the respective notes of the release in the following format:
     ```bash
     Release [SEMANTIC_VERSION] (dd/mm/aaaa) [Responsible engineer name]
     * [User Story ID if possible] - First chage name or description.
     * [User Story ID if possible] - Second chage name or description.
     ```
-* In order to merge your `feature` code with `master` branch, we recommend using a single commit. To achieve this here is
-a list of steps that you can follow.
-    1. Update the `RELEASE_NOTES.md` file that is on the root of this project. You can also do it while performing the merge
-    step during step 5. 
+* To merge your `feature` code with `master` branch, we recommend using a single commit. To achieve this, here is a list
+  of steps that you can follow.
+    1. Update the `RELEASE_NOTES.md` file that is on the root of this project. You can also do it while performing the
+       merge step during step 5.
     2. Pull the origin `master` branch in your code to be up to date.
     3. Switch to the `master` branch and pull origin to be up to date as well.
-    4. Create a "bubble" branch from `master` where the first merge is going to be perfomed. Example: `my.feature.branch.v2`.
-    5. Perform the folowing list of commands:
-    `git merge --squash my.original.feature.branch.with.the.ready.work`
-    and then `git commit`. Just before accepting the commit, remove all the "garbage" or not necessary commit messages and we suggest that you
-    create a meaningful commit message to identify your feature branch.
-    6. Submit a `pull request` on Github to merge your branch into master. If any issues are found, they will be notified
-    to the developer through email or chat and comments with observations, corrections and suggestions will be specified
-    on the `pull request`.
+    4. Create a "bubble" branch from `master` where the person responsible will perform the first merge.
+       Example: `my.feature.branch.v2`.
+    5. Perform the following list of commands:
+       `git merge --squash my.original.feature.branch.with.the.ready.work`
+       and then `git commit`. Before accepting the commit, remove all the "garbage" or unnecessary commit messages, and
+       we suggest that you create a meaningful commit message to identify your feature branch.
+    6. Submit a `pull request` on Github to merge your branch into master. If the team finds any issues, the developer
+       will receive a notification through email or chat with the comments with observations, corrections, and
+       suggestions specified on the `pull request`.
 
 ### Architecture
+
 ```mermaid
 graph TD;
     UI --> API;
@@ -208,6 +216,7 @@ graph TD;
 ```
 
 ### Servers
+
 |Integration|Development|Production|
 |-----------|-----------|----------|
 |           |           |          |
@@ -221,6 +230,7 @@ graph TD;
 ### Dependencies
 
 ### Cron Jobs
+
 > The cronjob that is running
 
 ```bash
@@ -234,36 +244,42 @@ graph TD;
 |dev01      |prod01    |
 
 ### Queues
+
 - [Queue #1](#)
 - [Queue #2](#)
 - ...
 
 ### Pipeline
+
 - [Pipeline](#)
 
 ### Monitoring
-- This bundles a [JMX to Prometheus agent](https://github.com/prometheus/jmx_exporter) which scrapes and exports JMX targets via HTTP server.
+
+- This bundles a [JMX to Prometheus agent](https://github.com/prometheus/jmx_exporter) which scrapes and exports JMX
+  targets via HTTP server.
 - [SUMO API Log Dashboard](#)
 - [SUMO Access Log Dashboard](#)
 - [Grafana Dashboard](#)
 
 #### Log Files
+
 Application logs are exposed in different ways:
 
 * Via Sumo Logic -> TBD
 * Integration and production servers under the /path/to/directory/logs directory
 
-Dynamic Logging Settings
-Also, log settings can be dynamically changed at runtime in both integration and production servers.
+Dynamic Logging Settings Also, log settings can be dynamically changed at runtime in both integration and production
+servers.
 
-Simply change your logging settings in /path/to/directory/logs/logback.xml.
-Any changes will take around 1 minute to get applied by the log manager.
+Simply change your logging settings in /path/to/directory/logs/logback.xml. Any changes will take around 1 minute to get
+applied by the log manager.
 
 ---
 
 ## Monitoring
 
 ### Alerting
+
 |Server Metrics|
 |--------------|
 |[CPU](#)|
@@ -292,12 +308,15 @@ Any changes will take around 1 minute to get applied by the log manager.
 ---
 
 ## User Guide
+
 > How can we use it? How do we know it is working?
 
 ### API documentation
+
 [Endpoints](#)
 
 ### Troubleshooting
+
 |Integration      |Production       |
 |-----------------|-----------------|
 |[Manager](#)     |[Manager](#)     |
@@ -310,14 +329,15 @@ Any changes will take around 1 minute to get applied by the log manager.
 ---
 
 ## [Team Members](mailto:)
+
 | **Team Member**                                                 | **Role**                           |
 | ----------------------------------------------------------------|------------------------------------|
 |[:envelope: Mariana Olivares](mailto:marianapoh@gmail.com)       | :cop: Associate / Manager          |
 |[:envelope: Jose Pablo Arata](mailto:josepablo191290@gmail.com)  | :monkey_face: Associate / Engineer |
 |[:envelope: Emanuel Avendano](mailto:eavendano.ic@gmail.com)     | :monkey_face: Associate / Engineer |
 
-
 ### Reference Documentation
+
 For further reference, please consider the following sections:
 
 * [Semantic Versioning](https://semver.org/)
@@ -345,6 +365,7 @@ For further reference, please consider the following sections:
 * [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
 
 ### Guides
+
 The following guides illustrate how to use some features concretely:
 
 * [Building a RESTful Web Service with Spring Boot Actuator](https://spring.io/guides/gs/actuator-service/)
@@ -364,3 +385,6 @@ The following guides illustrate how to use some features concretely:
 * [Establish JMX connection to JVM running on docker](https://www.adam-bien.com/roller/abien/entry/how_to_establish_jmx_connection)
 * [Docker Remove images, containers and volumes](https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes)
 * [Docker Remove network](https://docs.docker.com/engine/reference/commandline/network_rm/)
+* [Run Postgresql Local](https://medium.com/@martinlasek/tutorial-how-to-use-postgresql-88cddc858d9f)
+* [Spring DataIntegrityViolationException Explained (ConstraintViolationException)](https://www.baeldung.com/spring-dataIntegrityviolationexception)
+* [Programmatic Transaction Management](https://www.baeldung.com/spring-programmatic-transaction-management)

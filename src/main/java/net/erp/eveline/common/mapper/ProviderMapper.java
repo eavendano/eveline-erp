@@ -1,18 +1,18 @@
 package net.erp.eveline.common.mapper;
 
 import net.erp.eveline.data.entity.Provider;
+import net.erp.eveline.model.ActiveProviderModel;
 import net.erp.eveline.model.ProviderModel;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class ProviderMapper {
 
     public static ProviderModel toModel(final Provider provider) {
         return new ProviderModel()
                 .setId(provider.getProviderId())
+                .setName(provider.getName())
                 .setDescription(provider.getDescription())
                 .setEmail(provider.getEmail())
                 .setTelephone1(provider.getTelephone1())
@@ -20,12 +20,38 @@ public class ProviderMapper {
                 .setTelephone3(provider.getTelephone3())
                 .setCreateDate(provider.getCreateDate())
                 .setLastModified(provider.getLastModified())
+                .setEnabled(provider.isEnabled())
                 .setLastUser(provider.getLastUser());
     }
 
-    public static List<ProviderModel> toModel(final Iterable<Provider> providers){
-        return StreamSupport.stream(providers.spliterator(),false)
+    public static Set<ProviderModel> toModel(final Set<Provider> providers) {
+        return providers.stream()
                 .map(ProviderMapper::toModel)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
+    }
+
+    public static Provider toEntity(final ProviderModel providerModel) {
+        return new Provider()
+                .setProviderId(providerModel.getId())
+                .setName(providerModel.getName())
+                .setDescription(providerModel.getDescription())
+                .setEmail(providerModel.getEmail())
+                .setTelephone1(providerModel.getTelephone1())
+                .setTelephone2(providerModel.getTelephone2())
+                .setTelephone3(providerModel.getTelephone3())
+                .setEnabled(providerModel.isEnabled())
+                .setLastUser(providerModel.getLastUser());
+    }
+
+    public static Set<Provider> toEntity(final Set<ProviderModel> providerModelSet) {
+        return providerModelSet.stream()
+                .map(ProviderMapper::toEntity)
+                .collect(Collectors.toSet());
+    }
+
+    public static Provider toEntity(final Provider provider, final ActiveProviderModel activeProviderModel) {
+        return provider
+                .setLastUser(activeProviderModel.getLastUser())
+                .setEnabled(activeProviderModel.isEnabled());
     }
 }

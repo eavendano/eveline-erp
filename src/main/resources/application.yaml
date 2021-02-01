@@ -63,6 +63,9 @@ spring:
     url: "jdbc:postgresql://localhost:5432/evelinedb"
     username: "eveline-erp"
     password: "TEwZn;V#3?roLBA6i=2pw8Zo"
+    #    url: "jdbc:postgresql://database-1.cbeng1ekqdjf.us-east-1.rds.amazonaws.com:5432/evelinedb"
+    #    username: "eveline-erp"
+    #    password: "TEwZn;V#3?roLBA6i=2pw8Zo"
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       connection-timeout: 20000 #maximum number of milliseconds that a client will wait for a connection

@@ -2,7 +2,6 @@ package net.erp.eveline;
 
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +11,10 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.UUID;
+
+import static org.springframework.http.HttpMethod.DELETE;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
 
 @Configuration(proxyBeanMethods = false)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -40,14 +43,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 .anyRequest().authenticated()
         ).formLogin(
                 (formLogin) -> formLogin.loginPage(this.adminServer.path("/login")).successHandler(successHandler).and()
-        ).logout((logout) -> logout.logoutUrl(this.adminServer.path("/logout"))).httpBasic(Customizer.withDefaults())
+        ).logout((logout) -> logout.logoutUrl(this.adminServer.path("/logout")))
+                .httpBasic(Customizer.withDefaults())
                 .csrf((csrf) -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringRequestMatchers(
                                 new AntPathRequestMatcher(this.adminServer.path("/instances"),
-                                        HttpMethod.POST.toString()),
+                                        POST.toString()),
                                 new AntPathRequestMatcher(this.adminServer.path("/instances/*"),
-                                        HttpMethod.DELETE.toString()),
-                                new AntPathRequestMatcher(this.adminServer.path("/actuator/**"))
+                                        DELETE.toString()),
+                                new AntPathRequestMatcher(this.adminServer.path("/actuator/**")),
+                                new AntPathRequestMatcher("/provider/**", PUT.toString())
                         ))
                 .rememberMe((rememberMe) -> rememberMe.key(UUID.randomUUID().toString()).tokenValiditySeconds(1209600));
     }

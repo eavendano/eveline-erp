@@ -1,7 +1,6 @@
 package net.erp.eveline.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -10,6 +9,7 @@ import java.time.OffsetDateTime;
 public class ProviderModel {
 
     private String id;
+    private String name;
     private String description;
     private String email;
     private String telephone1;
@@ -18,6 +18,7 @@ public class ProviderModel {
     private OffsetDateTime createDate;
     private OffsetDateTime lastModified;
     private String lastUser;
+    private Boolean enabled;
 
     public String getId() {
         return id;
@@ -25,6 +26,15 @@ public class ProviderModel {
 
     public ProviderModel setId(final String id) {
         this.id = id;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ProviderModel setName(String name) {
+        this.name = name;
         return this;
     }
 
@@ -100,6 +110,15 @@ public class ProviderModel {
         return this;
     }
 
+    public Boolean isEnabled() {
+        return enabled;
+    }
+
+    public ProviderModel setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -134,6 +153,7 @@ public class ProviderModel {
                 .append("createDate", createDate)
                 .append("lastModified", lastModified)
                 .append("lastUser", lastUser)
+                .append("enabled", enabled)
                 .toString();
     }
 }
