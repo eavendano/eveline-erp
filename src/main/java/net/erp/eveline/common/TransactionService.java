@@ -28,7 +28,7 @@ public class TransactionService {
     private TransactionTemplate writeTransactionTemplate;
     private RetryTemplate retryTemplate;
 
-    public <T, B> T performWriteTransaction(final TransactionCallback<T> callback, final B parameter) throws ServiceException {
+    public <T, B> T performWriteTransaction(final TransactionCallback<T> callback, final B parameter) {
         return performTransaction(writeTransactionTemplate, callback, parameter);
     }
 
@@ -36,11 +36,11 @@ public class TransactionService {
         performTransactionWithoutResult(writeTransactionTemplate, callbackWithoutResult, parameter);
     }
 
-    public <T, B> T performReadOnlyTransaction(final TransactionCallback<T> callback, final B parameter) throws ServiceException {
+    public <T, B> T performReadOnlyTransaction(final TransactionCallback<T> callback, final B parameter) {
         return performTransaction(readOnlyTransactionTemplate, callback, parameter);
     }
 
-    private <T, B> T performTransaction(final TransactionTemplate transactionTemplate, final TransactionCallback<T> callback, final B parameter) throws ServiceException {
+    private <T, B> T performTransaction(final TransactionTemplate transactionTemplate, final TransactionCallback<T> callback, final B parameter) {
         var parameterSanitized = (parameter == null) ? "null" : parameter.toString();
         try {
             return retryTemplate.execute((RetryCallback<T, Throwable>) context -> {
@@ -63,7 +63,11 @@ public class TransactionService {
         } catch (RetryableException | NonRetryableException ex) {
             var message = String.format("Unable to process request probably due to exhaust for: %s", parameterSanitized);
             logger.warn(message, ex);
-            throw new ServiceException(message, ex);
+            if (ex instanceof RetryableException) {
+                throw new RetryableException(message, ex);
+            } else {
+                throw new NonRetryableException(message, ex);
+            }
         } catch (Throwable ex) {
             var message = String.format("Unexpected exception occurred. Unable to perform transaction for: %s | Cause: %s", parameterSanitized, ex.getMessage());
             logger.warn(message, ex);
@@ -71,7 +75,7 @@ public class TransactionService {
         }
     }
 
-    private <B> Void performTransactionWithoutResult(final TransactionTemplate transactionTemplate, final TransactionCallback<Object> callback, final B parameter) throws ServiceException {
+    private <B> Void performTransactionWithoutResult(final TransactionTemplate transactionTemplate, final TransactionCallback<Object> callback, final B parameter) {
         var parameterSanitized = (parameter == null) ? "null" : parameter.toString();
         try {
             return retryTemplate.execute((RetryCallback<Void, Throwable>) context -> {
@@ -95,7 +99,11 @@ public class TransactionService {
         } catch (RetryableException | NonRetryableException ex) {
             var message = String.format("Unable to process request probably due to exhaust for: %s", parameterSanitized);
             logger.warn(message, ex);
-            throw new ServiceException(message, ex.getCause());
+            if (ex instanceof RetryableException) {
+                throw new RetryableException(message, ex);
+            } else {
+                throw new NonRetryableException(message, ex);
+            }
         } catch (Throwable ex) {
             var message = String.format("Unexpected exception occurred. Unable to perform transaction for: %s | Cause: %s", parameterSanitized, ex.getMessage());
             logger.warn(message, ex);

@@ -18,9 +18,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.OptimisticLockException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static net.erp.eveline.common.mapper.ProviderMapper.toModel;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.times;
@@ -55,13 +57,13 @@ class ProviderServiceImplTest {
         when(providerRepository.findAll()).thenReturn(mockProviderList(expectedLength));
 
         //Execution
-        final List<ProviderModel> actualProviderModels = service.getProviderModels();
+        final Set<ProviderModel> actualProviderModels = service.findAll();
 
         //Validation
         verify(providerRepository, times(1))
                 .findAll();
         assertEquals(expectedLength, actualProviderModels.size());
-        assertEquals(toModel(mockProviderList(expectedLength)), actualProviderModels);
+        assertEquals(toModel(Set.copyOf(mockProviderList(expectedLength))).toString(), actualProviderModels.toString());
     }
 
     @Test
@@ -73,13 +75,13 @@ class ProviderServiceImplTest {
         when(providerRepository.findAll()).thenReturn(mockProviderList(expectedLength));
 
         //Execution
-        final List<ProviderModel> actualProviderModels = service.getProviderModels();
+        final Set<ProviderModel> actualProviderModels = service.findAll();
 
         //Validation
         verify(providerRepository, times(1))
                 .findAll();
         assertEquals(expectedLength, actualProviderModels.size());
-        assertEquals(toModel(mockProviderList(expectedLength)), actualProviderModels);
+        assertEquals(toModel(Set.copyOf(mockProviderList(expectedLength))), actualProviderModels);
     }
 
     @Test
@@ -88,7 +90,7 @@ class ProviderServiceImplTest {
         when(providerRepository.findAll()).thenThrow(new OptimisticLockException("Optimistic lock test"));
 
         //Execution
-        assertThrows(RetryableException.class, service::getProviderModels);
+        assertThrows(RetryableException.class, service::findAll);
 
         //Validation
         verify(providerRepository, times(4))
