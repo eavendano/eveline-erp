@@ -1,0 +1,136 @@
+package net.erp.eveline.data.entity;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import javax.persistence.*;
+import java.time.OffsetDateTime;
+
+@Entity
+@Table(name = "product")
+public class Product {
+    @Id
+    private String productId; // todo ask ema, what about barcode? is this it
+
+    @ManyToOne
+    @JoinColumn(name = "provider_id", nullable = false)
+    private Provider provider;
+
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "sanitary_registry_number")
+    private String sanitaryRegistryNumber; //todo ask ema
+
+    @Column(name = "create_date")
+    private OffsetDateTime createDate;
+
+    @Column(name = "last_modified")
+    private OffsetDateTime lastModified;
+
+    @Column(name = "last_user")
+    private String lastUser;
+
+    @Column(name = "enabled")
+    private Boolean enabled;
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public Product setProductId(String productId) {
+        this.productId = productId;
+        return this;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public Product setProvider(Provider provider) {
+        this.provider = provider;
+        return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Product setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Product setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public String getSanitaryRegistryNumber() {
+        return sanitaryRegistryNumber;
+    }
+
+    public Product setSanitaryRegistryNumber(String sanitaryRegistryNumber) {
+        this.sanitaryRegistryNumber = sanitaryRegistryNumber;
+        return this;
+    }
+
+    public OffsetDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public Product setCreateDate(OffsetDateTime createDate) {
+        this.createDate = createDate;
+        return this;
+    }
+
+    public OffsetDateTime getLastModified() {
+        return lastModified;
+    }
+
+    public Product setLastModified(OffsetDateTime lastModified) {
+        this.lastModified = lastModified;
+        return this;
+    }
+
+    public String getLastUser() {
+        return lastUser;
+    }
+
+    public Product setLastUser(String lastUser) {
+        this.lastUser = lastUser;
+        return this;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public Product setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
+                .append("__class__", this.getClass().getSimpleName())
+                .append("productId", productId)
+                .append("provider", provider)
+                .append("title", title)
+                .append("description", description)
+                .append("sanitaryRegistryNumber", sanitaryRegistryNumber)
+                .append("createDate", createDate)
+                .append("lastModified", lastModified)
+                .append("lastUser", lastUser)
+                .append("enabled", enabled)
+                .toString();
+    }
+}

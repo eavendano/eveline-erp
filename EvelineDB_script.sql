@@ -21,3 +21,18 @@ CREATE TABLE provider (
 GRANT SELECT, INSERT, UPDATE, DELETE ON provider TO "eveline-erp";
 
 
+CREATE SEQUENCE product_id_seq;
+
+DROP TABLE IF EXISTS product;
+CREATE TABLE product (
+  product_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 'p'||lpad(nextval('product_id_seq'::regclass)::TEXT,5,'0'),
+  title varchar(50) NOT NULL,
+  description TEXT DEFAULT NULL,
+  sanitary_registry_number varchar(15) NOT NULL,
+  last_user varchar(100) NOT NULL,
+  enabled boolean NOT NULL DEFAULT false,
+  create_date timestamp(0) with time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone,
+  last_modified timestamp(0) with time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone
+);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON provider TO "eveline-erp";
