@@ -18,7 +18,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class ProductController {
     private ProductService productService;
 
-    @GetMapping(value = "/{providerId}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/provider/{providerId}", produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public Set<ProductModel> getProductsByProvider(@PathVariable final String providerId) {
         return productService.findAllByProvider(providerId);
