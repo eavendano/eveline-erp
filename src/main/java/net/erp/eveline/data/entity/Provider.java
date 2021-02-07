@@ -1,5 +1,10 @@
 package net.erp.eveline.data.entity;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -133,8 +138,48 @@ public class Provider {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Provider provider = (Provider) o;
+
+        return new EqualsBuilder()
+                .append(providerId, provider.providerId)
+                .append(name, provider.name)
+                .append(description, provider.description)
+                .append(email, provider.email)
+                .append(telephone1, provider.telephone1)
+                .append(telephone2, provider.telephone2)
+                .append(telephone3, provider.telephone3)
+                .append(createDate, provider.createDate)
+                .append(lastModified, provider.lastModified)
+                .append(lastUser, provider.lastUser)
+                .append(enabled, provider.enabled)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(providerId)
+                .append(name)
+                .append(description)
+                .append(email)
+                .append(telephone1)
+                .append(telephone2)
+                .append(telephone3)
+                .append(createDate)
+                .append(lastModified)
+                .append(lastUser)
+                .append(enabled)
+                .toHashCode();
+    }
+
+    @Override
     public String toString() {
-        return new org.apache.commons.lang3.builder.ToStringBuilder(this, org.apache.commons.lang3.builder.ToStringStyle.JSON_STYLE)
+        return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
                 .append("__class__", this.getClass().getSimpleName())
                 .append("providerId", providerId)
                 .append("name", name)
