@@ -35,9 +35,9 @@ CREATE TABLE product (
   description TEXT DEFAULT NULL,
   sanitary_registry_number varchar(100) DEFAULT NULL,
   last_user varchar(100) NOT NULL,
-  enabled boolean NOT NULL DEFAULT false,
-  create_date timestamp(0) with time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone,
-  last_modified timestamp(0) with time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone
+  enabled boolean DEFAULT false,
+  create_date timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+  last_modified timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone
 );
 
 alter table product
