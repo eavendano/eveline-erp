@@ -23,12 +23,15 @@ CREATE TABLE provider (
 GRANT SELECT, INSERT, UPDATE, DELETE ON provider TO "eveline-erp";
 
 
-CREATE SEQUENCE product_id_seq;
+DROP SEQUENCE IF EXISTS product_id_seq;
+CREATE SEQUENCE product_id_seq MINVALUE 1 INCREMENT 1 MAXVALUE 99999;
+GRANT USAGE, SELECT ON SEQUENCE product_id_seq TO "eveline-erp";
 
 DROP TABLE IF EXISTS product;
 CREATE TABLE product (
-  product_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 'p'||lpad(nextval('product_id_seq'::regclass)::TEXT,5,'0'),
-  title varchar(50) NOT NULL,
+  product_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 'u'||lpad(nextval('product_id_seq'::regclass)::TEXT,5,'0'),
+  upc varchar(12) UNIQUE NOT NULL,
+  title varchar(100) NOT NULL,
   description TEXT DEFAULT NULL,
   sanitary_registry_number varchar(100) DEFAULT NULL,
   last_user varchar(100) NOT NULL,
@@ -36,5 +39,10 @@ CREATE TABLE product (
   create_date timestamp(0) with time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone,
   last_modified timestamp(0) with time zone NOT NULL DEFAULT ('now'::text)::timestamp(6) with time zone
 );
+
+alter table product
+    add constraint check_upc_length check (length(upc) = 12);
+
+CREATE INDEX upc_index ON product (upc);
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON provider TO "eveline-erp";

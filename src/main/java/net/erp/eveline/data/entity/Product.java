@@ -1,5 +1,7 @@
 package net.erp.eveline.data.entity;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -10,11 +12,14 @@ import java.time.OffsetDateTime;
 @Table(name = "product")
 public class Product {
     @Id
-    private String productId; // todo ask ema, what about barcode? is this it
+    private String productId;
 
     @ManyToOne
     @JoinColumn(name = "provider_id", nullable = false)
     private Provider provider;
+
+    @Column(name="upc")
+    private String upc;
 
     @Column(name = "title")
     private String title;
@@ -23,7 +28,7 @@ public class Product {
     private String description;
 
     @Column(name = "sanitary_registry_number")
-    private String sanitaryRegistryNumber; //todo ask ema
+    private String sanitaryRegistryNumber;
 
     @Column(name = "create_date")
     private OffsetDateTime createDate;
@@ -118,19 +123,49 @@ public class Product {
         return this;
     }
 
+    public String getUpc() {
+        return upc;
+    }
+
+    public void setUpc(String upc) {
+        this.upc = upc;
+    }
+
     @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
-                .append("__class__", this.getClass().getSimpleName())
-                .append("productId", productId)
-                .append("provider", provider)
-                .append("title", title)
-                .append("description", description)
-                .append("sanitaryRegistryNumber", sanitaryRegistryNumber)
-                .append("createDate", createDate)
-                .append("lastModified", lastModified)
-                .append("lastUser", lastUser)
-                .append("enabled", enabled)
-                .toString();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Product product = (Product) o;
+
+        return new EqualsBuilder()
+                .append(productId, product.productId)
+                .append(provider, product.provider)
+                .append(upc, product.upc)
+                .append(title, product.title)
+                .append(description, product.description)
+                .append(sanitaryRegistryNumber, product.sanitaryRegistryNumber)
+                .append(createDate, product.createDate)
+                .append(lastModified, product.lastModified)
+                .append(lastUser, product.lastUser)
+                .append(enabled, product.enabled)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(productId)
+                .append(provider)
+                .append(upc)
+                .append(title)
+                .append(description)
+                .append(sanitaryRegistryNumber)
+                .append(createDate)
+                .append(lastModified)
+                .append(lastUser)
+                .append(enabled)
+                .toHashCode();
     }
 }

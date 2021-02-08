@@ -11,4 +11,5 @@ public interface ProductService {
     ProductModel getProductModel(final String productId);
     ProductModel upsertProductModel(final ProductModel productModel);
     ProductModel activateProvider(final ActivateProductModel activateProductModel);
+    ProductModel findByUpc(final String upc);
 }

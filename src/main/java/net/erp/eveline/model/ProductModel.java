@@ -1,5 +1,7 @@
 package net.erp.eveline.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -7,6 +9,7 @@ import java.time.OffsetDateTime;
 
 public class ProductModel {
     private String id;
+    private String upc;
     private ProviderModel providerModel;
     private String title;
     private String description;
@@ -32,6 +35,15 @@ public class ProductModel {
     public ProductModel setProviderModel(ProviderModel providerModel) {
         this.providerModel = providerModel;
         return this;
+    }
+
+
+    public String getUpc() {
+        return upc;
+    }
+
+    public void setUpc(String upc) {
+        this.upc = upc;
     }
 
     public String getTitle() {
@@ -98,10 +110,33 @@ public class ProductModel {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProductModel that = (ProductModel) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(upc, that.upc)
+                .append(providerModel, that.providerModel)
+                .append(title, that.title)
+                .append(description, that.description)
+                .append(sanitaryRegistryNumber, that.sanitaryRegistryNumber)
+                .append(createDate, that.createDate)
+                .append(lastModified, that.lastModified)
+                .append(lastUser, that.lastUser)
+                .append(enabled, that.enabled)
+                .isEquals();
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
                 .append("__class__", this.getClass().getSimpleName())
                 .append("id", id)
+                .append("upc", upc)
                 .append("providerModel", providerModel)
                 .append("title", title)
                 .append("description", description)

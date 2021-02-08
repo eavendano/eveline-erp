@@ -30,6 +30,12 @@ public class ProductController {
         return productService.getProductModel(productId);
     }
 
+    @GetMapping(value = "/upc/{upc}", produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ProductModel getProductByUpc(@PathVariable final String upc) {
+        return productService.findByUpc(upc);
+    }
+
     @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public ProductModel upsertProduct(@RequestBody final ProductModel productModel) {
