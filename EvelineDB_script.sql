@@ -22,4 +22,73 @@ CREATE TABLE provider (
 );
 GRANT SELECT, INSERT, UPDATE, DELETE ON provider TO "eveline-erp";
 
+DROP FUNCTION IF EXISTS insert_create_date();
+CREATE FUNCTION insert_create_date()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$
+BEGIN
+    NEW.create_date := CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$BODY$;
+GRANT EXECUTE ON FUNCTION insert_create_date() TO "eveline-erp";
+
+DROP FUNCTION IF EXISTS update_create_date();
+CREATE FUNCTION update_create_date()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$
+BEGIN
+    NEW.create_date := OLD.create_date;
+    RETURN NEW;
+END;
+$BODY$;
+GRANT EXECUTE ON FUNCTION update_create_date() TO "eveline-erp";
+
+DROP FUNCTION update_last_modified();
+CREATE FUNCTION update_last_modified()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$
+BEGIN
+    /*
+        Force last_modified timestamp to be accurately updated,
+        using wall clock time, not start of transaction as given
+        by CURRENT_TIMESTAMP, now(), etc.
+    */
+    NEW.last_modified := timeofday()::timestamp;
+    RETURN NEW;
+END;
+$BODY$;
+GRANT EXECUTE ON FUNCTION update_last_modified() TO "eveline-erp";
+
+DROP TRIGGER IF EXISTS provider_insert_create_date ON provider;
+CREATE TRIGGER provider_insert_create_date
+    BEFORE INSERT
+    ON provider
+    FOR EACH ROW
+EXECUTE PROCEDURE insert_create_date();
+
+DROP TRIGGER IF EXISTS provider_update_create_date ON provider;
+CREATE TRIGGER provider_update_create_date
+    BEFORE UPDATE
+    ON provider
+    FOR EACH ROW
+EXECUTE PROCEDURE update_create_date();
+
+DROP TRIGGER IF EXISTS provider_last_modified ON provider;
+CREATE TRIGGER provider_last_modified
+    BEFORE INSERT OR UPDATE
+    ON provider
+    FOR EACH ROW
+EXECUTE PROCEDURE update_last_modified();
+
+
 
