@@ -46,7 +46,7 @@ public class Provider {
     private String lastUser;
 
     @Column(name = "enabled")
-    private Boolean enabled;
+    private Boolean enabled = false;
 
     public String getProviderId() {
         return providerId;
