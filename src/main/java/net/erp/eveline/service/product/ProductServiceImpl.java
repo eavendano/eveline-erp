@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
         return transactionService.performReadOnlyTransaction(status -> {
 
             Set< Product> products = productRepository.findAllByProviderProviderId(providerId);
-            logger.info("Retrieved all providers successfully.");
+            logger.info("Retrieved {} products for provider {} successfully.", products.size(), providerId);
             return toModel(products);
         }, null);
     }
@@ -56,5 +56,10 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     public void setProductRepository(ProductRepository productRepository) {
         this.productRepository = productRepository;
+    }
+
+    @Autowired
+    public void setTransactionService(TransactionService transactionService) {
+        this.transactionService = transactionService;
     }
 }

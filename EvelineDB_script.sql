@@ -30,6 +30,7 @@ GRANT USAGE, SELECT ON SEQUENCE product_id_seq TO "eveline-erp";
 DROP TABLE IF EXISTS product;
 CREATE TABLE product (
   product_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 'u'||lpad(nextval('product_id_seq'::regclass)::TEXT,5,'0'),
+  provider_id varchar(6) NOT NULL,
   upc varchar(12) UNIQUE NOT NULL,
   title varchar(100) NOT NULL,
   description TEXT DEFAULT NULL,
@@ -37,11 +38,14 @@ CREATE TABLE product (
   last_user varchar(100) NOT NULL,
   enabled boolean DEFAULT false,
   create_date timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
-  last_modified timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone
-);
+  last_modified timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+  CONSTRAINT fk_provider
+                     FOREIGN KEY(provider_id)
+                     REFERENCES provider(provider_id),
+  CONSTRAINT check_upc_length
+      check (length(upc) = 12)
 
-alter table product
-    add constraint check_upc_length check (length(upc) = 12);
+);
 
 CREATE INDEX upc_index ON product (upc);
 

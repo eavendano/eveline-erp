@@ -127,8 +127,9 @@ public class Product {
         return upc;
     }
 
-    public void setUpc(String upc) {
+    public Product setUpc(String upc) {
         this.upc = upc;
+        return this;
     }
 
     @Override
