@@ -4,9 +4,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.OffsetDateTime;
@@ -16,6 +19,10 @@ import java.time.OffsetDateTime;
 public class Provider {
 
     @Id
+    @GeneratedValue(generator = "providerIdGenerator")
+    @GenericGenerator(name = "providerIdGenerator", parameters = @Parameter(name = "prefix", value = "p"),
+            strategy = "net.erp.eveline.data.generators.ProviderIdGenerator")
+    @Column(name="provider_id")
     private String providerId;
 
     @Column(name = "name")
