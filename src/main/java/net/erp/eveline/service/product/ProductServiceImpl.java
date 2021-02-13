@@ -3,10 +3,12 @@ package net.erp.eveline.service.product;
 import net.erp.eveline.common.TransactionService;
 import net.erp.eveline.common.exception.NotFoundException;
 import net.erp.eveline.common.mapper.ProductMapper;
+import net.erp.eveline.common.mapper.ProviderMapper;
 import net.erp.eveline.data.entity.Product;
 import net.erp.eveline.data.repository.ProductRepository;
 import net.erp.eveline.model.ActivateProductModel;
 import net.erp.eveline.model.ProductModel;
+import net.erp.eveline.model.ProviderModel;
 import net.erp.eveline.service.BaseService;
 import net.erp.eveline.service.provider.ProviderServiceImpl;
 import org.slf4j.Logger;
@@ -23,8 +25,8 @@ import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 import static net.erp.eveline.common.mapper.ProductMapper.toEntity;
 import static net.erp.eveline.common.mapper.ProductMapper.toModel;
-import static net.erp.eveline.common.predicate.ProductPredicates.isProductModelValidForInsert;
-import static net.erp.eveline.common.predicate.ProductPredicates.isProductModelValidForUpdate;
+import static net.erp.eveline.common.predicate.ProductPredicates.*;
+import static net.erp.eveline.common.predicate.ProviderPredicates.isActiveProviderModelValid;
 
 @Service
 public class ProductServiceImpl extends BaseService implements ProductService {
@@ -108,7 +110,22 @@ public class ProductServiceImpl extends BaseService implements ProductService {
 
     @Override
     public ProductModel activateProduct(ActivateProductModel activateProductModel) {
-        return null;
+        logger.info("Activation operation for model: {}", activateProductModel);
+        requireNonNull(activateProductModel, "Active status provided cannot be null or empty.");
+        List<String> errorList = new ArrayList<>();
+
+        return transactionService.performWriteTransaction(status -> {
+            logger.info("Performing product activation transaction for model: {}", activateProductModel);
+            validate(activateProductModel, isActiveProductModelValid(errorList), errorList);
+
+            final var product = productRepository.findById(activateProductModel.getId())
+                    .orElseThrow(() -> new NotFoundException(String.format("Unable to update a provider with the id specified: %s", activateProductModel.getId())));
+
+            ProductModel result = ProductMapper.toModel(productRepository.save(ProductMapper.toEntity(product, activateProductModel)));
+
+            logger.info("Product activation operation completed for result: {}", activateProductModel);
+            return result;
+        }, activateProductModel);
     }
 
     @Autowired
