@@ -3,12 +3,10 @@ package net.erp.eveline.service.product;
 import net.erp.eveline.common.TransactionService;
 import net.erp.eveline.common.exception.NotFoundException;
 import net.erp.eveline.common.mapper.ProductMapper;
-import net.erp.eveline.common.mapper.ProviderMapper;
 import net.erp.eveline.data.entity.Product;
 import net.erp.eveline.data.repository.ProductRepository;
 import net.erp.eveline.model.ActivateProductModel;
 import net.erp.eveline.model.ProductModel;
-import net.erp.eveline.model.ProviderModel;
 import net.erp.eveline.service.BaseService;
 import net.erp.eveline.service.provider.ProviderServiceImpl;
 import org.slf4j.Logger;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -47,12 +46,26 @@ public class ProductServiceImpl extends BaseService implements ProductService {
 
     @Override
     public ProductModel getProductModel(String productId) {
-        return null;
+        logger.info("Requesting product matching id {}.", productId);
+        return transactionService.performReadOnlyTransaction(status -> {
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new NotFoundException(String.format("Unable to find a product with the id specified: %s", productId)));
+
+            logger.info("Retrieved {} product for productId {} successfully.", product, productId);
+            return toModel(product);
+        }, null);
     }
 
     @Override
     public ProductModel findByUpc(String upc) {
-        return null;
+        logger.info("Requesting product matching upc {}.", upc);
+        return transactionService.performReadOnlyTransaction(status -> {
+            Product product = productRepository.findByUpc(upc)
+                    .orElseThrow(() -> new NotFoundException(String.format("Unable to find a product with the upc specified: %s", upc)));
+
+            logger.info("Retrieved {} product for upc {} successfully.", product, upc);
+            return toModel(product);
+        }, null);
     }
 
     @Override
@@ -94,7 +107,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     }
 
     @Override
-    public ProductModel activateProvider(ActivateProductModel activateProductModel) {
+    public ProductModel activateProduct(ActivateProductModel activateProductModel) {
         return null;
     }
 

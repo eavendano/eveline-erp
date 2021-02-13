@@ -10,6 +10,6 @@ public interface ProductService {
     Set<ProductModel> findAllByProvider(final String providerId);
     ProductModel getProductModel(final String productId);
     ProductModel upsertProductModel(final ProductModel productModel);
-    ProductModel activateProvider(final ActivateProductModel activateProductModel);
+    ProductModel activateProduct(final ActivateProductModel activateProductModel);
     ProductModel findByUpc(final String upc);
 }

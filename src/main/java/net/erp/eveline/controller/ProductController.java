@@ -1,9 +1,7 @@
 package net.erp.eveline.controller;
 
 import net.erp.eveline.model.ActivateProductModel;
-import net.erp.eveline.model.ActiveProviderModel;
 import net.erp.eveline.model.ProductModel;
-import net.erp.eveline.model.ProviderModel;
 import net.erp.eveline.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +43,7 @@ public class ProductController {
     @PutMapping(value = "/activate", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
     public ProductModel activateProvider(@RequestBody final ActivateProductModel activeProviderModel) {
-        return productService.activateProvider(activeProviderModel);
+        return productService.activateProduct(activeProviderModel);
     }
 
     @Autowired
