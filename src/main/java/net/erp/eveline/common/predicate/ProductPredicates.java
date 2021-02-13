@@ -35,6 +35,12 @@ public class ProductPredicates {
         };
     }
 
+    public static Predicate<ProductModel> isProductModelValidForUpdate(final List<String> errorList) {
+        return productModel -> {
+            boolean idValid = isProductIdValid().test(productModel.getId());
+            return evaluateModel(errorList, productModel, idValid);
+        };
+    }
     public static Predicate<String> isProductIdValidAtInsert() {
         return providerId -> ofNullable(providerId).isEmpty();
     }
