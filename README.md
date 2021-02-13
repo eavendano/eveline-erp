@@ -388,3 +388,4 @@ The following guides illustrate how to use some features concretely:
 * [Run Postgresql Local](https://medium.com/@martinlasek/tutorial-how-to-use-postgresql-88cddc858d9f)
 * [Spring DataIntegrityViolationException Explained (ConstraintViolationException)](https://www.baeldung.com/spring-dataIntegrityviolationexception)
 * [Programmatic Transaction Management](https://www.baeldung.com/spring-programmatic-transaction-management)
+* [Overview of identifiers in Hibernate/JPA](https://www.baeldung.com/hibernate-identifiers)

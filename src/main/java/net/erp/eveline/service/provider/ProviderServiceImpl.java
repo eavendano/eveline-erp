@@ -91,9 +91,7 @@ public class ProviderServiceImpl extends BaseService implements ProviderService 
                 // Try to perform insert if the rest of the values is valid
                 validate(providerModel, isProviderModelValidForInsert(errorList), errorList);
                 logger.info("Preparing to insert provider: {}", providerModel);
-                final Provider provider = toEntity(providerModel);
-                provider.setProviderId("p" + String.format("%05d", providerRepository.getProvideIdNextVal()));
-                result = toModel(providerRepository.save(provider));
+                result = toModel(providerRepository.save(toEntity(providerModel)));
                 logger.info("Successful insert operation for provider: {}", providerModel);
             }
 

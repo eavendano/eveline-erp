@@ -2,8 +2,7 @@ package net.erp.eveline.data.entity;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
@@ -12,6 +11,9 @@ import java.time.OffsetDateTime;
 @Table(name = "product")
 public class Product {
     @Id
+    @GeneratedValue(generator = "productIdGenerator")
+    @GenericGenerator(name = "productIdGenerator", parameters = @org.hibernate.annotations.Parameter(name = "prefix", value = "s"),
+            strategy = "net.erp.eveline.data.generators.ProductIdGenerator")
     private String productId;
 
     @ManyToOne

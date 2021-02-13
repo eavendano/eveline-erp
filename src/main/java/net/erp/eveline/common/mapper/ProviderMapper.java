@@ -4,6 +4,7 @@ import net.erp.eveline.data.entity.Provider;
 import net.erp.eveline.model.ActiveProviderModel;
 import net.erp.eveline.model.ProviderModel;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class ProviderMapper {
     }
 
     public static Provider toEntity(final ProviderModel providerModel) {
-        return new Provider()
+        final Provider entity = new Provider()
                 .setProviderId(providerModel.getId())
                 .setName(providerModel.getName())
                 .setDescription(providerModel.getDescription())
@@ -39,8 +40,13 @@ public class ProviderMapper {
                 .setTelephone1(providerModel.getTelephone1())
                 .setTelephone2(providerModel.getTelephone2())
                 .setTelephone3(providerModel.getTelephone3())
-                .setEnabled(providerModel.isEnabled())
                 .setLastUser(providerModel.getLastUser());
+
+        if (Optional.ofNullable(providerModel.isEnabled()).isPresent()) {
+            entity.setEnabled(providerModel.isEnabled());
+        }
+
+        return entity;
     }
 
     public static Set<Provider> toEntity(final Set<ProviderModel> providerModelSet) {

@@ -4,6 +4,7 @@ import net.erp.eveline.data.entity.Product;
 import net.erp.eveline.model.ActivateProductModel;
 import net.erp.eveline.model.ProductModel;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,15 +28,20 @@ public class ProductMapper {
     }
 
     public static Product toEntity(final ProductModel productModel){
-        return new Product()
+        final Product entity = new Product()
                 .setProductId(productModel.getId())
                 .setProvider(ProviderMapper.toEntity(productModel.getProviderModel()))
                 .setTitle(productModel.getTitle())
                 .setDescription(productModel.getDescription())
                 .setCreateDate(productModel.getCreateDate())
                 .setLastModified(productModel.getLastModified())
-                .setEnabled(productModel.getEnabled())
+                .setEnabled(productModel.isEnabled())
                 .setLastUser(productModel.getLastUser());
+
+        if (Optional.ofNullable(productModel.isEnabled()).isPresent()) {
+            entity.setEnabled(productModel.isEnabled());
+        }
+        return entity;
     }
 
     public static Set<Product> toEntity(final Set<ProductModel> productModelSet){

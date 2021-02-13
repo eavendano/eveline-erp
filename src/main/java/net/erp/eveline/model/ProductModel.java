@@ -100,7 +100,7 @@ public class ProductModel {
         return this;
     }
 
-    public Boolean getEnabled() {
+    public Boolean isEnabled() {
         return enabled;
     }
 
