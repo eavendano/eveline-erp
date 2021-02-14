@@ -22,7 +22,7 @@ public class ProductPredicates {
     public static final String PRODUCT_ENABLED_INVALID_MESSAGE = "Enabled field must not be null";
     public static final String PRODUCT_PROVIDER_MODEL_INVALID_MESSAGE = "ProviderModel must have a valid ID and must not be null ";
 
-    private static final Pattern productIdPattern = Pattern.compile("u[0-9]{9}");
+    private static final Pattern productIdPattern = Pattern.compile("s[0-9]{5}");
     private static final Pattern productUpcPattern = Pattern.compile("[0-9]{12}");
     private static final Pattern productTitlePattern = Pattern.compile("[\\w\\s-]+");
     private static final Pattern productDescriptionPattern = Pattern.compile("[\\wáéíóúÁÉÍÓÚüÜñÑ$₡€@%|\\s()\\[\\]{}¡!¿?\";,&/.:'<>_+-]+");
@@ -66,9 +66,9 @@ public class ProductPredicates {
     }
 
     public static Predicate<String> isProductIdValid() {
-        return providerId -> ofNullable(providerId).isPresent()
-                && providerId.length() == 6
-                && productIdPattern.matcher(providerId.trim()).matches();
+        return productId -> ofNullable(productId).isPresent()
+                && productId.length() == 6
+                && productIdPattern.matcher(productId.trim()).matches();
     }
 
     public static Predicate<String> isProviderTitleValid() {

@@ -41,8 +41,9 @@ public class ProductModel {
         return upc;
     }
 
-    public void setUpc(String upc) {
+    public ProductModel setUpc(String upc) {
         this.upc = upc;
+        return this;
     }
 
     public String getTitle() {

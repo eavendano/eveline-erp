@@ -15,6 +15,7 @@ public class ProductMapper {
                 .setId(product.getProductId())
                 .setProviderId(product.getProvider().getProviderId())
                 .setTitle(product.getTitle())
+                .setUpc(product.getUpc())
                 .setDescription(product.getDescription())
                 .setCreateDate(product.getCreateDate())
                 .setLastModified(product.getLastModified())
