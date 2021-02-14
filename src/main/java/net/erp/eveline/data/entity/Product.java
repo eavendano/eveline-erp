@@ -16,11 +16,11 @@ public class Product {
             strategy = "net.erp.eveline.data.generators.ProductIdGenerator")
     private String productId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "provider_id", nullable = false)
     private Provider provider;
 
-    @Column(name="upc")
+    @Column(name = "upc")
     private String upc;
 
     @Column(name = "title")

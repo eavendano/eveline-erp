@@ -98,7 +98,7 @@ GRANT USAGE, SELECT ON SEQUENCE product_id_seq TO "eveline-erp";
 
 DROP TABLE IF EXISTS product;
 CREATE TABLE product (
-  product_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 'u'||lpad(nextval('product_id_seq'::regclass)::TEXT,5,'0'),
+  product_id varchar(10) PRIMARY KEY NOT NULL DEFAULT 'u'||lpad(nextval('product_id_seq'::regclass)::TEXT,9,'0'),
   provider_id varchar(6) NOT NULL,
   upc varchar(12) UNIQUE NOT NULL,
   title varchar(100) NOT NULL,
@@ -118,4 +118,4 @@ CREATE TABLE product (
 
 CREATE INDEX upc_index ON product (upc);
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON provider TO "eveline-erp";
+GRANT SELECT, INSERT, UPDATE, DELETE ON product TO "eveline-erp";
