@@ -20,8 +20,8 @@ public class Provider {
 
     @Id
     @GeneratedValue(generator = "providerIdGenerator")
-    @GenericGenerator(name = "providerIdGenerator", parameters = @Parameter(name = "prefix", value = "p"),
-            strategy = "net.erp.eveline.data.generators.ProviderIdGenerator")
+    @GenericGenerator(name = "providerIdGenerator", strategy = "net.erp.eveline.data.generators.CustomGenerator",
+            parameters = {@Parameter(name = "prefix", value = "p"), @Parameter(name = "sequence", value = "provider_id_seq")})
     @Column(name="provider_id")
     private String providerId;
 
