@@ -12,8 +12,8 @@ import java.time.OffsetDateTime;
 public class Product {
     @Id
     @GeneratedValue(generator = "productIdGenerator")
-    @GenericGenerator(name = "productIdGenerator", parameters = @org.hibernate.annotations.Parameter(name = "prefix", value = "s"),
-            strategy = "net.erp.eveline.data.generators.ProductIdGenerator")
+    @GenericGenerator(name = "productIdGenerator", strategy = "net.erp.eveline.data.generators.CustomGenerator",
+            parameters = {@org.hibernate.annotations.Parameter(name = "prefix", value = "s"), @org.hibernate.annotations.Parameter(name = "sequence", value = "product_id_seq")})
     private String productId;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
