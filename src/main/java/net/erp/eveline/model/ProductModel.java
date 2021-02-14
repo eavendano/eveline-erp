@@ -1,6 +1,7 @@
 package net.erp.eveline.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -9,7 +10,7 @@ import java.time.OffsetDateTime;
 public class ProductModel {
     private String id;
     private String upc;
-    private ProviderModel providerModel;
+    private String providerId;
     private String title;
     private String description;
     private String sanitaryRegistryNumber;
@@ -27,15 +28,14 @@ public class ProductModel {
         return this;
     }
 
-    public ProviderModel getProviderModel() {
-        return providerModel;
+    public String getProviderId() {
+        return providerId;
     }
 
-    public ProductModel setProviderModel(ProviderModel providerModel) {
-        this.providerModel = providerModel;
+    public ProductModel setProviderId(String providerId) {
+        this.providerId = providerId;
         return this;
     }
-
 
     public String getUpc() {
         return upc;
@@ -119,7 +119,7 @@ public class ProductModel {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(upc, that.upc)
-                .append(providerModel, that.providerModel)
+                .append(providerId, that.providerId)
                 .append(title, that.title)
                 .append(description, that.description)
                 .append(sanitaryRegistryNumber, that.sanitaryRegistryNumber)
@@ -136,7 +136,7 @@ public class ProductModel {
                 .append("__class__", this.getClass().getSimpleName())
                 .append("id", id)
                 .append("upc", upc)
-                .append("providerModel", providerModel)
+                .append("providerId", providerId)
                 .append("title", title)
                 .append("description", description)
                 .append("sanitaryRegistryNumber", sanitaryRegistryNumber)

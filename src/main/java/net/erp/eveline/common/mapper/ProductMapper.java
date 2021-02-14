@@ -1,6 +1,7 @@
 package net.erp.eveline.common.mapper;
 
 import net.erp.eveline.data.entity.Product;
+import net.erp.eveline.data.entity.Provider;
 import net.erp.eveline.model.ActivateProductModel;
 import net.erp.eveline.model.ProductModel;
 
@@ -12,7 +13,7 @@ public class ProductMapper {
     public static ProductModel toModel(final Product product){
         return new ProductModel()
                 .setId(product.getProductId())
-                .setProviderModel(ProviderMapper.toModel(product.getProvider()))
+                .setProviderId(product.getProvider().getProviderId())
                 .setTitle(product.getTitle())
                 .setDescription(product.getDescription())
                 .setCreateDate(product.getCreateDate())
@@ -30,7 +31,8 @@ public class ProductMapper {
     public static Product toEntity(final ProductModel productModel){
         final Product entity = new Product()
                 .setProductId(productModel.getId())
-                .setProvider(ProviderMapper.toEntity(productModel.getProviderModel()))
+                .setProvider(new Provider().setProviderId(productModel.getProviderId()))
+                .setUpc(productModel.getUpc())
                 .setTitle(productModel.getTitle())
                 .setDescription(productModel.getDescription())
                 .setCreateDate(productModel.getCreateDate())

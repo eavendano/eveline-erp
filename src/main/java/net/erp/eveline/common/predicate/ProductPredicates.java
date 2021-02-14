@@ -110,7 +110,7 @@ public class ProductPredicates {
         boolean descriptionValid = isProductDescriptionValid().test(productModel.getDescription().trim());
         boolean lastUserValid = isLastUserValid().test(productModel.getLastUser());
         boolean upcValid = isProductUpcValid().test(productModel.getUpc());
-        boolean isProviderValid = isProviderValid().test(productModel.getProviderModel());
+        boolean isProviderValid = isProviderIdValid().test(productModel.getProviderId());
 
         if (!idValid) {
             errorList.add(PRODUCT_ID_INVALID_MESSAGE);
