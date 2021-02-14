@@ -116,7 +116,7 @@ public class ProviderPredicates {
 
     public static Predicate<String> isProviderNameValid() {
         return name -> ofNullable(name).isPresent()
-                && name.length() >= 2
+                && name.length() >= 3
                 && name.length() <= 100
                 && namePattern.matcher(name.trim()).matches();
     }
