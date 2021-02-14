@@ -1,6 +1,5 @@
 package net.erp.eveline.data.generators;
 
-import net.erp.eveline.common.exception.NonRetryableException;
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
@@ -19,10 +18,11 @@ import java.util.Properties;
 
 import static java.lang.String.format;
 
-public class ProviderIdGenerator implements IdentifierGenerator, Configurable {
+public class CustomGenerator implements IdentifierGenerator, Configurable {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProviderIdGenerator.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomGenerator.class);
     private String prefix;
+    private String sequence;
 
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object obj) throws HibernateException {
@@ -31,7 +31,7 @@ public class ProviderIdGenerator implements IdentifierGenerator, Configurable {
         try {
             Statement statement = connection.createStatement();
 
-            ResultSet rs = statement.executeQuery("SELECT nextval('provider_id_seq')");
+            ResultSet rs = statement.executeQuery("SELECT nextval('" + sequence + "')");
 
             if (rs.next()) {
                 return prefix + format("%05d", rs.getInt(1));
@@ -47,5 +47,6 @@ public class ProviderIdGenerator implements IdentifierGenerator, Configurable {
     @Override
     public void configure(Type type, Properties properties, ServiceRegistry serviceRegistry) throws MappingException {
         prefix = properties.getProperty("prefix");
+        sequence = properties.getProperty("sequence");
     }
 }
