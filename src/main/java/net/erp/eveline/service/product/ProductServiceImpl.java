@@ -3,12 +3,10 @@ package net.erp.eveline.service.product;
 import net.erp.eveline.common.TransactionService;
 import net.erp.eveline.common.exception.NotFoundException;
 import net.erp.eveline.common.mapper.ProductMapper;
-import net.erp.eveline.common.mapper.ProviderMapper;
 import net.erp.eveline.data.entity.Product;
 import net.erp.eveline.data.repository.ProductRepository;
 import net.erp.eveline.model.ActivateProductModel;
 import net.erp.eveline.model.ProductModel;
-import net.erp.eveline.model.ProviderModel;
 import net.erp.eveline.service.BaseService;
 import net.erp.eveline.service.provider.ProviderServiceImpl;
 import org.slf4j.Logger;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -26,7 +23,6 @@ import static java.util.Optional.ofNullable;
 import static net.erp.eveline.common.mapper.ProductMapper.toEntity;
 import static net.erp.eveline.common.mapper.ProductMapper.toModel;
 import static net.erp.eveline.common.predicate.ProductPredicates.*;
-import static net.erp.eveline.common.predicate.ProviderPredicates.isActiveProviderModelValid;
 
 @Service
 public class ProductServiceImpl extends BaseService implements ProductService {
