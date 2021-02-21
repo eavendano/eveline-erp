@@ -25,7 +25,7 @@ public class ProductPredicates {
     private static final Pattern productIdPattern = Pattern.compile("s[0-9]{5}");
     private static final Pattern productUpcPattern = Pattern.compile("[0-9]{12}");
     private static final Pattern productTitlePattern = Pattern.compile("[\\w\\s-]+");
-    private static final Pattern productDescriptionPattern = Pattern.compile("[\\wáéíóúÁÉÍÓÚüÜñÑ$₡€@%|\\s()\\[\\]{}¡!¿?\";,&/.:'<>_+-]+");
+    private static final Pattern productDescriptionPattern = Pattern.compile("[\\wáéíóúÁÉÍÓÚüÜñÑ$₡€@%|\\s()\\[\\]{}¡!¿?\";,&/.:'<>_+-]*");
     private static final Pattern productLastUserPattern = Pattern.compile("[\\w.]+");
 
     public static Predicate<ProductModel> isProductModelValidForInsert(final List<String> errorList) {
@@ -71,7 +71,7 @@ public class ProductPredicates {
                 && productIdPattern.matcher(productId.trim()).matches();
     }
 
-    public static Predicate<String> isProviderTitleValid() {
+    public static Predicate<String> isProductTitleValid() {
         return name -> ofNullable(name).isPresent()
                 && name.length() >= 2
                 && name.length() <= 100
@@ -96,18 +96,14 @@ public class ProductPredicates {
 
     public static Predicate<String> isProductUpcValid() {
         return productUpc -> ofNullable(productUpc).isPresent()
-                && productUpc.length() == 6
+                && productUpc.length() == 12
                 && productUpcPattern.matcher(productUpc.trim()).matches();
     }
 
-    public static Predicate<ProviderModel> isProviderValid(){
-        return providerModel -> ofNullable(providerModel).isPresent()
-                && isProviderIdValid().test(providerModel.getId());
-    }
 
     private static boolean evaluateModel(List<String> errorList, ProductModel productModel, boolean idValid) {
-        boolean titleValid = isProviderTitleValid().test(productModel.getTitle().trim());
-        boolean descriptionValid = isProductDescriptionValid().test(productModel.getDescription().trim());
+        boolean titleValid = isProductTitleValid().test(productModel.getTitle().trim());
+        boolean descriptionValid = isProductDescriptionValid().test(productModel.getDescription());
         boolean lastUserValid = isLastUserValid().test(productModel.getLastUser());
         boolean upcValid = isProductUpcValid().test(productModel.getUpc());
         boolean isProviderValid = isProviderIdValid().test(productModel.getProviderId());
@@ -132,6 +128,8 @@ public class ProductPredicates {
         }
 
         return idValid
+                && upcValid
+                && isProviderValid
                 && titleValid
                 && descriptionValid
                 && lastUserValid;

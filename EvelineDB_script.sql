@@ -119,3 +119,24 @@ CREATE TABLE product (
 CREATE INDEX upc_index ON product (upc);
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON product TO "eveline-erp";
+
+DROP TRIGGER IF EXISTS product_insert_create_date ON product;
+CREATE TRIGGER product_insert_create_date
+    BEFORE INSERT
+    ON product
+    FOR EACH ROW
+EXECUTE PROCEDURE insert_create_date();
+
+DROP TRIGGER IF EXISTS product_update_create_date ON product;
+CREATE TRIGGER product_update_create_date
+    BEFORE UPDATE
+    ON product
+    FOR EACH ROW
+EXECUTE PROCEDURE update_create_date();
+
+DROP TRIGGER IF EXISTS product_last_modified ON product;
+CREATE TRIGGER product_last_modified
+    BEFORE INSERT OR UPDATE
+    ON product
+    FOR EACH ROW
+EXECUTE PROCEDURE update_last_modified();
