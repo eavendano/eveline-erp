@@ -2,14 +2,12 @@ package net.erp.eveline.common.predicate;
 
 import net.erp.eveline.model.ActivateProductModel;
 import net.erp.eveline.model.ProductModel;
-import net.erp.eveline.model.ProviderModel;
 
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import static java.util.Optional.ofNullable;
-import static net.erp.eveline.common.predicate.ProviderPredicates.isProviderIdValid;
 import static net.erp.eveline.common.predicate.ProviderPredicates.isProviderSetValid;
 
 public class ProductPredicates {
@@ -48,6 +46,7 @@ public class ProductPredicates {
             return evaluateModel(errorList, productModel, idValid);
         };
     }
+
     public static Predicate<String> isProductIdValidAtInsert() {
         return productId -> ofNullable(productId).isEmpty();
     }
@@ -121,13 +120,13 @@ public class ProductPredicates {
         if (!descriptionValid) {
             errorList.add(PRODUCT_DESCRIPTION_INVALID_MESSAGE);
         }
-        if(!upcValid){
+        if (!upcValid) {
             errorList.add(PRODUCT_UPC_INVALID_MESSAGE);
         }
         if (!lastUserValid) {
             errorList.add(PRODUCT_LAST_USER_INVALID_MESSAGE);
         }
-        if(!isProviderSetValid){
+        if (!isProviderSetValid) {
             errorList.add(PRODUCT_PROVIDER_SET_INVALID_MESSAGE);
         }
 

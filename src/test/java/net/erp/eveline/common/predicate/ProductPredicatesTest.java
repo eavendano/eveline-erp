@@ -2,7 +2,6 @@ package net.erp.eveline.common.predicate;
 
 import net.erp.eveline.model.ActivateProductModel;
 import net.erp.eveline.model.ProductModel;
-import net.erp.eveline.model.ProviderModel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -10,7 +9,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static java.util.Set.of;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 class ProductPredicatesTest {
@@ -23,11 +25,13 @@ class ProductPredicatesTest {
                 .setTitle("valid")
                 .setUpc("123456789012")
                 .setLastUser("valid")
-                .setProviderId("p12345");
+                .setDescription("Valid Desc")
+                .setProviderSet(of("p12345"));
 
         assertTrue(ProductPredicates.isProductModelValidForInsert(errorList).test(productModel));
         assertEquals(0, errorList.size());
     }
+
     @Test
     void isProductModelValidForInsertFailsOnNonNullId() {
         final List<String> errorList = new ArrayList<>();
@@ -36,7 +40,8 @@ class ProductPredicatesTest {
                 .setTitle("valid")
                 .setUpc("123456789012")
                 .setLastUser("valid")
-                .setProviderId("p12345");
+                .setDescription("Valid Desc")
+                .setProviderSet(of("p12345"));
 
         assertFalse(ProductPredicates.isProductModelValidForInsert(errorList).test(productModel));
         assertEquals(1, errorList.size());
@@ -49,7 +54,8 @@ class ProductPredicatesTest {
                 .setTitle("+++======")
                 .setUpc("123456789012")
                 .setLastUser("valid")
-                .setProviderId("p12345");
+                .setDescription("Valid Desc")
+                .setProviderSet(of("p12345"));
 
         assertFalse(ProductPredicates.isProductModelValidForInsert(errorList).test(productModel));
         assertEquals(1, errorList.size());
@@ -62,7 +68,7 @@ class ProductPredicatesTest {
                 .setTitle("valid")
                 .setUpc("123456789012")
                 .setLastUser("valid")
-                .setProviderId("p12345")
+                .setProviderSet(of("p12345"))
                 .setDescription("ö");
 
         assertFalse(ProductPredicates.isProductModelValidForInsert(errorList).test(productModel));
@@ -75,7 +81,8 @@ class ProductPredicatesTest {
         final ProductModel productModel = new ProductModel()
                 .setTitle("valid")
                 .setLastUser("valid")
-                .setProviderId("p12345")
+                .setDescription("Valid Desc")
+                .setProviderSet(of("p12345"))
                 .setUpc("abc");
 
         assertFalse(ProductPredicates.isProductModelValidForInsert(errorList).test(productModel));
@@ -88,7 +95,8 @@ class ProductPredicatesTest {
         final ProductModel productModel = new ProductModel()
                 .setTitle("valid")
                 .setLastUser("valid")
-                .setProviderId("p1234")
+                .setProviderSet(of("p1234"))
+                .setDescription("Valid Desc")
                 .setUpc("123456789012");
 
         assertFalse(ProductPredicates.isProductModelValidForInsert(errorList).test(productModel));
@@ -100,7 +108,8 @@ class ProductPredicatesTest {
         final List<String> errorList = new ArrayList<>();
         final ProductModel productModel = new ProductModel()
                 .setTitle("valid")
-                .setProviderId("p12345")
+                .setProviderSet(of("p12345"))
+                .setDescription("Valid Desc")
                 .setUpc("123456789012");
 
         assertFalse(ProductPredicates.isProductModelValidForInsert(errorList).test(productModel));
@@ -108,7 +117,7 @@ class ProductPredicatesTest {
     }
 
     @Test
-    //Validation of evaluateModel is skipped, as it was tested on tests for isProductModelValidForInsert
+        //Validation of evaluateModel is skipped, as it was tested on tests for isProductModelValidForInsert
     void isProductModelValidForUpdateSuccessful() {
         final List<String> errorList = new ArrayList<>();
         final ProductModel productModel = new ProductModel()
@@ -116,7 +125,8 @@ class ProductPredicatesTest {
                 .setTitle("valid")
                 .setUpc("123456789012")
                 .setLastUser("valid")
-                .setProviderId("p12345");
+                .setDescription("Valid Desc")
+                .setProviderSet(of("p12345"));
 
         assertTrue(ProductPredicates.isProductModelValidForUpdate(errorList).test(productModel));
         assertEquals(0, errorList.size());
@@ -130,7 +140,8 @@ class ProductPredicatesTest {
                 .setTitle("valid")
                 .setUpc("123456789012")
                 .setLastUser("valid")
-                .setProviderId("p12345");
+                .setDescription("Valid Desc")
+                .setProviderSet(of("p12345"));
 
         assertFalse(ProductPredicates.isProductModelValidForUpdate(errorList).test(productModel));
         assertEquals(1, errorList.size());

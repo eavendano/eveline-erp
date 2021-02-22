@@ -23,13 +23,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toSet;
 import static net.erp.eveline.common.mapper.ProviderMapper.toModel;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -104,14 +101,14 @@ class ProviderServiceImplTest {
     }
 
     List<Provider> mockProviderList(int length) {
-        return IntStream.rangeClosed(0, length-1)
+        return IntStream.rangeClosed(0, length - 1)
                 .mapToObj(this::mockProvider)
                 .collect(Collectors.toList());
     }
 
     Provider mockProvider(int idx) {
         return new Provider()
-                .setProviderId("p"+idx)
+                .setProviderId("p" + idx)
                 .setDescription("description")
                 .setEmail("email")
                 .setLastUser("user");
