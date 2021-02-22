@@ -389,3 +389,4 @@ The following guides illustrate how to use some features concretely:
 * [Spring DataIntegrityViolationException Explained (ConstraintViolationException)](https://www.baeldung.com/spring-dataIntegrityviolationexception)
 * [Programmatic Transaction Management](https://www.baeldung.com/spring-programmatic-transaction-management)
 * [Overview of identifiers in Hibernate/JPA](https://www.baeldung.com/hibernate-identifiers)
+* [JPA Many to Many Modeling](https://www.baeldung.com/jpa-many-to-many)

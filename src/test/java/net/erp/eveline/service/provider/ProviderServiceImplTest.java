@@ -17,14 +17,19 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.OptimisticLockException;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toSet;
 import static net.erp.eveline.common.mapper.ProviderMapper.toModel;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -54,7 +59,8 @@ class ProviderServiceImplTest {
         final int expectedLength = 2;
 
         //Set up
-        when(providerRepository.findAll()).thenReturn(mockProviderList(expectedLength));
+        final var mockProviderList = mockProviderList(expectedLength);
+        when(providerRepository.findAll()).thenReturn(mockProviderList);
 
         //Execution
         final Set<ProviderModel> actualProviderModels = service.findAll();
@@ -63,7 +69,7 @@ class ProviderServiceImplTest {
         verify(providerRepository, times(1))
                 .findAll();
         assertEquals(expectedLength, actualProviderModels.size());
-        assertEquals(toModel(Set.copyOf(mockProviderList(expectedLength))).toString(), actualProviderModels.toString());
+        assertEquals(toModel(Set.copyOf(mockProviderList(expectedLength))).stream().sorted(Comparator.comparing(ProviderModel::getId)).collect(Collectors.toCollection(LinkedHashSet::new)).toString(), actualProviderModels.stream().sorted(Comparator.comparing(ProviderModel::getId)).collect(Collectors.toCollection(LinkedHashSet::new)).toString());
     }
 
     @Test
@@ -98,13 +104,14 @@ class ProviderServiceImplTest {
     }
 
     List<Provider> mockProviderList(int length) {
-        return Stream.generate(this::mockProvider)
-                .limit(length)
+        return IntStream.rangeClosed(0, length-1)
+                .mapToObj(this::mockProvider)
                 .collect(Collectors.toList());
     }
 
-    Provider mockProvider() {
+    Provider mockProvider(int idx) {
         return new Provider()
+                .setProviderId("p"+idx)
                 .setDescription("description")
                 .setEmail("email")
                 .setLastUser("user");

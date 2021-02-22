@@ -99,7 +99,6 @@ GRANT USAGE, SELECT ON SEQUENCE product_id_seq TO "eveline-erp";
 DROP TABLE IF EXISTS product;
 CREATE TABLE product (
   product_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 's'||lpad(nextval('product_id_seq'::regclass)::TEXT,9,'0'),
-  provider_id varchar(6) NOT NULL,
   upc varchar(12) UNIQUE NOT NULL,
   title varchar(100) NOT NULL,
   description TEXT DEFAULT NULL,
@@ -108,9 +107,6 @@ CREATE TABLE product (
   enabled boolean DEFAULT false,
   create_date timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
   last_modified timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
-  CONSTRAINT fk_provider
-                     FOREIGN KEY(provider_id)
-                     REFERENCES provider(provider_id),
   CONSTRAINT check_upc_length
       check (length(upc) = 12)
 
@@ -140,3 +136,19 @@ CREATE TRIGGER product_last_modified
     ON product
     FOR EACH ROW
 EXECUTE PROCEDURE update_last_modified();
+
+DROP TABLE IF EXISTS product_provider_assignation;
+CREATE TABLE product_provider_assignation (
+    id SERIAL PRIMARY KEY,
+    product_id varchar(6),
+    provider_id varchar(6),
+    CONSTRAINT product_id_fk
+        FOREIGN KEY(product_id)
+            REFERENCES product(product_id),
+    CONSTRAINT provider_id_fk
+        FOREIGN KEY(provider_id)
+            REFERENCES provider(provider_id)
+);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON product_provider_assignation TO "eveline-erp";
+GRANT USAGE, SELECT ON SEQUENCE product_provider_assignation_id_seq TO "eveline-erp";

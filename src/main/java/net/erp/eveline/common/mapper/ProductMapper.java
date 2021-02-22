@@ -9,11 +9,20 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+// Quick note on this class, if the transaction is taking longer to resolve, that is because of the ManyToMany
+// relationship between the Product and the Provider. A quick solution should be to remove the providerSet from the
+// mapping process, create a toModel and/or toEntity methods that do not include the set mapping, adding indexes to
+// speed up the transaction and re-evaluating how this relationship should be done in code.
+// Also small details like including the set in the toString method might increment transaction throughput without the
+// developer noticing.
 public class ProductMapper {
-    public static ProductModel toModel(final Product product){
+    public static ProductModel toModel(final Product product) {
         return new ProductModel()
                 .setId(product.getProductId())
-                .setProviderId(product.getProvider().getProviderId())
+                .setProviderSet(product.getProviderSet()
+                        .stream()
+                        .map(Provider::getProviderId)
+                        .collect(Collectors.toSet()))
                 .setTitle(product.getTitle())
                 .setUpc(product.getUpc())
                 .setDescription(product.getDescription())
@@ -23,16 +32,16 @@ public class ProductMapper {
                 .setLastUser(product.getLastUser());
     }
 
-    public static Set<ProductModel> toModel(final Set<Product> products){
+    public static Set<ProductModel> toModel(final Set<Product> products) {
         return products.stream()
                 .map(ProductMapper::toModel)
                 .collect(Collectors.toSet());
     }
 
-    public static Product toEntity(final ProductModel productModel){
+    public static Product toEntity(final ProductModel productModel, final Set<Provider> providers) {
         final Product entity = new Product()
                 .setProductId(productModel.getId())
-                .setProvider(new Provider().setProviderId(productModel.getProviderId()))
+                .setProviderSet(providers)
                 .setUpc(productModel.getUpc())
                 .setTitle(productModel.getTitle())
                 .setDescription(productModel.getDescription())
@@ -47,14 +56,31 @@ public class ProductMapper {
         return entity;
     }
 
-    public static Set<Product> toEntity(final Set<ProductModel> productModelSet){
+    public static Product toEntity(final ProductModel productModel) {
+        final Product entity = new Product()
+                .setProductId(productModel.getId())
+                .setUpc(productModel.getUpc())
+                .setTitle(productModel.getTitle())
+                .setDescription(productModel.getDescription())
+                .setCreateDate(productModel.getCreateDate())
+                .setLastModified(productModel.getLastModified())
+                .setEnabled(productModel.isEnabled())
+                .setLastUser(productModel.getLastUser());
+
+        if (Optional.ofNullable(productModel.isEnabled()).isPresent()) {
+            entity.setEnabled(productModel.isEnabled());
+        }
+        return entity;
+    }
+
+    public static Set<Product> toEntity(final Set<ProductModel> productModelSet) {
         return productModelSet
                 .stream()
                 .map(ProductMapper::toEntity)
                 .collect(Collectors.toSet());
     }
 
-    public static Product toEntity(final Product product, final ActivateProductModel activateProductModel){
+    public static Product toEntity(final Product product, final ActivateProductModel activateProductModel) {
         return product
                 .setLastUser(activateProductModel.getLastUser())
                 .setEnabled(activateProductModel.isEnabled());

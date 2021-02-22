@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import static java.util.Optional.ofNullable;
 import static net.erp.eveline.common.predicate.ProviderPredicates.isProviderIdValid;
+import static net.erp.eveline.common.predicate.ProviderPredicates.isProviderSetValid;
 
 public class ProductPredicates {
     public static final String PRODUCT_MODEL_INVALID_MESSAGE = "The productModel is invalid. Please verify the fields are correct.";
@@ -19,8 +20,8 @@ public class ProductPredicates {
     public static final String PRODUCT_UPC_INVALID_MESSAGE = "The product upc might be null or does not match the expresion.";
     public static final String PRODUCT_DESCRIPTION_INVALID_MESSAGE = "The product description does not match the expresion.";
     public static final String PRODUCT_LAST_USER_INVALID_MESSAGE = "The lastUser field might be null or is not a valid input.";
-    public static final String PRODUCT_ENABLED_INVALID_MESSAGE = "Enabled field must not be null";
-    public static final String PRODUCT_PROVIDER_MODEL_INVALID_MESSAGE = "ProviderModel must have a valid ID and must not be null ";
+    public static final String PRODUCT_ENABLED_INVALID_MESSAGE = "Enabled field must not be null.";
+    public static final String PRODUCT_PROVIDER_SET_INVALID_MESSAGE = "ProviderSet must have a valid set of ID and must not be null.";
 
     private static final Pattern productIdPattern = Pattern.compile("s[0-9]{5}");
     private static final Pattern productUpcPattern = Pattern.compile("[0-9]{12}");
@@ -31,6 +32,9 @@ public class ProductPredicates {
     public static Predicate<ProductModel> isProductModelValidForInsert(final List<String> errorList) {
         return productModel -> {
             boolean idValid = isProductIdValidAtInsert().test(productModel.getId());
+            if (!idValid) {
+                errorList.add(PRODUCT_ID_INVALID_AT_INSERT_MESSAGE);
+            }
             return evaluateModel(errorList, productModel, idValid);
         };
     }
@@ -38,11 +42,14 @@ public class ProductPredicates {
     public static Predicate<ProductModel> isProductModelValidForUpdate(final List<String> errorList) {
         return productModel -> {
             boolean idValid = isProductIdValid().test(productModel.getId());
+            if (!idValid) {
+                errorList.add(PRODUCT_ID_INVALID_MESSAGE);
+            }
             return evaluateModel(errorList, productModel, idValid);
         };
     }
     public static Predicate<String> isProductIdValidAtInsert() {
-        return providerId -> ofNullable(providerId).isEmpty();
+        return productId -> ofNullable(productId).isEmpty();
     }
 
     public static Predicate<ActivateProductModel> isActiveProductModelValid(final List<String> errorList) {
@@ -72,10 +79,10 @@ public class ProductPredicates {
     }
 
     public static Predicate<String> isProductTitleValid() {
-        return name -> ofNullable(name).isPresent()
-                && name.length() >= 2
-                && name.length() <= 100
-                && productTitlePattern.matcher(name.trim()).matches();
+        return title -> ofNullable(title).isPresent()
+                && title.length() >= 2
+                && title.length() <= 100
+                && productTitlePattern.matcher(title.trim()).matches();
     }
 
     public static Predicate<String> isProductDescriptionValid() {
@@ -101,16 +108,13 @@ public class ProductPredicates {
     }
 
 
-    private static boolean evaluateModel(List<String> errorList, ProductModel productModel, boolean idValid) {
+    private static boolean evaluateModel(final List<String> errorList, final ProductModel productModel, boolean idValid) {
         boolean titleValid = isProductTitleValid().test(productModel.getTitle().trim());
-        boolean descriptionValid = isProductDescriptionValid().test(productModel.getDescription());
+        boolean descriptionValid = isProductDescriptionValid().test(productModel.getDescription().trim());
         boolean lastUserValid = isLastUserValid().test(productModel.getLastUser());
         boolean upcValid = isProductUpcValid().test(productModel.getUpc());
-        boolean isProviderValid = isProviderIdValid().test(productModel.getProviderId());
+        boolean isProviderSetValid = isProviderSetValid().test(productModel.getProviderSet());
 
-        if (!idValid) {
-            errorList.add(PRODUCT_ID_INVALID_MESSAGE);
-        }
         if (!titleValid) {
             errorList.add(PRODUCT_TITLE_INVALID_MESSAGE);
         }
@@ -123,16 +127,16 @@ public class ProductPredicates {
         if (!lastUserValid) {
             errorList.add(PRODUCT_LAST_USER_INVALID_MESSAGE);
         }
-        if(!isProviderValid){
-            errorList.add(PRODUCT_PROVIDER_MODEL_INVALID_MESSAGE);
+        if(!isProviderSetValid){
+            errorList.add(PRODUCT_PROVIDER_SET_INVALID_MESSAGE);
         }
 
         return idValid
-                && upcValid
-                && isProviderValid
                 && titleValid
                 && descriptionValid
-                && lastUserValid;
+                && upcValid
+                && lastUserValid
+                && isProviderSetValid;
     }
 
 }

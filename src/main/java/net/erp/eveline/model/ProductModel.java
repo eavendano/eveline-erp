@@ -6,11 +6,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.time.OffsetDateTime;
+import java.util.Set;
 
 public class ProductModel {
     private String id;
     private String upc;
-    private String providerId;
+    private Set<String> providerSet;
     private String title;
     private String description;
     private String sanitaryRegistryNumber;
@@ -28,12 +29,12 @@ public class ProductModel {
         return this;
     }
 
-    public String getProviderId() {
-        return providerId;
+    public Set<String> getProviderSet() {
+        return providerSet;
     }
 
-    public ProductModel setProviderId(String providerId) {
-        this.providerId = providerId;
+    public ProductModel setProviderSet(Set<String> providerSet) {
+        this.providerSet = providerSet;
         return this;
     }
 
@@ -120,7 +121,7 @@ public class ProductModel {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(upc, that.upc)
-                .append(providerId, that.providerId)
+                .append(providerSet, that.providerSet)
                 .append(title, that.title)
                 .append(description, that.description)
                 .append(sanitaryRegistryNumber, that.sanitaryRegistryNumber)
@@ -137,7 +138,7 @@ public class ProductModel {
                 .append("__class__", this.getClass().getSimpleName())
                 .append("id", id)
                 .append("upc", upc)
-                .append("providerId", providerId)
+                .append("providerId", providerSet)
                 .append("title", title)
                 .append("description", description)
                 .append("sanitaryRegistryNumber", sanitaryRegistryNumber)

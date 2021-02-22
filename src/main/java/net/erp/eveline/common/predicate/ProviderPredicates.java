@@ -4,6 +4,7 @@ import net.erp.eveline.model.ActiveProviderModel;
 import net.erp.eveline.model.ProviderModel;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -36,6 +37,9 @@ public class ProviderPredicates {
     public static Predicate<ProviderModel> isProviderModelValidForInsert(final List<String> errorList) {
         return providerModel -> {
             boolean idValid = isProviderIdValidAtInsert().test(providerModel.getId());
+            if (!idValid) {
+                errorList.add(PROVIDER_ID_INVALID_AT_INSERT_MESSAGE);
+            }
             return evaluateModel(errorList, providerModel, idValid);
         };
     }
@@ -43,6 +47,9 @@ public class ProviderPredicates {
     public static Predicate<ProviderModel> isProviderModelValidForUpdate(final List<String> errorList) {
         return providerModel -> {
             boolean idValid = isProviderIdValid().test(providerModel.getId());
+            if (!idValid) {
+                errorList.add(PROVIDER_ID_INVALID_MESSAGE);
+            }
             return evaluateModel(errorList, providerModel, idValid);
         };
     }
@@ -56,9 +63,6 @@ public class ProviderPredicates {
         boolean telephone3Valid = isProviderNullPhoneValid().test(providerModel.getTelephone3());
         boolean lastUserValid = isLastUserValid().test(providerModel.getLastUser());
 
-        if (!idValid) {
-            errorList.add(PROVIDER_ID_INVALID_AT_INSERT_MESSAGE);
-        }
         if (!nameValid) {
             errorList.add(PROVIDER_NAME_INVALID_MESSAGE);
         }
@@ -108,6 +112,11 @@ public class ProviderPredicates {
         return providerId -> ofNullable(providerId).isPresent()
                 && providerId.length() == 6
                 && providerIdPattern.matcher(providerId.trim()).matches();
+    }
+
+    public static Predicate<Set<String>> isProviderSetValid() {
+        return providerIds -> ofNullable(providerIds).isPresent()
+                && providerIds.stream().allMatch(providerId -> isProviderIdValid().test(providerId));
     }
 
     public static Predicate<String> isProviderIdValidAtInsert() {

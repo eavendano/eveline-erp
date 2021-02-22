@@ -9,10 +9,15 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.time.OffsetDateTime;
+import java.util.Set;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "provider")
@@ -42,6 +47,9 @@ public class Provider {
 
     @Column(name = "telephone3")
     private String telephone3;
+
+//    @ManyToOne(mappedBy = "providerSet", fetch = LAZY)
+//    private Set<Product> productSet;
 
     @Column(name = "create_date")
     private OffsetDateTime createDate;
@@ -82,6 +90,10 @@ public class Provider {
     public String getTelephone3() {
         return telephone3;
     }
+
+//    public Set<Product> getProductSet() {
+//        return productSet;
+//    }
 
     public OffsetDateTime getCreateDate() {
         return createDate;
@@ -134,6 +146,11 @@ public class Provider {
         return this;
     }
 
+//    public Provider setProductSet(Set<Product> productSet) {
+//        this.productSet = productSet;
+//        return this;
+//    }
+
     public Provider setLastUser(final String lastUser) {
         this.lastUser = lastUser;
         return this;
@@ -160,6 +177,7 @@ public class Provider {
                 .append(telephone1, provider.telephone1)
                 .append(telephone2, provider.telephone2)
                 .append(telephone3, provider.telephone3)
+//                .append(productSet, provider.productSet)
                 .append(createDate, provider.createDate)
                 .append(lastModified, provider.lastModified)
                 .append(lastUser, provider.lastUser)
@@ -177,6 +195,7 @@ public class Provider {
                 .append(telephone1)
                 .append(telephone2)
                 .append(telephone3)
+//                .append(productSet)
                 .append(createDate)
                 .append(lastModified)
                 .append(lastUser)
