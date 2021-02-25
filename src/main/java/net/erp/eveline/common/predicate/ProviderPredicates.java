@@ -59,8 +59,8 @@ public class ProviderPredicates {
         boolean descriptionValid = isProviderDescriptionValid().test(providerModel.getDescription().trim());
         boolean emailValid = isProviderEmailValid().test(providerModel.getEmail().trim());
         boolean telephone1Valid = isProviderPhoneValid().test(providerModel.getTelephone1());
-        boolean telephone2Valid = isProviderNullPhoneValid().test(providerModel.getTelephone2());
-        boolean telephone3Valid = isProviderNullPhoneValid().test(providerModel.getTelephone3());
+        boolean telephone2Valid = isProviderOptionalPhoneValid().test(providerModel.getTelephone2());
+        boolean telephone3Valid = isProviderOptionalPhoneValid().test(providerModel.getTelephone3());
         boolean lastUserValid = isLastUserValid().test(providerModel.getLastUser());
 
         if (!nameValid) {
@@ -147,7 +147,7 @@ public class ProviderPredicates {
                 && phonePattern.matcher(telephone).matches();
     }
 
-    public static Predicate<String> isProviderNullPhoneValid() {
+    public static Predicate<String> isProviderOptionalPhoneValid() {
         return telephone -> ofNullable(telephone).isEmpty()
                 || phonePattern.matcher(telephone).matches();
     }

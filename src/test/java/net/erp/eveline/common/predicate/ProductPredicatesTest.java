@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 class ProductPredicatesTest {
 
-
     @Test
     void isProductModelValidForInsertSuccessful() {
         final List<String> errorList = new ArrayList<>();
