@@ -2,6 +2,9 @@ package net.erp.eveline.service.provider;
 
 import config.ServiceTestConfiguration;
 import net.erp.eveline.common.TransactionService;
+import net.erp.eveline.common.exception.BadRequestException;
+import net.erp.eveline.common.exception.NonRetryableException;
+import net.erp.eveline.common.exception.NotFoundException;
 import net.erp.eveline.common.exception.RetryableException;
 import net.erp.eveline.data.entity.Provider;
 import net.erp.eveline.data.repository.ProviderRepository;
@@ -24,9 +27,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 import static net.erp.eveline.common.mapper.ProviderMapper.toModel;
+import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCause;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -100,18 +107,276 @@ class ProviderServiceImplTest {
                 .findAll();
     }
 
-    List<Provider> mockProviderList(int length) {
+    @Test
+    void getProviderModelSuccessful() {
+        final var providerId = "p00001";
+        final Provider provider = mockIndividualProvider(providerId);
+        when(providerRepository.findById(providerId)).thenReturn(ofNullable(provider));
+
+        final var resultProviderModel = service.getProviderModel(providerId);
+        assertEquals(provider.getProviderId(), resultProviderModel.getId());
+        verify(providerRepository, times(1)).findById(any(String.class));
+    }
+
+    @Test
+    void getProviderModelNotFoundEntityThrowsNotFoundException() {
+        final var providerId = "p00001";
+        when(providerRepository.findById(providerId)).thenReturn(empty());
+
+        var ex = assertThrows(NonRetryableException.class, () -> service.getProviderModel(providerId));
+        assertEquals(NotFoundException.class, getRootCause(ex).getClass());
+        verify(providerRepository, times(1)).findById(any(String.class));
+    }
+
+    @Test
+    void getProviderModelWithNullIdThrowsBadRequestException() {
+        assertThrows(BadRequestException.class, () -> service.getProviderModel(null));
+        verify(providerRepository, times(0)).findById(any(String.class));
+    }
+
+    @Test
+    void getProviderModelWithEmptyIdThrowsBadRequestException() {
+        assertThrows(BadRequestException.class, () -> service.getProviderModel(""));
+        verify(providerRepository, times(0)).findById(any(String.class));
+    }
+
+    @Test
+    void getProviderModelWithSmallIdThrowsBadRequestException() {
+        assertThrows(BadRequestException.class, () -> service.getProviderModel("p0001"));
+        verify(providerRepository, times(0)).findById(any(String.class));
+    }
+
+    @Test
+    void getProviderModelWithLargeIdThrowsBadRequestException() {
+        assertThrows(BadRequestException.class, () -> service.getProviderModel("p000001"));
+        verify(providerRepository, times(0)).findById(any(String.class));
+    }
+
+    @Test
+    void upsertProviderModelWithNullModelThrowsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> service.upsertProviderModel(null));
+        verify(providerRepository, times(0)).save(any(Provider.class));
+        verify(providerRepository, times(0)).findById(any(String.class));
+    }
+
+    @Test
+    void upsertProviderModelForInsertSuccessfulRequest() {
+        final var providerModel = new ProviderModel()
+                .setName("valid")
+                .setDescription("Esta es una descripción totalmente válida. Por eso no puede fa$har.")
+                .setEmail("test@test.com")
+                .setTelephone1("12345678")
+                .setLastUser("valid");
+
+        when(providerRepository.save(any(Provider.class))).thenReturn(mockIndividualProvider("p00002"));
+
+        var resultModel = service.upsertProviderModel(providerModel);
+        assertEquals(resultModel.getId(), "p00002");
+        verify(providerRepository, times(1)).save(any(Provider.class));
+        verify(providerRepository, times(0)).findById(any(String.class));
+    }
+
+    @Test
+    void upsertProviderModelForInsertWithInvalidModelThrowsBadRequestException() {
+        final var providerModel = new ProviderModel()
+                .setName("")
+                .setDescription("")
+                .setEmail("")
+                .setTelephone1("")
+                .setLastUser("");
+
+        var ex = assertThrows(NonRetryableException.class, () -> service.upsertProviderModel(providerModel));
+        assertEquals(BadRequestException.class, getRootCause(ex).getClass());
+        verify(providerRepository, times(0)).save(any(Provider.class));
+        verify(providerRepository, times(0)).findById(any(String.class));
+    }
+
+    @Test
+    void upsertProviderModelForInsertSaveFailsThrowsRetryableException() {
+        final var providerModel = new ProviderModel()
+                .setName("valid")
+                .setDescription("Esta es una descripción totalmente válida. Por eso no puede fa$har.")
+                .setEmail("test@test.com")
+                .setTelephone1("12345678")
+                .setLastUser("valid");
+
+        when(providerRepository.save(any(Provider.class))).thenThrow(new OptimisticLockException("Optimistic lock test"));
+
+        var ex = assertThrows(RetryableException.class, () -> service.upsertProviderModel(providerModel));
+        assertEquals(OptimisticLockException.class, getRootCause(ex).getClass());
+        verify(providerRepository, times(4)).save(any(Provider.class));
+        verify(providerRepository, times(0)).findById(any(String.class));
+    }
+
+    @Test
+    void upsertProviderModelForInsertSaveFailsThrowsNonRetryableException() {
+        final var providerModel = new ProviderModel()
+                .setName("valid")
+                .setDescription("Esta es una descripción totalmente válida. Por eso no puede fa$har.")
+                .setEmail("test@test.com")
+                .setTelephone1("12345678")
+                .setLastUser("valid");
+
+        when(providerRepository.save(any(Provider.class))).thenThrow(new RuntimeException("Regular exception test."));
+
+        var ex = assertThrows(NonRetryableException.class, () -> service.upsertProviderModel(providerModel));
+        assertEquals(RuntimeException.class, getRootCause(ex).getClass());
+        verify(providerRepository, times(1)).save(any(Provider.class));
+        verify(providerRepository, times(0)).findById(any(String.class));
+    }
+
+    @Test
+    void upsertProviderModelForUpdateSuccessfulRequest() {
+        final var providerModel = new ProviderModel()
+                .setId("p00003")
+                .setName("valid")
+                .setDescription("Esta es una descripción totalmente válida. Por eso no puede fa$har.")
+                .setEmail("test@test.com")
+                .setTelephone1("12345678")
+                .setLastUser("valid");
+
+        when(providerRepository.findById("p00003")).thenReturn(ofNullable(mockIndividualProvider("p00003")));
+        when(providerRepository.save(any(Provider.class))).thenReturn(mockIndividualProvider("p00003"));
+
+        var resultModel = service.upsertProviderModel(providerModel);
+        assertEquals(resultModel.getId(), "p00003");
+        verify(providerRepository, times(1)).save(any(Provider.class));
+        verify(providerRepository, times(1)).findById(any(String.class));
+    }
+
+    @Test
+    void upsertProviderModelForUpdateWithInvalidModelThrowsBadRequestException() {
+        final var providerModel = new ProviderModel()
+                .setId("p00004")
+                .setName("")
+                .setDescription("")
+                .setEmail("")
+                .setTelephone1("")
+                .setLastUser("");
+
+        var ex = assertThrows(NonRetryableException.class, () -> service.upsertProviderModel(providerModel));
+        assertEquals(BadRequestException.class, getRootCause(ex).getClass());
+        verify(providerRepository, times(0)).save(any(Provider.class));
+        verify(providerRepository, times(0)).findById(any(String.class));
+    }
+
+    @Test
+    void upsertProviderModelForUpdateProviderNotFoundThrowsNotFoundException() {
+        final var providerModel = new ProviderModel()
+                .setId("p00003")
+                .setName("valid")
+                .setDescription("Esta es una descripción totalmente válida. Por eso no puede fa$har.")
+                .setEmail("test@test.com")
+                .setTelephone1("12345678")
+                .setLastUser("valid");
+
+        when(providerRepository.findById("p00003")).thenReturn(empty());
+
+        var ex = assertThrows(NonRetryableException.class, () -> service.upsertProviderModel(providerModel));
+
+        assertEquals(NotFoundException.class, getRootCause(ex).getClass());
+        verify(providerRepository, times(0)).save(any(Provider.class));
+        verify(providerRepository, times(1)).findById(any(String.class));
+    }
+
+    @Test
+    void upsertProviderModelForUpdateSaveFailsThrowsRetryableException() {
+        final var providerModel = new ProviderModel()
+                .setId("p00003")
+                .setName("valid")
+                .setDescription("Esta es una descripción totalmente válida. Por eso no puede fa$har.")
+                .setEmail("test@test.com")
+                .setTelephone1("12345678")
+                .setLastUser("valid");
+
+        when(providerRepository.findById("p00003")).thenReturn(ofNullable(mockIndividualProvider("p00003")));
+
+        when(providerRepository.save(any(Provider.class))).thenThrow(new OptimisticLockException("Optimistic lock test"));
+
+        var ex = assertThrows(RetryableException.class, () -> service.upsertProviderModel(providerModel));
+        assertEquals(OptimisticLockException.class, getRootCause(ex).getClass());
+        verify(providerRepository, times(4)).save(any(Provider.class));
+        verify(providerRepository, times(4)).findById(any(String.class));
+    }
+
+    @Test
+    void upsertProviderModelForUpdateSaveFailsThrowsNonRetryableException() {
+        final var providerModel = new ProviderModel()
+                .setId("p00003")
+                .setName("valid")
+                .setDescription("Esta es una descripción totalmente válida. Por eso no puede fa$har.")
+                .setEmail("test@test.com")
+                .setTelephone1("12345678")
+                .setLastUser("valid");
+
+        when(providerRepository.findById("p00003")).thenReturn(ofNullable(mockIndividualProvider("p00003")));
+        when(providerRepository.save(any(Provider.class))).thenThrow(new RuntimeException("Regular exception test."));
+
+        var ex = assertThrows(NonRetryableException.class, () -> service.upsertProviderModel(providerModel));
+        assertEquals(RuntimeException.class, getRootCause(ex).getClass());
+        verify(providerRepository, times(1)).save(any(Provider.class));
+        verify(providerRepository, times(1)).findById(any(String.class));
+    }
+
+    @Test
+    void upsertProviderModelForUpdateFindByIdFailsThrowsRetryableException() {
+        final var providerModel = new ProviderModel()
+                .setId("p00003")
+                .setName("valid")
+                .setDescription("Esta es una descripción totalmente válida. Por eso no puede fa$har.")
+                .setEmail("test@test.com")
+                .setTelephone1("12345678")
+                .setLastUser("valid");
+
+        when(providerRepository.findById("p00003")).thenThrow(new OptimisticLockException("Optimistic lock test"));
+
+        var ex = assertThrows(RetryableException.class, () -> service.upsertProviderModel(providerModel));
+        assertEquals(OptimisticLockException.class, getRootCause(ex).getClass());
+        verify(providerRepository, times(0)).save(any(Provider.class));
+        verify(providerRepository, times(4)).findById(any(String.class));
+    }
+
+    @Test
+    void upsertProviderModelForUpdateFindByIdFailsThrowsNonRetryableException() {
+        final var providerModel = new ProviderModel()
+                .setId("p00003")
+                .setName("valid")
+                .setDescription("Esta es una descripción totalmente válida. Por eso no puede fa$har.")
+                .setEmail("test@test.com")
+                .setTelephone1("12345678")
+                .setLastUser("valid");
+
+        when(providerRepository.findById("p00003")).thenThrow(new RuntimeException("Regular exception test."));
+
+        var ex = assertThrows(NonRetryableException.class, () -> service.upsertProviderModel(providerModel));
+        assertEquals(RuntimeException.class, getRootCause(ex).getClass());
+        verify(providerRepository, times(0)).save(any(Provider.class));
+        verify(providerRepository, times(1)).findById(any(String.class));
+    }
+
+
+    private List<Provider> mockProviderList(int length) {
         return IntStream.rangeClosed(0, length - 1)
                 .mapToObj(this::mockProvider)
                 .collect(Collectors.toList());
     }
 
-    Provider mockProvider(int idx) {
+    private Provider mockProvider(int idx) {
         return new Provider()
                 .setProviderId("p" + idx)
                 .setDescription("description")
                 .setEmail("email")
                 .setLastUser("user");
+    }
+
+    private Provider mockIndividualProvider(final String id) {
+        return new Provider()
+                .setProviderId(id)
+                .setName("valid")
+                .setDescription("Esta es una descripción totalmente válida. Por eso no puede fa$har.")
+                .setEmail("test@test.com")
+                .setTelephone1("12345678")
+                .setLastUser("valid");
     }
 
 
