@@ -27,9 +27,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 import static net.erp.eveline.common.mapper.ProductMapper.toEntity;
 import static net.erp.eveline.common.mapper.ProductMapper.toModel;
-import static net.erp.eveline.common.predicate.ProductPredicates.isActiveProductModelValid;
-import static net.erp.eveline.common.predicate.ProductPredicates.isProductModelValidForInsert;
-import static net.erp.eveline.common.predicate.ProductPredicates.isProductModelValidForUpdate;
+import static net.erp.eveline.common.predicate.ProductPredicates.*;
 import static net.erp.eveline.common.predicate.ProviderPredicates.PROVIDER_ID_INVALID_MESSAGE;
 import static net.erp.eveline.common.predicate.ProviderPredicates.isProviderIdValid;
 
@@ -56,12 +54,12 @@ public class ProductServiceImpl extends BaseService implements ProductService {
             logger.info("Retrieved {} products for provider {} successfully.", 0, providerId);
             return emptySet();
         }, providerId);
-//        return emptySet();
     }
 
     @Override
     public ProductModel getProductModel(final String productId) {
         logger.info("Requesting product matching id {}.", productId);
+        validate(productId, isProductIdValid(), PRODUCT_ID_INVALID_MESSAGE);
         return transactionService.performReadOnlyTransaction(status -> {
             Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new NotFoundException(String.format("Unable to find a product with the id specified: %s", productId)));
@@ -74,6 +72,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     @Override
     public ProductModel findByUpc(final String upc) {
         logger.info("Requesting product matching upc {}.", upc);
+        validate(upc, isProductUpcValid(), PRODUCT_UPC_INVALID_MESSAGE);
         return transactionService.performReadOnlyTransaction(status -> {
             Product product = productRepository.findByUpc(upc)
                     .orElseThrow(() -> new NotFoundException(String.format("Unable to find a product with the upc specified: %s", upc)));
