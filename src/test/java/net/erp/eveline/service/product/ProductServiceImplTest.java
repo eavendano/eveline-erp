@@ -5,10 +5,12 @@ import net.erp.eveline.common.TransactionService;
 import net.erp.eveline.common.exception.BadRequestException;
 import net.erp.eveline.common.exception.NonRetryableException;
 import net.erp.eveline.common.exception.RetryableException;
+import net.erp.eveline.common.mapper.ProductMapper;
 import net.erp.eveline.data.entity.Product;
 import net.erp.eveline.data.entity.Provider;
 import net.erp.eveline.data.repository.ProductRepository;
 import net.erp.eveline.data.repository.ProviderRepository;
+import net.erp.eveline.model.ActivateProductModel;
 import net.erp.eveline.model.ProductModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.OptimisticLockException;
+import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.Set;
 
@@ -318,7 +321,34 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void activateProduct() {
+    void activateProductSuccessful() {
+        //Initialization
+        final ActivateProductModel activateProductModel = new ActivateProductModel()
+                .setEnabled(true)
+                .setId("s00001")
+                .setLastUser("testUser");
+
+        final Product expectedProduct = ProductMapper.toEntity(
+                mockProduct(mockProvider())
+                        .setEnabled(false),
+                activateProductModel);
+
+        //Set up
+        when(productRepository.findById(anyString())).thenReturn(Optional.of(expectedProduct));
+        when(productRepository.save(any())).thenReturn(expectedProduct);
+
+        //Execution
+        final ProductModel actualProductModel = service.activateProduct(activateProductModel);
+
+        //Validation
+        assertEquals(toModel(expectedProduct), actualProductModel);
+        assertTrue(actualProductModel.isEnabled());
+        verify(productRepository, times(1))
+                .findById(any());
+        verify(productRepository, times(1))
+                .save(any());
+
+
     }
 
     private Provider mockProvider() {

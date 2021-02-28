@@ -137,10 +137,10 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         logger.info("Activation operation for model: {}", activateProductModel);
         requireNonNull(activateProductModel, "Active status provided cannot be null or empty.");
         List<String> errorList = new ArrayList<>();
+        validate(activateProductModel, isActiveProductModelValid(errorList), errorList);
 
         return transactionService.performWriteTransaction(status -> {
             logger.info("Performing product activation transaction for model: {}", activateProductModel);
-            validate(activateProductModel, isActiveProductModelValid(errorList), errorList);
 
             final var product = productRepository.findById(activateProductModel.getId())
                     .orElseThrow(() -> new NotFoundException(String.format("Unable to update a provider with the id specified: %s", activateProductModel.getId())));
