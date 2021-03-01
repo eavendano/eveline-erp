@@ -99,12 +99,12 @@ public class Provider {
         return enabled;
     }
 
-    public Provider setProviderId(String providerId) {
+    public Provider setProviderId(final String providerId) {
         this.providerId = providerId;
         return this;
     }
 
-    public Provider setName(String name) {
+    public Provider setName(final String name) {
         this.name = name;
         return this;
     }
@@ -139,7 +139,7 @@ public class Provider {
         return this;
     }
 
-    public Provider setEnabled(Boolean enabled) {
+    public Provider setEnabled(final Boolean enabled) {
         this.enabled = enabled;
         return this;
     }

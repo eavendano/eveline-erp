@@ -1,6 +1,6 @@
 package net.erp.eveline.common.predicate;
 
-import net.erp.eveline.model.ActivateProductModel;
+import net.erp.eveline.model.ActiveProductModel;
 import net.erp.eveline.model.ProductModel;
 
 import java.util.List;
@@ -51,7 +51,7 @@ public class ProductPredicates {
         return productId -> ofNullable(productId).isEmpty();
     }
 
-    public static Predicate<ActivateProductModel> isActiveProductModelValid(final List<String> errorList) {
+    public static Predicate<ActiveProductModel> isActiveProductModelValid(final List<String> errorList) {
         return activateProductModel -> {
             boolean idValid = isProductIdValid().test(activateProductModel.getId());
             boolean lastUserValid = isLastUserValid().test(activateProductModel.getLastUser());

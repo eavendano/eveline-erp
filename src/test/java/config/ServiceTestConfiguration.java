@@ -77,15 +77,15 @@ public class ServiceTestConfiguration {
         }
 
         @Override
-        protected void doBegin(Object transaction, TransactionDefinition definition) throws TransactionException {
+        protected void doBegin(final Object transaction, TransactionDefinition definition) throws TransactionException {
         }
 
         @Override
-        protected void doCommit(DefaultTransactionStatus status) throws TransactionException {
+        protected void doCommit(final DefaultTransactionStatus status) throws TransactionException {
         }
 
         @Override
-        protected void doRollback(DefaultTransactionStatus status) throws TransactionException {
+        protected void doRollback(final DefaultTransactionStatus status) throws TransactionException {
         }
     }
 }

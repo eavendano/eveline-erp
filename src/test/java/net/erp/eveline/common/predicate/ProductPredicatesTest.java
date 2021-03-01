@@ -1,6 +1,6 @@
 package net.erp.eveline.common.predicate;
 
-import net.erp.eveline.model.ActivateProductModel;
+import net.erp.eveline.model.ActiveProductModel;
 import net.erp.eveline.model.ProductModel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -163,7 +163,7 @@ class ProductPredicatesTest {
 
     @Test
     void isActiveProductModelValid() {
-        final ActivateProductModel validModel = new ActivateProductModel()
+        final ActiveProductModel validModel = new ActiveProductModel()
                 .setId("s00001")
                 .setEnabled(true)
                 .setLastUser("bmiranda");
@@ -173,7 +173,7 @@ class ProductPredicatesTest {
 
     @Test
     void isActiveProductModelFailsOnNullEnabledValue() {
-        final ActivateProductModel validModel = new ActivateProductModel()
+        final ActiveProductModel validModel = new ActiveProductModel()
                 .setId("s00001")
                 .setEnabled(null)
                 .setLastUser("bmiranda");
@@ -186,7 +186,7 @@ class ProductPredicatesTest {
 
     @Test
     void isActiveProductModelFailsOnInvalidId() {
-        final ActivateProductModel validModel = new ActivateProductModel()
+        final ActiveProductModel validModel = new ActiveProductModel()
                 .setId("000001")
                 .setEnabled(true)
                 .setLastUser("bmiranda");
@@ -199,7 +199,7 @@ class ProductPredicatesTest {
 
     @Test
     void isActiveProductModelFailsOnInvalidUser() {
-        final ActivateProductModel validModel = new ActivateProductModel()
+        final ActiveProductModel validModel = new ActiveProductModel()
                 .setId("s00001")
                 .setEnabled(true)
                 .setLastUser("+++++");
@@ -293,11 +293,10 @@ class ProductPredicatesTest {
         final String invalidLength = "01234567";
         final String invalidSymbols = "-1234567898a";
         final String invalidEmptyString = "";
-        final String nullValue = null;
 
         assertFalse(ProductPredicates.isProductUpcValid().test(invalidLength));
         assertFalse(ProductPredicates.isProductUpcValid().test(invalidSymbols));
         assertFalse(ProductPredicates.isProductUpcValid().test(invalidEmptyString));
-        assertFalse(ProductPredicates.isProductUpcValid().test(nullValue));
+        assertFalse(ProductPredicates.isProductUpcValid().test(null));
     }
 }

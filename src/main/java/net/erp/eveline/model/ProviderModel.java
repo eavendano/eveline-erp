@@ -33,7 +33,7 @@ public class ProviderModel {
         return name;
     }
 
-    public ProviderModel setName(String name) {
+    public ProviderModel setName(final String name) {
         this.name = name;
         return this;
     }
@@ -114,7 +114,7 @@ public class ProviderModel {
         return enabled;
     }
 
-    public ProviderModel setEnabled(Boolean enabled) {
+    public ProviderModel setEnabled(final Boolean enabled) {
         this.enabled = enabled;
         return this;
     }

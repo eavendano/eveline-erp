@@ -31,11 +31,11 @@ import java.util.stream.IntStream;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
+import static net.erp.eveline.common.mapper.ProviderMapper.toActiveModel;
 import static net.erp.eveline.common.mapper.ProviderMapper.toModel;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCause;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -91,8 +91,7 @@ class ProviderServiceImplTest {
         final Set<ProviderModel> actualProviderModels = service.findAll();
 
         //Validation
-        verify(providerRepository, times(1))
-                .findAll();
+        verify(providerRepository, times(1)).findAll();
         assertEquals(expectedLength, actualProviderModels.size());
         assertEquals(toModel(Set.copyOf(mockProviderList(expectedLength))), actualProviderModels);
     }
@@ -113,11 +112,11 @@ class ProviderServiceImplTest {
     @Test
     void getProviderModelSuccessful() {
         final var providerId = "p00001";
-        final Provider provider = mockIndividualProvider(providerId);
+        final var provider = mockIndividualProvider(providerId);
         when(providerRepository.findById(providerId)).thenReturn(ofNullable(provider));
 
         final var resultProviderModel = service.getProviderModel(providerId);
-        assertEquals(provider.getProviderId(), resultProviderModel.getId());
+        assertEquals(toModel(provider), resultProviderModel);
         verify(providerRepository, times(1)).findById(any(String.class));
     }
 
@@ -171,10 +170,12 @@ class ProviderServiceImplTest {
                 .setTelephone1("12345678")
                 .setLastUser("valid");
 
-        when(providerRepository.save(any(Provider.class))).thenReturn(mockIndividualProvider("p00002"));
+        final var provider = mockIndividualProvider("p00002");
+
+        when(providerRepository.save(any(Provider.class))).thenReturn(provider);
 
         var resultModel = service.upsertProviderModel(providerModel);
-        assertEquals(resultModel.getId(), "p00002");
+        assertEquals(toModel(provider), resultModel);
         verify(providerRepository, times(1)).save(any(Provider.class));
         verify(providerRepository, times(0)).findById(any(String.class));
     }
@@ -188,8 +189,7 @@ class ProviderServiceImplTest {
                 .setTelephone1("")
                 .setLastUser("");
 
-        var ex = assertThrows(NonRetryableException.class, () -> service.upsertProviderModel(providerModel));
-        assertEquals(BadRequestException.class, getRootCause(ex).getClass());
+        var ex = assertThrows(BadRequestException.class, () -> service.upsertProviderModel(providerModel));
         verify(providerRepository, times(0)).save(any(Provider.class));
         verify(providerRepository, times(0)).findById(any(String.class));
     }
@@ -238,11 +238,13 @@ class ProviderServiceImplTest {
                 .setTelephone1("12345678")
                 .setLastUser("valid");
 
-        when(providerRepository.findById("p00003")).thenReturn(ofNullable(mockIndividualProvider("p00003")));
+        final var provider = mockIndividualProvider("p00003");
+
+        when(providerRepository.findById("p00003")).thenReturn(of(provider));
         when(providerRepository.save(any(Provider.class))).thenReturn(mockIndividualProvider("p00003"));
 
         var resultModel = service.upsertProviderModel(providerModel);
-        assertEquals(resultModel.getId(), "p00003");
+        assertEquals(toModel(provider), resultModel);
         verify(providerRepository, times(1)).save(any(Provider.class));
         verify(providerRepository, times(1)).findById(any(String.class));
     }
@@ -257,8 +259,7 @@ class ProviderServiceImplTest {
                 .setTelephone1("")
                 .setLastUser("");
 
-        var ex = assertThrows(NonRetryableException.class, () -> service.upsertProviderModel(providerModel));
-        assertEquals(BadRequestException.class, getRootCause(ex).getClass());
+        assertThrows(BadRequestException.class, () -> service.upsertProviderModel(providerModel));
         verify(providerRepository, times(0)).save(any(Provider.class));
         verify(providerRepository, times(0)).findById(any(String.class));
     }
@@ -375,9 +376,7 @@ class ProviderServiceImplTest {
 
         var result = service.activateProvider(activeProviderModel);
 
-        assertEquals("p00001", result.getId());
-        assertEquals("eavendano", result.getLastUser());
-        assertTrue(resultMock.isEnabled());
+        assertEquals(toActiveModel(resultMock), result);
         verify(providerRepository, times(1)).save(any(Provider.class));
         verify(providerRepository, times(1)).findById(any(String.class));
     }
@@ -396,7 +395,7 @@ class ProviderServiceImplTest {
                 .setLastUser("")
                 .setEnabled(null);
 
-        var ex = assertThrows(NonRetryableException.class, () -> service.activateProvider(activeProviderModel));
+        var ex = assertThrows(BadRequestException.class, () -> service.activateProvider(activeProviderModel));
 
         assertEquals(BadRequestException.class, getRootCause(ex).getClass());
         verify(providerRepository, times(0)).save(any(Provider.class));
@@ -431,6 +430,22 @@ class ProviderServiceImplTest {
         var ex = assertThrows(NonRetryableException.class, () -> service.activateProvider(activeProviderModel));
 
         assertEquals(RuntimeException.class, getRootCause(ex).getClass());
+        verify(providerRepository, times(0)).save(any(Provider.class));
+        verify(providerRepository, times(1)).findById(any(String.class));
+    }
+
+    @Test
+    void activateProviderFindByIdFailsThrowsNotFoundException() {
+        var activeProviderModel = new ActiveProviderModel()
+                .setId("p00001")
+                .setLastUser("eavendano")
+                .setEnabled(true);
+
+        when(providerRepository.findById("p00001")).thenReturn(empty());
+
+        var ex = assertThrows(NonRetryableException.class, () -> service.activateProvider(activeProviderModel));
+
+        assertEquals(NotFoundException.class, getRootCause(ex).getClass());
         verify(providerRepository, times(0)).save(any(Provider.class));
         verify(providerRepository, times(1)).findById(any(String.class));
     }

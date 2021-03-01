@@ -10,9 +10,4 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     Optional<Product> findByUpc(final String upc);
 
     Set<Product> findByProviderSetProviderId(final String providerId);
-
-//    @Query(value = "SELECT * FROM product p " +
-//            "JOIN product_provider_assignation ppa USING(product_id) " +
-//            "WHERE ppa.provider_id = ?1", nativeQuery = true)
-//    Set<Product> findProductsByProviderId(final String providerId);
 }

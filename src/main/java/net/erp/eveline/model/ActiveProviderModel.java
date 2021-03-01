@@ -1,5 +1,7 @@
 package net.erp.eveline.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,7 +15,7 @@ public class ActiveProviderModel {
         return id;
     }
 
-    public ActiveProviderModel setId(String id) {
+    public ActiveProviderModel setId(final String id) {
         this.id = id;
         return this;
     }
@@ -22,7 +24,7 @@ public class ActiveProviderModel {
         return enabled;
     }
 
-    public ActiveProviderModel setEnabled(Boolean enabled) {
+    public ActiveProviderModel setEnabled(final Boolean enabled) {
         this.enabled = enabled;
         return this;
     }
@@ -31,9 +33,25 @@ public class ActiveProviderModel {
         return lastUser;
     }
 
-    public ActiveProviderModel setLastUser(String lastUser) {
+    public ActiveProviderModel setLastUser(final String lastUser) {
         this.lastUser = lastUser;
         return this;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ActiveProviderModel that = (ActiveProviderModel) o;
+
+        return new EqualsBuilder().append(id, that.id).append(enabled, that.enabled).append(lastUser, that.lastUser).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(id).append(enabled).append(lastUser).toHashCode();
     }
 
     @Override

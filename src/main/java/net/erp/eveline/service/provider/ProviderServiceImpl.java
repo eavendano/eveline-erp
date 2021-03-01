@@ -68,15 +68,18 @@ public class ProviderServiceImpl extends BaseService implements ProviderService 
         logger.info("Upsert operation for model: {}", providerModel);
         requireNonNull(providerModel, "Model provided cannot be null or empty.");
         List<String> errorList = new ArrayList<>();
+        final var providerId = ofNullable(providerModel.getId());
+        if (providerId.isPresent()) {
+            validate(providerModel, isProviderModelValidForUpdate(errorList), errorList);
+        } else {
+            validate(providerModel, isProviderModelValidForInsert(errorList), errorList);
+        }
 
         return transactionService.performWriteTransaction(status -> {
             logger.info("Performing upsert transaction for model: {}", providerModel);
-            final var providerId = ofNullable(providerModel.getId());
             ProviderModel result;
-
             if (providerId.isPresent()) {
                 // Try to perform the update
-                validate(providerModel, isProviderModelValidForUpdate(errorList), errorList);
 
                 final var optionalProvider = providerRepository.findById(providerId.get());
                 if (optionalProvider.isEmpty()) {
@@ -90,7 +93,6 @@ public class ProviderServiceImpl extends BaseService implements ProviderService 
 
             } else {
                 // Try to perform insert if the rest of the values is valid
-                validate(providerModel, isProviderModelValidForInsert(errorList), errorList);
                 logger.info("Preparing to insert provider: {}", providerModel);
                 result = toModel(providerRepository.save(toEntity(providerModel)));
                 logger.info("Successful insert operation for provider: {}", providerModel);
@@ -106,11 +108,10 @@ public class ProviderServiceImpl extends BaseService implements ProviderService 
         logger.info("Activation operation for model: {}", activeProviderModel);
         requireNonNull(activeProviderModel, "Active status provided cannot be null or empty.");
         List<String> errorList = new ArrayList<>();
+        validate(activeProviderModel, isActiveProviderModelValid(errorList), errorList);
 
         return transactionService.performWriteTransaction(status -> {
             logger.info("Performing provider activation transaction for model: {}", activeProviderModel);
-            validate(activeProviderModel, isActiveProviderModelValid(errorList), errorList);
-
             final var optionalProvider = providerRepository.findById(activeProviderModel.getId());
             if (optionalProvider.isEmpty()) {
                 throw new NotFoundException(String.format("Unable to update a provider with the id specified: %s", activeProviderModel.getId()));
