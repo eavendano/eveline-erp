@@ -45,7 +45,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         validate(providerId, isProviderIdValid(), PROVIDER_ID_INVALID_MESSAGE);
         return transactionService.performReadOnlyTransaction(status -> {
             final Optional<Provider> optionalProvider = providerRepository.findById(providerId);
-            Set<Product> products = null;
+            Set<Product> products;
             if (optionalProvider.isPresent()) {
                 products = productRepository.findByProviderSetProviderId(providerId);
                 logger.info("Retrieved {} products for provider {} successfully.", products.size(), providerId);

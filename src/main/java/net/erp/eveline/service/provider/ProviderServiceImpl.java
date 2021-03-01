@@ -19,6 +19,7 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
+import static net.erp.eveline.common.mapper.ProviderMapper.toActiveModel;
 import static net.erp.eveline.common.mapper.ProviderMapper.toEntity;
 import static net.erp.eveline.common.mapper.ProviderMapper.toModel;
 import static net.erp.eveline.common.predicate.ProviderPredicates.PROVIDER_ID_INVALID_MESSAGE;
@@ -101,7 +102,7 @@ public class ProviderServiceImpl extends BaseService implements ProviderService 
     }
 
     @Override
-    public ProviderModel activateProvider(final ActiveProviderModel activeProviderModel) {
+    public ActiveProviderModel activateProvider(final ActiveProviderModel activeProviderModel) {
         logger.info("Activation operation for model: {}", activeProviderModel);
         requireNonNull(activeProviderModel, "Active status provided cannot be null or empty.");
         List<String> errorList = new ArrayList<>();
@@ -115,7 +116,7 @@ public class ProviderServiceImpl extends BaseService implements ProviderService 
                 throw new NotFoundException(String.format("Unable to update a provider with the id specified: %s", activeProviderModel.getId()));
             }
 
-            ProviderModel result = toModel(providerRepository.save(toEntity(optionalProvider.get(), activeProviderModel)));
+            var result = toActiveModel(providerRepository.save(toEntity(optionalProvider.get(), activeProviderModel)));
 
             logger.info("Provider activation operation completed for result: {}", activeProviderModel);
             return result;
