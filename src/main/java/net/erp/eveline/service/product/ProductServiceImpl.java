@@ -161,17 +161,17 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     }
 
     @Autowired
-    public void setProductRepository(ProductRepository productRepository) {
+    public void setProductRepository(final ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
     @Autowired
-    public void setProviderRepository(ProviderRepository providerRepository) {
+    public void setProviderRepository(final ProviderRepository providerRepository) {
         this.providerRepository = providerRepository;
     }
 
     @Autowired
-    public void setTransactionService(TransactionService transactionService) {
+    public void setTransactionService(final TransactionService transactionService) {
         this.transactionService = transactionService;
     }
 }
