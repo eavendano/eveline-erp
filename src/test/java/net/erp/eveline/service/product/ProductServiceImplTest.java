@@ -25,9 +25,12 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.OptimisticLockException;
 import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 
+import static net.erp.eveline.common.mapper.ProductMapper.toEntity;
 import static net.erp.eveline.common.mapper.ProductMapper.toModel;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -317,16 +320,179 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void upsertProductModel() {
+    void upsertProductModelSuccessfulOnInsert() {
+        //Initialization
+        final String providerId = "p99999";
+        final ProductModel product = mockProductModel(null, providerId);
+        final Provider provider = mockProvider()
+                .setProviderId(providerId);
+
+        //Set up
+        when(providerRepository.existsById(anyString()))
+                .thenReturn(true);
+        when(providerRepository.findAllById(product.getProviderSet()))
+                .thenReturn(List.of(provider));
+        when(productRepository.save(any()))
+                .thenReturn(toEntity(product, Set.of(provider)));
+
+        //Execution
+        final ProductModel actualProduct = service.upsertProductModel(product);
+
+        //Validation
+        assertEquals(product, actualProduct);
+        verify(providerRepository, times(1))
+                .existsById(any());
+        verify(providerRepository, times(1))
+                .findAllById(any());
+        verify(productRepository, times(0))
+                .findById(any());
+        verify(productRepository, times(1))
+                .save(any());
     }
+
+    @Test
+    void upsertProductModelSuccessfulOnUpsert() {
+        //Initialization
+        final String productId = "s00001";
+        final String providerId = "p99999";
+        final ProductModel product = mockProductModel(productId, providerId);
+        final Provider provider = mockProvider()
+                .setProviderId(providerId);
+
+        //Set up
+        when(providerRepository.existsById(anyString()))
+                .thenReturn(true);
+        when(providerRepository.findAllById(product.getProviderSet()))
+                .thenReturn(List.of(provider));
+        when(productRepository.findById(any()))
+                .thenReturn(Optional.of(toEntity(product)));
+        when(productRepository.save(any()))
+                .thenReturn(toEntity(product, Set.of(provider)));
+
+        //Execution
+        final ProductModel actualProduct = service.upsertProductModel(product);
+
+        //Validation
+        assertEquals(product, actualProduct);
+        assertEquals(productId, actualProduct.getId());
+        verify(providerRepository, times(1))
+                .existsById(any());
+        verify(providerRepository, times(1))
+                .findAllById(any());
+        verify(productRepository, times(1))
+                .findById(any());
+        verify(productRepository, times(1))
+                .save(any());
+    }
+
+    @Test
+    void upsertProductModelThrowsNPEOnNullModel() {
+        //Execution
+        assertThrows(NullPointerException.class,
+                () -> service.upsertProductModel(null));
+        //Validation
+        verify(providerRepository, times(0))
+                .existsById(any());
+        verify(providerRepository, times(0))
+                .findAllById(any());
+        verify(productRepository, times(0))
+                .findById(any());
+        verify(productRepository, times(0))
+                .save(any());
+    }
+
+    @Test
+    void upsertProductModelThrowsNonRetryableExceptionOnNotFoundProvider() {
+        //Initialization
+        final ProductModel product = mockProductModel("s00001", "p99999");
+
+        //Set up
+        product.getProviderSet().add("p00002");//let's force a failure in the second call.
+        when(providerRepository.existsById(anyString()))
+                .thenReturn(true)
+                .thenReturn(false);
+
+        //Execution
+        assertThrows(NonRetryableException.class,
+                () -> service.upsertProductModel(product));
+
+        //Validation
+        verify(providerRepository, times(2))
+                .existsById(any());
+        verify(providerRepository, times(0))
+                .findAllById(any());
+        verify(productRepository, times(0))
+                .findById(any());
+        verify(productRepository, times(0))
+                .save(any());
+    }
+
+    @Test
+    void upsertProductModelThrowsNonRetryableExceptionOnInvalidModel() {
+        //Initialization
+        final String providerId = "p99999";
+        final ProductModel product = mockProductModel("invalidId", providerId);
+        final Provider provider = mockProvider()
+                .setProviderId(providerId);
+
+        //Set up
+        when(providerRepository.existsById(anyString()))
+                .thenReturn(true);
+        when(providerRepository.findAllById(product.getProviderSet()))
+                .thenReturn(List.of(provider));
+
+        //Execution
+        assertThrows(NonRetryableException.class,
+                () -> service.upsertProductModel(product));
+
+        //Validation
+        verify(providerRepository, times(1))
+                .existsById(any());
+        verify(providerRepository, times(1))
+                .findAllById(any());
+        verify(productRepository, times(0))
+                .findById(any());
+        verify(productRepository, times(0))
+                .save(any());
+    }
+
+    @Test
+    void upsertProductModelThrowsNonRetryableExceptionOnUpsertWithNotFoundProduct() {
+        //Initialization
+        final String productId = "s00001";
+        final String providerId = "p99999";
+        final ProductModel product = mockProductModel(productId, providerId);
+        final Provider provider = mockProvider()
+                .setProviderId(providerId);
+
+        //Set up
+        when(providerRepository.existsById(anyString()))
+                .thenReturn(true);
+        when(providerRepository.findAllById(product.getProviderSet()))
+                .thenReturn(List.of(provider));
+        when(productRepository.findById(any()))
+                .thenReturn(Optional.empty());
+
+        //Execution
+        assertThrows(NonRetryableException.class,
+                () -> service.upsertProductModel(product));
+
+        //Validation
+        verify(providerRepository, times(1))
+                .existsById(any());
+        verify(providerRepository, times(1))
+                .findAllById(any());
+        verify(productRepository, times(1))
+                .findById(any());
+        verify(productRepository, times(0))
+                .save(any());
+    }
+
 
     @Test
     void activateProductSuccessful() {
         //Initialization
-        final ActivateProductModel activateProductModel = new ActivateProductModel()
-                .setEnabled(true)
-                .setId("s00001")
-                .setLastUser("testUser");
+        final ActivateProductModel activateProductModel = mockActivateProductModel();
 
         final Product expectedProduct = ProductMapper.toEntity(
                 mockProduct(mockProvider())
@@ -347,8 +513,112 @@ class ProductServiceImplTest {
                 .findById(any());
         verify(productRepository, times(1))
                 .save(any());
+    }
 
+    @Test
+    void activateProductThrowsNPEOnNullModel() {
+        //Execution
+        assertThrows(NullPointerException.class,
+                () -> service.activateProduct(null));
+        //Validation
+        verify(productRepository, times(0))
+                .findById(any());
+        verify(productRepository, times(0))
+                .save(any());
+    }
 
+    @Test
+    void activateProductThrowsBadRequestExceptionOnInvalidModel() {
+        //Initialization
+        final ActivateProductModel activateProductModel = new ActivateProductModel();
+
+        //Execution
+        assertThrows(BadRequestException.class,
+                () -> service.activateProduct(activateProductModel));
+        //Validation
+        verify(productRepository, times(0))
+                .findById(any());
+        verify(productRepository, times(0))
+                .save(any());
+    }
+
+    @Test
+    void activateProductThrowsNonRetryableExceptionOnNotFoundProduct() {
+        //Initialization
+        final ActivateProductModel activateProductModel = mockActivateProductModel();
+
+        //Set up
+        when(productRepository.findById(anyString()))
+                .thenReturn(Optional.empty());
+
+        //Execution
+        assertThrows(NonRetryableException.class,
+                () -> service.activateProduct(activateProductModel));
+
+        //Validation
+        verify(productRepository, times(1))
+                .findById(anyString());
+        verify(productRepository, times(0))
+                .save(any());
+    }
+
+    @Test
+    void activateProductThrowsServiceExceptionAfterRetries() {
+        //Initialization
+        final ActivateProductModel activateProductModel = mockActivateProductModel();
+
+        //Set up
+        when(productRepository.findById(anyString()))
+                .thenThrow(new OptimisticLockException("Optimistic lock test"));
+
+        //Execution
+        assertThrows(RetryableException.class, () -> service.activateProduct(activateProductModel));
+
+        //Validation
+        verify(productRepository, times(4))
+                .findById(anyString());
+        verify(productRepository, times(0))
+                .save(any());
+    }
+
+    @Test
+    void activateProductThrowsServiceExceptionOnNonRetryableException() {
+        //Initialization
+        final ActivateProductModel activateProductModel = mockActivateProductModel();
+
+        //Set up
+        when(productRepository.findById(anyString()))
+                .thenThrow(new PermissionDeniedDataAccessException("message",
+                        new Throwable()));
+
+        //Execution
+        assertThrows(NonRetryableException.class, () -> service.activateProduct(activateProductModel));
+
+        //Validation
+        verify(productRepository, times(1))
+                .findById(anyString());
+        verify(productRepository, times(0))
+                .save(any());
+    }
+
+    private ProductModel mockProductModel(final String productId, final String providerId){
+
+        final TreeSet<String> providerSet = new TreeSet<>();
+        providerSet.add(providerId);
+        return new ProductModel()
+                .setId(productId)
+                .setTitle("title")
+                .setProviderSet(providerSet)
+                .setUpc("123456789012")
+                .setEnabled(true)
+                .setLastUser("test");
+    }
+
+    private ActivateProductModel mockActivateProductModel() {
+        return new ActivateProductModel()
+                .setEnabled(true)
+                .setId("s00001")
+                .setLastUser("testUser");
     }
 
     private Provider mockProvider() {
