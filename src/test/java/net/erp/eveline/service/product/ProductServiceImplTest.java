@@ -540,6 +540,92 @@ class ProductServiceImplTest {
                 .save(any());
     }
 
+    @Test
+    void upsertProductModelThrowsServiceExceptionOnExistByIdAfterRetries() {
+        //Initialization
+        final String productId = "s00001";
+        final String providerId = "p99999";
+        final ProductModel product = mockProductModel(productId, providerId);
+
+        //Set up
+        when(providerRepository.existsById(anyString()))
+                .thenThrow(new OptimisticLockException("Optimistic lock test"));
+
+        //Execution
+        assertThrows(RetryableException.class, () -> service.upsertProductModel(product));
+
+        //Validation
+        verify(providerRepository, times(4))
+                .existsById(any());
+        verify(providerRepository, times(0))
+                .findAllById(any());
+        verify(productRepository, times(0))
+                .findById(any());
+        verify(productRepository, times(0))
+                .save(any());
+    }
+
+    @Test
+    void upsertProductModelThrowsServiceExceptionOnFindAllByIdAfterRetries() {
+        //Initialization
+        final String productId = "s00001";
+        final String providerId = "p99999";
+        final ProductModel product = mockProductModel(productId, providerId);
+        final Provider provider = mockProvider()
+                .setProviderId(providerId);
+
+        //Set up
+        when(providerRepository.existsById(anyString()))
+                .thenReturn(true);
+        when(providerRepository.findAllById(product.getProviderSet()))
+                .thenThrow(new OptimisticLockException("Optimistic lock test"));
+
+        //Execution
+        assertThrows(RetryableException.class, () -> service.upsertProductModel(product));
+
+        //Validation
+        verify(providerRepository, times(4))
+                .existsById(any());
+        verify(providerRepository, times(4))
+                .findAllById(any());
+        verify(productRepository, times(0))
+                .findById(any());
+        verify(productRepository, times(0))
+                .save(any());
+    }
+
+    @Test
+    void upsertProductModelThrowsServiceExceptionOnSaveAfterRetries() {
+        //Initialization
+        final String productId = "s00001";
+        final String providerId = "p99999";
+        final ProductModel product = mockProductModel(productId, providerId);
+        final Provider provider = mockProvider()
+                .setProviderId(providerId);
+
+        //Set up
+        when(providerRepository.existsById(anyString()))
+                .thenReturn(true);
+        when(providerRepository.findAllById(product.getProviderSet()))
+                .thenReturn(List.of(provider));
+        when(productRepository.findById(any()))
+                .thenReturn(Optional.of(toEntity(product)));
+        when(productRepository.save(any()))
+                .thenThrow(new OptimisticLockException("Optimistic lock test"));
+
+        //Execution
+        assertThrows(RetryableException.class, () -> service.upsertProductModel(product));
+
+        //Validation
+        verify(providerRepository, times(4))
+                .existsById(any());
+        verify(providerRepository, times(4))
+                .findAllById(any());
+        verify(productRepository, times(4))
+                .findById(any());
+        verify(productRepository, times(4))
+                .save(any());
+    }
 
     @Test
     void activateProductSuccessful() {
