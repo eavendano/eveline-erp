@@ -126,7 +126,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void findAllByProviderThrowsServiceExceptionAfterRetries() {
+    void findAllByProviderThrowsServiceExceptionOnFindByIdAfterRetries() {
         //Initialization
         final String providerId = "p00001";
 
@@ -145,7 +145,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void findAllByProviderThrowsServiceExceptionOnNonRetryableException() {
+    void findAllByProviderThrowsServiceExceptionOnNonRetryableExceptionAtFindById() {
         //Initialization
         final String providerId = "p00001";
 
@@ -161,6 +161,49 @@ class ProductServiceImplTest {
         verify(providerRepository, times(1))
                 .findById(anyString());
         verify(productRepository, times(0))
+                .findByProviderSetProviderId(anyString());
+    }
+
+    @Test
+    void findAllByProviderThrowsServiceExceptionOnFindByProviderAfterRetries() {
+        //Initialization
+        final Provider expectedProvider = mockProvider();
+
+        //Set up
+        when(providerRepository.findById(anyString())).thenReturn(of(expectedProvider));
+        when(productRepository.findByProviderSetProviderId(anyString()))
+                .thenThrow(new OptimisticLockException("Optimistic lock test"));
+
+        //Execution
+        assertThrows(RetryableException.class,
+                () -> service.findAllByProvider(expectedProvider.getProviderId()));
+
+        //Validation
+        verify(providerRepository, times(4))
+                .findById(anyString());
+        verify(productRepository, times(4))
+                .findByProviderSetProviderId(anyString());
+    }
+
+    @Test
+    void findAllByProviderThrowsServiceExceptionOnNonRetryableExceptionAtFindByProvider() {
+        //Initialization
+        final Provider expectedProvider = mockProvider();
+
+        //Set up
+        when(providerRepository.findById(anyString())).thenReturn(of(expectedProvider));
+        when(productRepository.findByProviderSetProviderId(anyString()))
+                .thenThrow(new PermissionDeniedDataAccessException("Optimistic lock test",
+                        new Throwable()));
+
+        //Execution
+        assertThrows(NonRetryableException.class,
+                () -> service.findAllByProvider(expectedProvider.getProviderId()));
+
+        //Validation
+        verify(providerRepository, times(1))
+                .findById(anyString());
+        verify(productRepository, times(1))
                 .findByProviderSetProviderId(anyString());
     }
 
