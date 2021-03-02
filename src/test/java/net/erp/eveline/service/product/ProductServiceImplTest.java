@@ -4,13 +4,13 @@ import config.ServiceTestConfiguration;
 import net.erp.eveline.common.TransactionService;
 import net.erp.eveline.common.exception.BadRequestException;
 import net.erp.eveline.common.exception.NonRetryableException;
+import net.erp.eveline.common.exception.NotFoundException;
 import net.erp.eveline.common.exception.RetryableException;
-import net.erp.eveline.common.mapper.ProductMapper;
 import net.erp.eveline.data.entity.Product;
 import net.erp.eveline.data.entity.Provider;
 import net.erp.eveline.data.repository.ProductRepository;
 import net.erp.eveline.data.repository.ProviderRepository;
-import net.erp.eveline.model.ActivateProductModel;
+import net.erp.eveline.model.ActiveProductModel;
 import net.erp.eveline.model.ProductModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,17 +24,26 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.OptimisticLockException;
-import javax.swing.text.html.Option;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static net.erp.eveline.common.mapper.ProductMapper.toActiveModel;
 import static net.erp.eveline.common.mapper.ProductMapper.toEntity;
 import static net.erp.eveline.common.mapper.ProductMapper.toModel;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCause;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {ServiceTestConfiguration.class})
@@ -67,7 +76,7 @@ class ProductServiceImplTest {
         final Set<Product> expectedProductSet = Set.of(expectedProduct);
 
         //Set up
-        when(providerRepository.findById(anyString())).thenReturn(Optional.of(expectedProvider));
+        when(providerRepository.findById(anyString())).thenReturn(of(expectedProvider));
         when(productRepository.findByProviderSetProviderId(anyString())).thenReturn(expectedProductSet);
 
         //Execution
@@ -162,7 +171,7 @@ class ProductServiceImplTest {
         final Product expectedProduct = mockProduct(expectedProvider);
 
         //Set up
-        when(productRepository.findById(anyString())).thenReturn(Optional.of(expectedProduct));
+        when(productRepository.findById(anyString())).thenReturn(of(expectedProduct));
 
         //Execution
         final ProductModel actualProduct = service.getProductModel(expectedProduct.getProductId());
@@ -242,7 +251,7 @@ class ProductServiceImplTest {
         final Product expectedProduct = mockProduct(expectedProvider);
 
         //Set up
-        when(productRepository.findByUpc(anyString())).thenReturn(Optional.of(expectedProduct));
+        when(productRepository.findByUpc(anyString())).thenReturn(of(expectedProduct));
 
         //Execution
         final ProductModel actualProduct = service.findByUpc(expectedProduct.getUpc());
@@ -492,22 +501,22 @@ class ProductServiceImplTest {
     @Test
     void activateProductSuccessful() {
         //Initialization
-        final ActivateProductModel activateProductModel = mockActivateProductModel();
+        final ActiveProductModel activeProductModel = mockActiveProductModel();
 
-        final Product expectedProduct = ProductMapper.toEntity(
+        final Product expectedProduct = toEntity(
                 mockProduct(mockProvider())
                         .setEnabled(false),
-                activateProductModel);
+                activeProductModel);
 
         //Set up
-        when(productRepository.findById(anyString())).thenReturn(Optional.of(expectedProduct));
+        when(productRepository.findById(anyString())).thenReturn(of(expectedProduct));
         when(productRepository.save(any())).thenReturn(expectedProduct);
 
         //Execution
-        final ProductModel actualProductModel = service.activateProduct(activateProductModel);
+        final var actualProductModel = service.activateProduct(activeProductModel);
 
         //Validation
-        assertEquals(toModel(expectedProduct), actualProductModel);
+        assertEquals(toActiveModel(expectedProduct), actualProductModel);
         assertTrue(actualProductModel.isEnabled());
         verify(productRepository, times(1))
                 .findById(any());
@@ -530,7 +539,7 @@ class ProductServiceImplTest {
     @Test
     void activateProductThrowsBadRequestExceptionOnInvalidModel() {
         //Initialization
-        final ActivateProductModel activateProductModel = new ActivateProductModel();
+        final ActiveProductModel activateProductModel = new ActiveProductModel();
 
         //Execution
         assertThrows(BadRequestException.class,
@@ -545,7 +554,7 @@ class ProductServiceImplTest {
     @Test
     void activateProductThrowsNonRetryableExceptionOnNotFoundProduct() {
         //Initialization
-        final ActivateProductModel activateProductModel = mockActivateProductModel();
+        final ActiveProductModel activateProductModel = mockActiveProductModel();
 
         //Set up
         when(productRepository.findById(anyString()))
@@ -563,43 +572,98 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void activateProductThrowsServiceExceptionAfterRetries() {
-        //Initialization
-        final ActivateProductModel activateProductModel = mockActivateProductModel();
+    void activateProductFailFindByIdThrowsRetryableException() {
+        final var activeProductModel = new ActiveProductModel()
+                .setEnabled(true)
+                .setId("s00001")
+                .setLastUser("testUser");
 
-        //Set up
-        when(productRepository.findById(anyString()))
-                .thenThrow(new OptimisticLockException("Optimistic lock test"));
+        when(productRepository.findById(anyString())).thenThrow(new OptimisticLockException("Optimistic Lock Exception"));
 
-        //Execution
-        assertThrows(RetryableException.class, () -> service.activateProduct(activateProductModel));
-
-        //Validation
-        verify(productRepository, times(4))
-                .findById(anyString());
-        verify(productRepository, times(0))
-                .save(any());
+        var ex = assertThrows(RetryableException.class, () -> service.activateProduct(activeProductModel));
+        assertEquals(OptimisticLockException.class, getRootCause(ex).getClass());
+        verify(productRepository, times(4)).findById(any());
+        verify(productRepository, times(0)).save(any());
     }
 
     @Test
-    void activateProductThrowsServiceExceptionOnNonRetryableException() {
-        //Initialization
-        final ActivateProductModel activateProductModel = mockActivateProductModel();
+    void activateProductFailFindByIdThrowsNonRetryableException() {
+        final var activeProductModel = new ActiveProductModel()
+                .setEnabled(true)
+                .setId("s00001")
+                .setLastUser("testUser");
 
-        //Set up
-        when(productRepository.findById(anyString()))
-                .thenThrow(new PermissionDeniedDataAccessException("message",
-                        new Throwable()));
+        when(productRepository.findById(anyString())).thenThrow(new RuntimeException("Runtime Exception"));
 
-        //Execution
-        assertThrows(NonRetryableException.class, () -> service.activateProduct(activateProductModel));
-
-        //Validation
-        verify(productRepository, times(1))
-                .findById(anyString());
-        verify(productRepository, times(0))
-                .save(any());
+        var ex = assertThrows(NonRetryableException.class, () -> service.activateProduct(activeProductModel));
+        assertEquals(RuntimeException.class, getRootCause(ex).getClass());
+        verify(productRepository, times(1)).findById(any());
+        verify(productRepository, times(0)).save(any());
     }
+
+    @Test
+    void activateProductFailFindByIdThrowsNotFoundException() {
+        final var activeProductModel = new ActiveProductModel()
+                .setEnabled(true)
+                .setId("s00001")
+                .setLastUser("testUser");
+
+        when(productRepository.findById(anyString())).thenReturn(empty());
+
+        var ex = assertThrows(NonRetryableException.class, () -> service.activateProduct(activeProductModel));
+        assertEquals(NotFoundException.class, getRootCause(ex).getClass());
+        verify(productRepository, times(1)).findById(any());
+        verify(productRepository, times(0)).save(any());
+    }
+
+    @Test
+    void activateProductFailSaveThrowsRetryableException() {
+        final var activeProductModel = new ActiveProductModel()
+                .setEnabled(true)
+                .setId("s00001")
+                .setLastUser("testUser");
+
+        final Product expectedProduct = toEntity(
+                mockProduct(mockProvider())
+                        .setEnabled(false),
+                activeProductModel);
+
+        when(productRepository.findById(anyString())).thenReturn(of(expectedProduct));
+        when(productRepository.save(any(Product.class))).thenThrow(new OptimisticLockException("Optimistic Lock Exception"));
+
+        var ex = assertThrows(RetryableException.class, () -> service.activateProduct(activeProductModel));
+        assertEquals(OptimisticLockException.class, getRootCause(ex).getClass());
+        verify(productRepository, times(4)).findById(any());
+        verify(productRepository, times(4)).save(any());
+    }
+
+    @Test
+    void activateProductFailSaveThrowsNonRetryableException() {
+        final var activeProductModel = new ActiveProductModel()
+                .setEnabled(true)
+                .setId("s00001")
+                .setLastUser("testUser");
+
+        final Product expectedProduct = toEntity(
+                mockProduct(mockProvider())
+                        .setEnabled(false),
+                activeProductModel);
+
+        when(productRepository.findById(anyString())).thenReturn(of(expectedProduct));
+        when(productRepository.save(any(Product.class))).thenThrow(new RuntimeException("Runtime Exception"));
+
+        var ex = assertThrows(NonRetryableException.class, () -> service.activateProduct(activeProductModel));
+        assertEquals(RuntimeException.class, getRootCause(ex).getClass());
+        verify(productRepository, times(1)).findById(any());
+        verify(productRepository, times(1)).save(any());
+    }
+
+    private ActiveProductModel mockActiveProductModel() {
+        return new ActiveProductModel()
+                .setEnabled(true)
+                .setId("s00001")
+                .setLastUser("testUser");
+}
 
     private ProductModel mockProductModel(final String productId, final String providerId){
 
@@ -614,12 +678,6 @@ class ProductServiceImplTest {
                 .setLastUser("test");
     }
 
-    private ActivateProductModel mockActivateProductModel() {
-        return new ActivateProductModel()
-                .setEnabled(true)
-                .setId("s00001")
-                .setLastUser("testUser");
-    }
 
     private Provider mockProvider() {
         return new Provider()

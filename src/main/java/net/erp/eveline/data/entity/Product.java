@@ -64,7 +64,7 @@ public class Product {
         return productId;
     }
 
-    public Product setProductId(String productId) {
+    public Product setProductId(final String productId) {
         this.productId = productId;
         return this;
     }
@@ -73,7 +73,7 @@ public class Product {
         return providerSet;
     }
 
-    public Product setProviderSet(Set<Provider> providerSet) {
+    public Product setProviderSet(final Set<Provider> providerSet) {
         this.providerSet = providerSet;
         return this;
     }
@@ -82,7 +82,7 @@ public class Product {
         return title;
     }
 
-    public Product setTitle(String title) {
+    public Product setTitle(final String title) {
         this.title = title;
         return this;
     }
@@ -91,7 +91,7 @@ public class Product {
         return description;
     }
 
-    public Product setDescription(String description) {
+    public Product setDescription(final String description) {
         this.description = description;
         return this;
     }
@@ -100,7 +100,7 @@ public class Product {
         return sanitaryRegistryNumber;
     }
 
-    public Product setSanitaryRegistryNumber(String sanitaryRegistryNumber) {
+    public Product setSanitaryRegistryNumber(final String sanitaryRegistryNumber) {
         this.sanitaryRegistryNumber = sanitaryRegistryNumber;
         return this;
     }
@@ -109,7 +109,7 @@ public class Product {
         return createDate;
     }
 
-    public Product setCreateDate(OffsetDateTime createDate) {
+    public Product setCreateDate(final OffsetDateTime createDate) {
         this.createDate = createDate;
         return this;
     }
@@ -118,7 +118,7 @@ public class Product {
         return lastModified;
     }
 
-    public Product setLastModified(OffsetDateTime lastModified) {
+    public Product setLastModified(final OffsetDateTime lastModified) {
         this.lastModified = lastModified;
         return this;
     }
@@ -127,7 +127,7 @@ public class Product {
         return lastUser;
     }
 
-    public Product setLastUser(String lastUser) {
+    public Product setLastUser(final String lastUser) {
         this.lastUser = lastUser;
         return this;
     }
@@ -136,7 +136,7 @@ public class Product {
         return enabled;
     }
 
-    public Product setEnabled(Boolean enabled) {
+    public Product setEnabled(final Boolean enabled) {
         this.enabled = enabled;
         return this;
     }
@@ -145,13 +145,13 @@ public class Product {
         return upc;
     }
 
-    public Product setUpc(String upc) {
+    public Product setUpc(final String upc) {
         this.upc = upc;
         return this;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
 
         if (o == null || getClass() != o.getClass()) return false;

@@ -2,7 +2,7 @@ package net.erp.eveline.common.mapper;
 
 import net.erp.eveline.data.entity.Product;
 import net.erp.eveline.data.entity.Provider;
-import net.erp.eveline.model.ActivateProductModel;
+import net.erp.eveline.model.ActiveProductModel;
 import net.erp.eveline.model.ProductModel;
 
 import java.util.Optional;
@@ -36,6 +36,13 @@ public class ProductMapper {
         return products.stream()
                 .map(ProductMapper::toModel)
                 .collect(Collectors.toSet());
+    }
+
+    public static ActiveProductModel toActiveModel(final Product product) {
+        return new ActiveProductModel()
+                .setId(product.getProductId())
+                .setEnabled(product.getEnabled())
+                .setLastUser(product.getLastUser());
     }
 
     public static Product toEntity(final ProductModel productModel, final Set<Provider> providers) {
@@ -80,10 +87,10 @@ public class ProductMapper {
                 .collect(Collectors.toSet());
     }
 
-    public static Product toEntity(final Product product, final ActivateProductModel activateProductModel) {
+    public static Product toEntity(final Product product, final ActiveProductModel activeProductModel) {
         return product
-                .setLastUser(activateProductModel.getLastUser())
-                .setEnabled(activateProductModel.isEnabled());
+                .setLastUser(activeProductModel.getLastUser())
+                .setEnabled(activeProductModel.isEnabled());
     }
 
 }

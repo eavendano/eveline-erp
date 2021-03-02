@@ -1,6 +1,6 @@
 package net.erp.eveline.service.product;
 
-import net.erp.eveline.model.ActivateProductModel;
+import net.erp.eveline.model.ActiveProductModel;
 import net.erp.eveline.model.ProductModel;
 
 import java.util.Set;
@@ -12,7 +12,7 @@ public interface ProductService {
 
     ProductModel upsertProductModel(final ProductModel productModel);
 
-    ProductModel activateProduct(final ActivateProductModel activateProductModel);
+    ActiveProductModel activateProduct(final ActiveProductModel activeProductModel);
 
     ProductModel findByUpc(final String upc);
 }

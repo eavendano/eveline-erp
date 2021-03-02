@@ -25,6 +25,13 @@ public class ProviderMapper {
                 .setLastUser(provider.getLastUser());
     }
 
+    public static ActiveProviderModel toActiveModel(final Provider provider) {
+        return new ActiveProviderModel()
+                .setId(provider.getProviderId())
+                .setEnabled(provider.isEnabled())
+                .setLastUser(provider.getLastUser());
+    }
+
     public static Set<ProviderModel> toModel(final Set<Provider> providers) {
         return providers.stream()
                 .map(ProviderMapper::toModel)

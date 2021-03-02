@@ -24,17 +24,8 @@ public class ProductModel {
         return id;
     }
 
-    public ProductModel setId(String id) {
+    public ProductModel setId(final String id) {
         this.id = id;
-        return this;
-    }
-
-    public Set<String> getProviderSet() {
-        return providerSet;
-    }
-
-    public ProductModel setProviderSet(Set<String> providerSet) {
-        this.providerSet = providerSet;
         return this;
     }
 
@@ -42,8 +33,17 @@ public class ProductModel {
         return upc;
     }
 
-    public ProductModel setUpc(String upc) {
+    public ProductModel setUpc(final String upc) {
         this.upc = upc;
+        return this;
+    }
+
+    public Set<String> getProviderSet() {
+        return providerSet;
+    }
+
+    public ProductModel setProviderSet(final Set<String> providerSet) {
+        this.providerSet = providerSet;
         return this;
     }
 
@@ -51,7 +51,7 @@ public class ProductModel {
         return title;
     }
 
-    public ProductModel setTitle(String title) {
+    public ProductModel setTitle(final String title) {
         this.title = title;
         return this;
     }
@@ -60,7 +60,7 @@ public class ProductModel {
         return description;
     }
 
-    public ProductModel setDescription(String description) {
+    public ProductModel setDescription(final String description) {
         this.description = description;
         return this;
     }
@@ -69,7 +69,7 @@ public class ProductModel {
         return sanitaryRegistryNumber;
     }
 
-    public ProductModel setSanitaryRegistryNumber(String sanitaryRegistryNumber) {
+    public ProductModel setSanitaryRegistryNumber(final String sanitaryRegistryNumber) {
         this.sanitaryRegistryNumber = sanitaryRegistryNumber;
         return this;
     }
@@ -78,7 +78,7 @@ public class ProductModel {
         return createDate;
     }
 
-    public ProductModel setCreateDate(OffsetDateTime createDate) {
+    public ProductModel setCreateDate(final OffsetDateTime createDate) {
         this.createDate = createDate;
         return this;
     }
@@ -87,7 +87,7 @@ public class ProductModel {
         return lastModified;
     }
 
-    public ProductModel setLastModified(OffsetDateTime lastModified) {
+    public ProductModel setLastModified(final OffsetDateTime lastModified) {
         this.lastModified = lastModified;
         return this;
     }
@@ -96,7 +96,7 @@ public class ProductModel {
         return lastUser;
     }
 
-    public ProductModel setLastUser(String lastUser) {
+    public ProductModel setLastUser(final String lastUser) {
         this.lastUser = lastUser;
         return this;
     }
@@ -105,7 +105,7 @@ public class ProductModel {
         return enabled;
     }
 
-    public ProductModel setEnabled(Boolean enabled) {
+    public ProductModel setEnabled(final Boolean enabled) {
         this.enabled = enabled;
         return this;
     }

@@ -1,9 +1,11 @@
 package net.erp.eveline.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class ActivateProductModel {
+public class ActiveProductModel {
     private String id;
     private Boolean enabled;
     private String lastUser;
@@ -12,7 +14,7 @@ public class ActivateProductModel {
         return id;
     }
 
-    public ActivateProductModel setId(String id) {
+    public ActiveProductModel setId(final String id) {
         this.id = id;
         return this;
     }
@@ -21,7 +23,7 @@ public class ActivateProductModel {
         return enabled;
     }
 
-    public ActivateProductModel setEnabled(Boolean enabled) {
+    public ActiveProductModel setEnabled(final Boolean enabled) {
         this.enabled = enabled;
         return this;
     }
@@ -30,9 +32,25 @@ public class ActivateProductModel {
         return lastUser;
     }
 
-    public ActivateProductModel setLastUser(String lastUser) {
+    public ActiveProductModel setLastUser(final String lastUser) {
         this.lastUser = lastUser;
         return this;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ActiveProductModel that = (ActiveProductModel) o;
+
+        return new EqualsBuilder().append(id, that.id).append(enabled, that.enabled).append(lastUser, that.lastUser).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(id).append(enabled).append(lastUser).toHashCode();
     }
 
     @Override
