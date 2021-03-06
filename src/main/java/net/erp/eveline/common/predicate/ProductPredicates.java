@@ -109,7 +109,7 @@ public class ProductPredicates {
 
     private static boolean evaluateModel(final List<String> errorList, final ProductModel productModel, boolean idValid) {
         boolean titleValid = isProductTitleValid().test(productModel.getTitle().trim());
-        boolean descriptionValid = isProductDescriptionValid().test(productModel.getDescription().trim());
+        boolean descriptionValid = isProductDescriptionValid().test(productModel.getDescription());
         boolean lastUserValid = isLastUserValid().test(productModel.getLastUser());
         boolean upcValid = isProductUpcValid().test(productModel.getUpc());
         boolean isProviderSetValid = isProviderSetValid().test(productModel.getProviderSet());

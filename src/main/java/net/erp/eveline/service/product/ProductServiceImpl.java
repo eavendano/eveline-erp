@@ -150,8 +150,8 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         return transactionService.performWriteTransaction(status -> {
             logger.info("Performing product activation transaction for model: {}", activeProductModel);
 
-            final var product = productRepository.findById(activeProductModel.getId())
-                    .orElseThrow(() -> new NotFoundException(format("Unable to update a provider with the id specified: %s", activeProductModel.getId())));
+            final Product product = productRepository.findById(activeProductModel.getId())
+                    .orElseThrow(() -> new NotFoundException(String.format("Unable to update a provider with the id specified: %s", activeProductModel.getId())));
 
             var result = toActiveModel(productRepository.save(ProductMapper.toEntity(product, activeProductModel)));
 
