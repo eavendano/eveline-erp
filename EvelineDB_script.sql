@@ -18,9 +18,19 @@ CREATE TABLE provider (
   last_user varchar(100) NOT NULL,
   enabled boolean DEFAULT false,
   create_date timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
-  last_modified timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone
+  last_modified timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+  UNIQUE (provider_id)
 );
 GRANT SELECT, INSERT, UPDATE, DELETE ON provider TO "eveline-erp";
+
+DROP INDEX IF EXISTS provider_id_index;
+CREATE INDEX provider_id_index ON provider(provider_id);
+
+DROP INDEX IF EXISTS provider_id_active_index;
+CREATE INDEX provider_id_active_index ON provider USING btree(provider_id) WHERE enabled IS TRUE;
+
+DROP INDEX IF EXISTS provider_last_modified_index;
+CREATE INDEX provider_last_modified_index ON provider USING btree (last_modified DESC NULLS LAST);
 
 DROP FUNCTION IF EXISTS insert_create_date();
 CREATE FUNCTION insert_create_date()
@@ -107,14 +117,24 @@ CREATE TABLE product (
   enabled boolean DEFAULT false,
   create_date timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
   last_modified timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
-  CONSTRAINT check_upc_length
-      check (length(upc) = 12)
-
+  UNIQUE (product_id),
+  UNIQUE (upc),
+  UNIQUE (sanitary_registry_number),
+  CONSTRAINT check_upc_length CHECK (length(upc) = 12)
 );
-
-CREATE INDEX upc_index ON product (upc);
-
 GRANT SELECT, INSERT, UPDATE, DELETE ON product TO "eveline-erp";
+
+DROP INDEX IF EXISTS product_id_index;
+CREATE INDEX product_id_index ON product(product_id);
+
+DROP INDEX IF EXISTS product_id_active_index;
+CREATE INDEX product_id_active_index ON product USING btree(product_id) WHERE enabled IS TRUE;
+
+DROP INDEX IF EXISTS upc_index;
+CREATE INDEX upc_index ON product(upc);
+
+DROP INDEX IF EXISTS product_last_modified_index;
+CREATE INDEX product_last_modified_index ON product USING btree (last_modified DESC NULLS LAST);
 
 DROP TRIGGER IF EXISTS product_insert_create_date ON product;
 CREATE TRIGGER product_insert_create_date
