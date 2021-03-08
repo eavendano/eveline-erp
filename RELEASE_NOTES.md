@@ -6,6 +6,14 @@ Release [SEMANTIC_VERSION] (dd/mm/aaaa) [Responsible engineer name]
 * [User Story ID if possible] - First chage name or description.
 * [User Story ID if possible] - Second chage name or description.
 ```
+Release 1.3.0 (07/03/21) Byron Miranda, Emanuel Avendaño
+* Product CRUD operations implemented.
+* Provider CRUD operations maintenance and optimization.
+* Unit testing implemented for both features.
+* Heavy validation improvements and testing.
+* DB script with new tables, indexes, triggers and validation definitions.
+* Definition for N-to-N mapping and Id generation for identities in both product and provider definitons.
+* Project dependency updates.
 
 Release 1.2.0 (04/06/2020) Emanuel Avendaño
 
