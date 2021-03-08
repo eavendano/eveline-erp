@@ -4,6 +4,7 @@ import net.erp.eveline.model.ActiveProviderModel;
 import net.erp.eveline.model.ProviderModel;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -36,6 +37,9 @@ public class ProviderPredicates {
     public static Predicate<ProviderModel> isProviderModelValidForInsert(final List<String> errorList) {
         return providerModel -> {
             boolean idValid = isProviderIdValidAtInsert().test(providerModel.getId());
+            if (!idValid) {
+                errorList.add(PROVIDER_ID_INVALID_AT_INSERT_MESSAGE);
+            }
             return evaluateModel(errorList, providerModel, idValid);
         };
     }
@@ -43,6 +47,9 @@ public class ProviderPredicates {
     public static Predicate<ProviderModel> isProviderModelValidForUpdate(final List<String> errorList) {
         return providerModel -> {
             boolean idValid = isProviderIdValid().test(providerModel.getId());
+            if (!idValid) {
+                errorList.add(PROVIDER_ID_INVALID_MESSAGE);
+            }
             return evaluateModel(errorList, providerModel, idValid);
         };
     }
@@ -52,13 +59,10 @@ public class ProviderPredicates {
         boolean descriptionValid = isProviderDescriptionValid().test(providerModel.getDescription().trim());
         boolean emailValid = isProviderEmailValid().test(providerModel.getEmail().trim());
         boolean telephone1Valid = isProviderPhoneValid().test(providerModel.getTelephone1());
-        boolean telephone2Valid = isProviderNullPhoneValid().test(providerModel.getTelephone2());
-        boolean telephone3Valid = isProviderNullPhoneValid().test(providerModel.getTelephone3());
+        boolean telephone2Valid = isProviderOptionalPhoneValid().test(providerModel.getTelephone2());
+        boolean telephone3Valid = isProviderOptionalPhoneValid().test(providerModel.getTelephone3());
         boolean lastUserValid = isLastUserValid().test(providerModel.getLastUser());
 
-        if (!idValid) {
-            errorList.add(PROVIDER_ID_INVALID_AT_INSERT_MESSAGE);
-        }
         if (!nameValid) {
             errorList.add(PROVIDER_NAME_INVALID_MESSAGE);
         }
@@ -110,13 +114,18 @@ public class ProviderPredicates {
                 && providerIdPattern.matcher(providerId.trim()).matches();
     }
 
+    public static Predicate<Set<String>> isProviderSetValid() {
+        return providerIds -> ofNullable(providerIds).isPresent()
+                && providerIds.stream().allMatch(providerId -> isProviderIdValid().test(providerId));
+    }
+
     public static Predicate<String> isProviderIdValidAtInsert() {
         return providerId -> ofNullable(providerId).isEmpty();
     }
 
     public static Predicate<String> isProviderNameValid() {
         return name -> ofNullable(name).isPresent()
-                && name.length() >= 2
+                && name.length() >= 3
                 && name.length() <= 100
                 && namePattern.matcher(name.trim()).matches();
     }
@@ -138,7 +147,7 @@ public class ProviderPredicates {
                 && phonePattern.matcher(telephone).matches();
     }
 
-    public static Predicate<String> isProviderNullPhoneValid() {
+    public static Predicate<String> isProviderOptionalPhoneValid() {
         return telephone -> ofNullable(telephone).isEmpty()
                 || phonePattern.matcher(telephone).matches();
     }

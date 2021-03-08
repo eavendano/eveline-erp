@@ -22,7 +22,7 @@ public class Provider {
     @GeneratedValue(generator = "providerIdGenerator")
     @GenericGenerator(name = "providerIdGenerator", strategy = "net.erp.eveline.data.generators.CustomGenerator",
             parameters = {@Parameter(name = "prefix", value = "p"), @Parameter(name = "sequence", value = "provider_id_seq")})
-    @Column(name="provider_id")
+    @Column(name = "provider_id")
     private String providerId;
 
     @Column(name = "name")
@@ -99,12 +99,12 @@ public class Provider {
         return enabled;
     }
 
-    public Provider setProviderId(String providerId) {
+    public Provider setProviderId(final String providerId) {
         this.providerId = providerId;
         return this;
     }
 
-    public Provider setName(String name) {
+    public Provider setName(final String name) {
         this.name = name;
         return this;
     }
@@ -139,7 +139,7 @@ public class Provider {
         return this;
     }
 
-    public Provider setEnabled(Boolean enabled) {
+    public Provider setEnabled(final Boolean enabled) {
         this.enabled = enabled;
         return this;
     }

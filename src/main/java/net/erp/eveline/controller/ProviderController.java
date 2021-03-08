@@ -44,7 +44,7 @@ public class ProviderController {
 
     @PutMapping(value = "/activate", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ProviderModel activateProvider(@RequestBody final ActiveProviderModel activeProviderModel) {
+    public ActiveProviderModel activateProvider(@RequestBody final ActiveProviderModel activeProviderModel) {
         return providerService.activateProvider(activeProviderModel);
     }
 

@@ -1,7 +1,7 @@
 Eveline ERP
 ---
 
-[![Eveline ERP Version](https://img.shields.io/badge/version-1.2.0-blue?style=for-the-badge)](https://img.shields.io/badge/version-1.2.0-blue?style=for-the-badge)
+[![Eveline ERP Version](https://img.shields.io/badge/version-1.3.0-blue?style=for-the-badge)](https://img.shields.io/badge/version-1.2.0-blue?style=for-the-badge)
 
 ## Purpose
 
@@ -182,7 +182,10 @@ troubleshoot changes faster to respond to our clients in the best way possible a
     1. Remember that we use `Semantic Versioning`. Go to the links at the bottom to read on how to update them. Comments
        when making the `pull request` will also be related to how to use it correctly.
     2. `README.md` update badge on line 4 with the right version.
-    3. `package.json` line 3.
+    3. `eveline-swagger.json` line 6.
+    4. `pom.xml` line 13.
+    5. `application.yml` line 5.
+    6. `Dockerfile` line 30
     7. `RELEASE_NOTES.md` with the respective notes of the release in the following format:
     ```bash
     Release [SEMANTIC_VERSION] (dd/mm/aaaa) [Responsible engineer name]
@@ -389,3 +392,4 @@ The following guides illustrate how to use some features concretely:
 * [Spring DataIntegrityViolationException Explained (ConstraintViolationException)](https://www.baeldung.com/spring-dataIntegrityviolationexception)
 * [Programmatic Transaction Management](https://www.baeldung.com/spring-programmatic-transaction-management)
 * [Overview of identifiers in Hibernate/JPA](https://www.baeldung.com/hibernate-identifiers)
+* [JPA Many to Many Modeling](https://www.baeldung.com/jpa-many-to-many)

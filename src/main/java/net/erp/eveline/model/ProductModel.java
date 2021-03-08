@@ -1,20 +1,20 @@
 package net.erp.eveline.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.time.OffsetDateTime;
+import java.util.Set;
 
-public class ProviderModel {
-
+public class ProductModel {
     private String id;
-    private String name;
+    private String upc;
+    private Set<String> providerSet;
+    private String title;
     private String description;
-    private String email;
-    private String telephone1;
-    private String telephone2;
-    private String telephone3;
+    private String sanitaryRegistryNumber;
     private OffsetDateTime createDate;
     private OffsetDateTime lastModified;
     private String lastUser;
@@ -24,17 +24,35 @@ public class ProviderModel {
         return id;
     }
 
-    public ProviderModel setId(final String id) {
+    public ProductModel setId(final String id) {
         this.id = id;
         return this;
     }
 
-    public String getName() {
-        return name;
+    public String getUpc() {
+        return upc;
     }
 
-    public ProviderModel setName(final String name) {
-        this.name = name;
+    public ProductModel setUpc(final String upc) {
+        this.upc = upc;
+        return this;
+    }
+
+    public Set<String> getProviderSet() {
+        return providerSet;
+    }
+
+    public ProductModel setProviderSet(final Set<String> providerSet) {
+        this.providerSet = providerSet;
+        return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public ProductModel setTitle(final String title) {
+        this.title = title;
         return this;
     }
 
@@ -42,44 +60,17 @@ public class ProviderModel {
         return description;
     }
 
-    public ProviderModel setDescription(final String description) {
+    public ProductModel setDescription(final String description) {
         this.description = description;
         return this;
     }
 
-    public String getEmail() {
-        return email;
+    public String getSanitaryRegistryNumber() {
+        return sanitaryRegistryNumber;
     }
 
-    public ProviderModel setEmail(final String email) {
-        this.email = email;
-        return this;
-    }
-
-    public String getTelephone1() {
-        return telephone1;
-    }
-
-    public ProviderModel setTelephone1(final String telephone1) {
-        this.telephone1 = telephone1;
-        return this;
-    }
-
-    public String getTelephone2() {
-        return telephone2;
-    }
-
-    public ProviderModel setTelephone2(final String telephone2) {
-        this.telephone2 = telephone2;
-        return this;
-    }
-
-    public String getTelephone3() {
-        return telephone3;
-    }
-
-    public ProviderModel setTelephone3(final String telephone3) {
-        this.telephone3 = telephone3;
+    public ProductModel setSanitaryRegistryNumber(final String sanitaryRegistryNumber) {
+        this.sanitaryRegistryNumber = sanitaryRegistryNumber;
         return this;
     }
 
@@ -87,7 +78,7 @@ public class ProviderModel {
         return createDate;
     }
 
-    public ProviderModel setCreateDate(final OffsetDateTime createDate) {
+    public ProductModel setCreateDate(final OffsetDateTime createDate) {
         this.createDate = createDate;
         return this;
     }
@@ -96,7 +87,7 @@ public class ProviderModel {
         return lastModified;
     }
 
-    public ProviderModel setLastModified(final OffsetDateTime lastModified) {
+    public ProductModel setLastModified(final OffsetDateTime lastModified) {
         this.lastModified = lastModified;
         return this;
     }
@@ -105,7 +96,7 @@ public class ProviderModel {
         return lastUser;
     }
 
-    public ProviderModel setLastUser(final String lastUser) {
+    public ProductModel setLastUser(final String lastUser) {
         this.lastUser = lastUser;
         return this;
     }
@@ -114,7 +105,7 @@ public class ProviderModel {
         return enabled;
     }
 
-    public ProviderModel setEnabled(final Boolean enabled) {
+    public ProductModel setEnabled(final Boolean enabled) {
         this.enabled = enabled;
         return this;
     }
@@ -125,19 +116,27 @@ public class ProviderModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProviderModel that = (ProviderModel) o;
+        ProductModel that = (ProductModel) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)
+                .append(upc, that.upc)
+                .append(providerSet, that.providerSet)
+                .append(title, that.title)
                 .append(description, that.description)
-                .append(email, that.email)
-                .append(telephone1, that.telephone1)
-                .append(telephone2, that.telephone2)
-                .append(telephone3, that.telephone3)
+                .append(sanitaryRegistryNumber, that.sanitaryRegistryNumber)
                 .append(createDate, that.createDate)
                 .append(lastModified, that.lastModified)
                 .append(lastUser, that.lastUser)
+                .append(enabled, that.enabled)
                 .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .toHashCode();
     }
 
     @Override
@@ -145,11 +144,11 @@ public class ProviderModel {
         return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
                 .append("__class__", this.getClass().getSimpleName())
                 .append("id", id)
+                .append("upc", upc)
+                .append("providerId", providerSet)
+                .append("title", title)
                 .append("description", description)
-                .append("email", email)
-                .append("telephone1", telephone1)
-                .append("telephone2", telephone2)
-                .append("telephone3", telephone3)
+                .append("sanitaryRegistryNumber", sanitaryRegistryNumber)
                 .append("createDate", createDate)
                 .append("lastModified", lastModified)
                 .append("lastUser", lastUser)

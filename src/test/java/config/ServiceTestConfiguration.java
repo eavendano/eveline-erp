@@ -47,11 +47,11 @@ public class ServiceTestConfiguration {
     public RetryTemplate getRetryTemplate() {
         RetryTemplate retryTemplate = new RetryTemplate();
 
-        // Backoff Policy (*in seconds): 5, 10, 20, 40, 60
+        // Backoff Policy (*in seconds): 3, 6, 9, 12, 15
         ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-        backOffPolicy.setInitialInterval(5000L);
-        backOffPolicy.setMultiplier(2);
-        backOffPolicy.setMaxInterval(60000);
+        backOffPolicy.setInitialInterval(3000L);
+        backOffPolicy.setMultiplier(1);//This multiplier was updated to speedup testing and project building.
+        backOffPolicy.setMaxInterval(15000);
 
         Map<Class<? extends Throwable>, Boolean> retryableExceptions = new HashMap<>();
         retryableExceptions.put(RetryableException.class, true);
@@ -77,15 +77,15 @@ public class ServiceTestConfiguration {
         }
 
         @Override
-        protected void doBegin(Object transaction, TransactionDefinition definition) throws TransactionException {
+        protected void doBegin(final Object transaction, TransactionDefinition definition) throws TransactionException {
         }
 
         @Override
-        protected void doCommit(DefaultTransactionStatus status) throws TransactionException {
+        protected void doCommit(final DefaultTransactionStatus status) throws TransactionException {
         }
 
         @Override
-        protected void doRollback(DefaultTransactionStatus status) throws TransactionException {
+        protected void doRollback(final DefaultTransactionStatus status) throws TransactionException {
         }
     }
 }

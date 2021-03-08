@@ -13,5 +13,5 @@ public interface ProviderService {
 
     ProviderModel upsertProviderModel(final ProviderModel providerModel);
 
-    ProviderModel activateProvider(final ActiveProviderModel activeProviderModel);
+    ActiveProviderModel activateProvider(final ActiveProviderModel activeProviderModel);
 }
