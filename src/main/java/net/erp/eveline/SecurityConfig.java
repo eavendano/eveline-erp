@@ -38,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         authorizeRequests
                                 .antMatchers("/docs/**").permitAll() // This is how a path can be white listed within the application
                                 .antMatchers("/provider/**").permitAll()
+                                .antMatchers("/product/**").permitAll()
                                 .antMatchers(this.adminServer.path("/assets/**")).permitAll()
                                 .antMatchers(this.adminServer.path("/login")).permitAll()
                                 .anyRequest().authenticated()
@@ -52,7 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 new AntPathRequestMatcher(this.adminServer.path("/instances/*"),
                                         DELETE.toString()),
                                 new AntPathRequestMatcher(this.adminServer.path("/actuator/**")),
-                                new AntPathRequestMatcher("/provider/**", PUT.toString())
+                                new AntPathRequestMatcher("/provider/**", PUT.toString()),
+                                new AntPathRequestMatcher("/product/**", PUT.toString())
                         ))
                 .rememberMe((rememberMe) -> rememberMe.key(UUID.randomUUID().toString()).tokenValiditySeconds(1209600));
     }

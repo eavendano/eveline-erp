@@ -5,8 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class ActiveProviderModel {
-
+public class ActiveProductModel {
     private String id;
     private Boolean enabled;
     private String lastUser;
@@ -15,7 +14,7 @@ public class ActiveProviderModel {
         return id;
     }
 
-    public ActiveProviderModel setId(final String id) {
+    public ActiveProductModel setId(final String id) {
         this.id = id;
         return this;
     }
@@ -24,7 +23,7 @@ public class ActiveProviderModel {
         return enabled;
     }
 
-    public ActiveProviderModel setEnabled(final Boolean enabled) {
+    public ActiveProductModel setEnabled(final Boolean enabled) {
         this.enabled = enabled;
         return this;
     }
@@ -33,7 +32,7 @@ public class ActiveProviderModel {
         return lastUser;
     }
 
-    public ActiveProviderModel setLastUser(final String lastUser) {
+    public ActiveProductModel setLastUser(final String lastUser) {
         this.lastUser = lastUser;
         return this;
     }
@@ -44,7 +43,7 @@ public class ActiveProviderModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ActiveProviderModel that = (ActiveProviderModel) o;
+        ActiveProductModel that = (ActiveProductModel) o;
 
         return new EqualsBuilder().append(id, that.id).append(enabled, that.enabled).append(lastUser, that.lastUser).isEquals();
     }
