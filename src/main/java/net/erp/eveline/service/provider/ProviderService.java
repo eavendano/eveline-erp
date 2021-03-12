@@ -14,4 +14,6 @@ public interface ProviderService {
     ProviderModel upsertProviderModel(final ProviderModel providerModel);
 
     ActiveProviderModel activateProvider(final ActiveProviderModel activeProviderModel);
+
+    Set<ActiveProviderModel> activateProviderSet(final Set<ActiveProviderModel> activeProviderModelSet);
 }

@@ -17,13 +17,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.util.Collections.emptySet;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toSet;
 import static net.erp.eveline.common.mapper.ProviderMapper.toActiveModel;
 import static net.erp.eveline.common.mapper.ProviderMapper.toEntity;
 import static net.erp.eveline.common.mapper.ProviderMapper.toModel;
 import static net.erp.eveline.common.predicate.ProviderPredicates.PROVIDER_ID_INVALID_MESSAGE;
 import static net.erp.eveline.common.predicate.ProviderPredicates.isActiveProviderModelValid;
+import static net.erp.eveline.common.predicate.ProviderPredicates.isActiveProviderSetValid;
 import static net.erp.eveline.common.predicate.ProviderPredicates.isProviderIdValid;
 import static net.erp.eveline.common.predicate.ProviderPredicates.isProviderModelValidForInsert;
 import static net.erp.eveline.common.predicate.ProviderPredicates.isProviderModelValidForUpdate;
@@ -57,9 +60,9 @@ public class ProviderServiceImpl extends BaseService implements ProviderService 
             if (optionalProvider.isEmpty()) {
                 throw new NotFoundException(String.format("Unable to find a provider with the id specified: %s", providerId));
             }
-            var provider = optionalProvider.get();
-            logger.info("Retrieving provider info: {}", provider);
-            return toModel(provider);
+            var providerModel = toModel(optionalProvider.get());
+            logger.info("Retrieving provider info: {}", providerModel);
+            return providerModel;
         }, providerId);
     }
 
@@ -81,8 +84,8 @@ public class ProviderServiceImpl extends BaseService implements ProviderService 
             if (providerId.isPresent()) {
                 // Try to perform the update
 
-                final var optionalProvider = providerRepository.findById(providerId.get());
-                if (optionalProvider.isEmpty()) {
+                final var providerExists = providerRepository.existsById(providerId.get());
+                if (!providerExists) {
                     throw new NotFoundException(String.format("Unable to update a provider with the id specified: %s", providerId));
                 }
 
@@ -122,6 +125,36 @@ public class ProviderServiceImpl extends BaseService implements ProviderService 
             logger.info("Provider activation operation completed for result: {}", activeProviderModel);
             return result;
         }, activeProviderModel);
+    }
+
+    @Override
+    public Set<ActiveProviderModel> activateProviderSet(final Set<ActiveProviderModel> activeProviderModelSet) {
+        logger.info("Activation operation for set of models: {}", activeProviderModelSet);
+        requireNonNull(activeProviderModelSet, "Active status set provided cannot be null or empty.");
+        if (activeProviderModelSet.isEmpty()) {
+            return emptySet();
+        }
+        List<String> errorList = new ArrayList<>();
+        validate(activeProviderModelSet, isActiveProviderSetValid(errorList), errorList);
+
+        return transactionService.performWriteTransaction(status -> {
+            logger.info("Performing provider activation transaction for set of models: {}", activeProviderModelSet);
+            final var providerIds = activeProviderModelSet.stream().map(ActiveProviderModel::getId).collect(toSet());
+            final var existsAllById = providerRepository.existsAllByProviderIdIn(providerIds);
+            if (!existsAllById) {
+                throw new NotFoundException(String.format("Unable to update providers with the ids specified: %s", providerIds));
+            }
+
+            final var providerSet = Set.copyOf(providerRepository.findAllById(providerIds));
+            if (providerSet.isEmpty()) {
+                throw new NotFoundException(String.format("Unable to update all providers with the ids specified since none where found: %s", providerIds));
+            }
+
+            var result = toActiveModel(Set.copyOf(providerRepository.saveAll(toEntity(providerSet, activeProviderModelSet))));
+
+            logger.info("Provider activation operation completed for results: {}", activeProviderModelSet);
+            return result;
+        }, activeProviderModelSet);
     }
 
     @Autowired

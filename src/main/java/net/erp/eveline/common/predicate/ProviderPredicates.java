@@ -108,6 +108,12 @@ public class ProviderPredicates {
         };
     }
 
+    public static Predicate<Set<ActiveProviderModel>> isActiveProviderSetValid(final List<String> errorList) {
+        return activeProviderModelSet -> ofNullable(activeProviderModelSet).isPresent()
+                && activeProviderModelSet.stream()
+                .allMatch(activeProviderModel -> isActiveProviderModelValid(errorList).test(activeProviderModel));
+    }
+
     public static Predicate<String> isProviderIdValid() {
         return providerId -> ofNullable(providerId).isPresent()
                 && providerId.length() == 6

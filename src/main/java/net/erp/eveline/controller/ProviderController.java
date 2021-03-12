@@ -48,6 +48,12 @@ public class ProviderController {
         return providerService.activateProvider(activeProviderModel);
     }
 
+    @PutMapping(value = "/activateSet", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Set<ActiveProviderModel> activateProvider(@RequestBody final Set<ActiveProviderModel> activeProviderModelSet) {
+        return providerService.activateProviderSet(activeProviderModelSet);
+    }
+
     @Autowired
     public void setProviderService(final ProviderService providerService) {
         this.providerService = providerService;
