@@ -6,6 +6,9 @@ Release [SEMANTIC_VERSION] (dd/mm/aaaa) [Responsible engineer name]
 * [User Story ID if possible] - First chage name or description.
 * [User Story ID if possible] - Second chage name or description.
 ```
+Release 1.3.1 (12/03/21) Emanuel Avendaño
+* New Provider Activate endpoint that supports a set instead of single values.
+
 Release 1.3.0 (07/03/21) Byron Miranda, Emanuel Avendaño
 * Product CRUD operations implemented.
 * Provider CRUD operations maintenance and optimization.

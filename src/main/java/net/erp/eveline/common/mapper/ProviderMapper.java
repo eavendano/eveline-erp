@@ -6,7 +6,8 @@ import net.erp.eveline.model.ProviderModel;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 public class ProviderMapper {
 
@@ -32,10 +33,16 @@ public class ProviderMapper {
                 .setLastUser(provider.getLastUser());
     }
 
+    public static Set<ActiveProviderModel> toActiveModel(final Set<Provider> providerSet) {
+        return providerSet.stream()
+                .map(ProviderMapper::toActiveModel)
+                .collect(toSet());
+    }
+
     public static Set<ProviderModel> toModel(final Set<Provider> providers) {
         return providers.stream()
                 .map(ProviderMapper::toModel)
-                .collect(Collectors.toSet());
+                .collect(toSet());
     }
 
     public static Provider toEntity(final ProviderModel providerModel) {
@@ -59,12 +66,23 @@ public class ProviderMapper {
     public static Set<Provider> toEntity(final Set<ProviderModel> providerModelSet) {
         return providerModelSet.stream()
                 .map(ProviderMapper::toEntity)
-                .collect(Collectors.toSet());
+                .collect(toSet());
     }
 
     public static Provider toEntity(final Provider provider, final ActiveProviderModel activeProviderModel) {
         return provider
                 .setLastUser(activeProviderModel.getLastUser())
                 .setEnabled(activeProviderModel.isEnabled());
+    }
+
+    public static Set<Provider> toEntity(final Set<Provider> providerSet, final Set<ActiveProviderModel> activeProviderModelSet) {
+        return providerSet.stream()
+                .map(provider -> {
+                    final var activeProviderFound = activeProviderModelSet.stream()
+                            .filter(activeProviderModel -> activeProviderModel.getId().equals(provider.getProviderId()))
+                            .collect(toSet())
+                            .iterator().next();
+                    return toEntity(provider, activeProviderFound);
+                }).collect(toSet());
     }
 }
