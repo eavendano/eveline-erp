@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import static java.util.Optional.ofNullable;
+import static net.erp.eveline.common.predicate.CommonPredicates.*;
 import static net.erp.eveline.common.predicate.ProviderPredicates.isProviderSetValid;
 
 public class ProductPredicates {
@@ -24,8 +25,6 @@ public class ProductPredicates {
     private static final Pattern productIdPattern = Pattern.compile("s[0-9]{5}");
     private static final Pattern productUpcPattern = Pattern.compile("[0-9]{12}");
     private static final Pattern productTitlePattern = Pattern.compile("[\\w\\s-]+");
-    private static final Pattern productDescriptionPattern = Pattern.compile("[\\wáéíóúÁÉÍÓÚüÜñÑ$₡€@%|\\s()\\[\\]{}¡!¿?\";,&/.:'<>_+-]*");
-    private static final Pattern productLastUserPattern = Pattern.compile("[\\w.]+");
 
     public static Predicate<ProductModel> isProductModelValidForInsert(final List<String> errorList) {
         return productModel -> {
@@ -84,18 +83,6 @@ public class ProductPredicates {
                 && productTitlePattern.matcher(title.trim()).matches();
     }
 
-    public static Predicate<String> isProductDescriptionValid() {
-        return description -> ofNullable(description).isEmpty()
-                || productDescriptionPattern.matcher(description.trim()).matches();
-    }
-
-    public static Predicate<String> isLastUserValid() {
-        return lastUser -> ofNullable(lastUser).isPresent()
-                && lastUser.length() >= 3
-                && lastUser.length() <= 100
-                && productLastUserPattern.matcher(lastUser).matches();
-    }
-
     public static Predicate<Boolean> isEnabledValid() {
         return enabled -> ofNullable(enabled).isPresent();
     }
@@ -109,7 +96,7 @@ public class ProductPredicates {
 
     private static boolean evaluateModel(final List<String> errorList, final ProductModel productModel, boolean idValid) {
         boolean titleValid = isProductTitleValid().test(productModel.getTitle().trim());
-        boolean descriptionValid = isProductDescriptionValid().test(productModel.getDescription());
+        boolean descriptionValid = isDescriptionValid().test(productModel.getDescription());
         boolean lastUserValid = isLastUserValid().test(productModel.getLastUser());
         boolean upcValid = isProductUpcValid().test(productModel.getUpc());
         boolean isProviderSetValid = isProviderSetValid().test(productModel.getProviderSet());

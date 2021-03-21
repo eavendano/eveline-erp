@@ -1,18 +1,23 @@
 package net.erp.eveline.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.OffsetDateTime;
 
 public class WarehouseModel {
     private String id;
+    private String name;
     private String description;
-    private String location;
+    private String address1;
+    private String address2;
+    private String telephone1;
+    private String telephone2;
+    private String geolocation;
     private OffsetDateTime createDate;
     private OffsetDateTime lastModified;
     private String lastUser;
+    private Boolean enabled;
 
     public String getId() {
         return id;
@@ -20,6 +25,15 @@ public class WarehouseModel {
 
     public WarehouseModel setId(String id) {
         this.id = id;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public WarehouseModel setName(String name) {
+        this.name = name;
         return this;
     }
 
@@ -32,12 +46,48 @@ public class WarehouseModel {
         return this;
     }
 
-    public String getLocation() {
-        return location;
+    public String getAddress1() {
+        return address1;
     }
 
-    public WarehouseModel setLocation(String location) {
-        this.location = location;
+    public WarehouseModel setAddress1(String address1) {
+        this.address1 = address1;
+        return this;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+
+    public WarehouseModel setAddress2(String address2) {
+        this.address2 = address2;
+        return this;
+    }
+
+    public String getTelephone1() {
+        return telephone1;
+    }
+
+    public WarehouseModel setTelephone1(String telephone1) {
+        this.telephone1 = telephone1;
+        return this;
+    }
+
+    public String getTelephone2() {
+        return telephone2;
+    }
+
+    public WarehouseModel setTelephone2(String telephone2) {
+        this.telephone2 = telephone2;
+        return this;
+    }
+
+    public String getGeolocation() {
+        return geolocation;
+    }
+
+    public WarehouseModel setGeolocation(String geolocation) {
+        this.geolocation = geolocation;
         return this;
     }
 
@@ -68,6 +118,22 @@ public class WarehouseModel {
         return this;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public WarehouseModel setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+        return this;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .toHashCode();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,18 +144,17 @@ public class WarehouseModel {
 
         return new EqualsBuilder()
                 .append(id, that.id)
+                .append(name, that.name)
                 .append(description, that.description)
-                .append(location, that.location)
+                .append(address1, that.address1)
+                .append(address2, that.address2)
+                .append(telephone1, that.telephone1)
+                .append(telephone2, that.telephone2)
+                .append(geolocation, that.geolocation)
+                .append(createDate, that.createDate)
+                .append(lastModified, that.lastModified)
+                .append(lastUser, that.lastUser)
+                .append(enabled, that.enabled)
                 .isEquals();
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
-                .append("__class__", this.getClass().getSimpleName())
-                .append("id", id)
-                .append("description", description)
-                .append("location", location)
-                .toString();
     }
 }
