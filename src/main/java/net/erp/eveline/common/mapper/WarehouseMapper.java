@@ -11,7 +11,7 @@ public class WarehouseMapper {
         return new WarehouseModel()
                 .setId(warehouse.getWarehouseId())
                 .setDescription(warehouse.getDescription())
-                .setLocation(warehouse.getLocation())
+                .setGeolocation(warehouse.getGeolocation())
                 .setCreateDate(warehouse.getCreateDate())
                 .setLastModified(warehouse.getLastModified())
                 .setLastUser(warehouse.getLastUser());
@@ -28,7 +28,7 @@ public class WarehouseMapper {
         return new Warehouse()
                 .setWarehouseId(warehouseModel.getId())
                 .setDescription(warehouseModel.getDescription())
-                .setLocation(warehouseModel.getLocation())
+                .setGeolocation(warehouseModel.getGeolocation())
                 .setLastUser(warehouseModel.getLastUser());
     }
 

@@ -244,35 +244,6 @@ class ProductPredicatesTest {
     }
 
     @Test
-    void isProductDescriptionValid() {
-        final String validDescription = "áéíóúÁÉÍÓÚüÜñÑ$₡€@%|();,&/.:'<>_+-{}¡!¿?";
-        final String validEmptyDescription = "";
-        assertTrue(ProductPredicates.isProductDescriptionValid().test(validDescription));
-        assertTrue(ProductPredicates.isProductDescriptionValid().test(validEmptyDescription));
-        assertTrue(ProductPredicates.isProductDescriptionValid().test(null));
-    }
-
-    @Test
-    void isProductDescriptionValidFailsOnInvalidInput() {
-        final String invalidSymbol = "ö";
-        assertFalse(ProductPredicates.isProductDescriptionValid().test(invalidSymbol));
-    }
-
-    @Test
-    void isLastUserValid() {
-        final String validString = "username.com";
-        assertTrue(ProductPredicates.isLastUserValid().test(validString));
-    }
-
-    @Test
-    void isLastUserValidFailsOnInvalidInput() {
-        final String invalidUsername = "-90";
-        final String invalidEmptyUsername = "";
-        assertFalse(ProductPredicates.isLastUserValid().test(invalidUsername));
-        assertFalse(ProductPredicates.isLastUserValid().test(invalidEmptyUsername));
-    }
-
-    @Test
     void isEnabledValid() {
         assertTrue(ProductPredicates.isEnabledValid().test(true));
     }

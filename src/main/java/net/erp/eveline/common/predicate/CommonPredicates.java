@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import static java.util.Optional.ofNullable;
 
 public class CommonPredicates {
-    static final Pattern descriptionPattern = Pattern.compile("[\\wáéíóúÁÉÍÓÚüÜñÑ$₡€@%|\\s()\\[\\]{}¡!¿?\";,&/.:'<>_+-]+");
+    static final Pattern descriptionPattern = Pattern.compile("[\\wáéíóúÁÉÍÓÚüÜñÑ$₡€@%|\\s()\\[\\]{}¡!¿?\";,&/.:'<>_+-]*");
     static final Pattern phonePattern = Pattern.compile("\\d{8,25}");
     static final Pattern lastUserPattern = Pattern.compile("[\\w.]+");
 
