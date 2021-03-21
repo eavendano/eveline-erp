@@ -118,7 +118,7 @@ public class WarehouseModel {
         return this;
     }
 
-    public Boolean getEnabled() {
+    public Boolean isEnabled() {
         return enabled;
     }
 

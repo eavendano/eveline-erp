@@ -36,9 +36,6 @@ public class Warehouse {
     @Column(name = "telephone2")
     private String telephone2;
 
-    @Column(name = "telephone3")
-    private String telephone3;
-
     @Column(name = "geolocation")
     private String geolocation;
 
@@ -117,15 +114,6 @@ public class Warehouse {
         return this;
     }
 
-    public String getTelephone3() {
-        return telephone3;
-    }
-
-    public Warehouse setTelephone3(String telephone3) {
-        this.telephone3 = telephone3;
-        return this;
-    }
-
     public String getGeolocation() {
         return geolocation;
     }
@@ -135,7 +123,7 @@ public class Warehouse {
         return this;
     }
 
-    public Boolean getEnabled() {
+    public Boolean isEnabled() {
         return enabled;
     }
 
@@ -187,7 +175,6 @@ public class Warehouse {
                 .append(address2, warehouse.address2)
                 .append(telephone1, warehouse.telephone1)
                 .append(telephone2, warehouse.telephone2)
-                .append(telephone3, warehouse.telephone3)
                 .append(geolocation, warehouse.geolocation)
                 .append(createDate, warehouse.createDate)
                 .append(enabled, warehouse.enabled)
@@ -207,7 +194,6 @@ public class Warehouse {
                 .append("address2", address2)
                 .append("telephone1", telephone1)
                 .append("telephone2", telephone2)
-                .append("telephone3", telephone3)
                 .append("geolocation", geolocation)
                 .append("createDate", createDate)
                 .append("lastModified", lastModified)
