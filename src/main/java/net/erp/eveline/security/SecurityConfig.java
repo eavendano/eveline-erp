@@ -1,4 +1,4 @@
-package net.erp.eveline;
+package net.erp.eveline.security;
 
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import org.springframework.context.annotation.Configuration;
@@ -33,18 +33,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         successHandler.setTargetUrlParameter("redirectTo");
         successHandler.setDefaultTargetUrl(this.adminServer.path("/"));
 
-        http.authorizeRequests(
-                (authorizeRequests) ->
-                        authorizeRequests
-                                .antMatchers("/docs/**").permitAll() // This is how a path can be white listed within the application
-                                .antMatchers("/provider/**").permitAll()
-                                .antMatchers("/product/**").permitAll()
-                                .antMatchers(this.adminServer.path("/assets/**")).permitAll()
-                                .antMatchers(this.adminServer.path("/login")).permitAll()
-                                .anyRequest().authenticated()
-        ).formLogin(
-                (formLogin) -> formLogin.loginPage(this.adminServer.path("/login")).successHandler(successHandler).and()
-        ).logout((logout) -> logout.logoutUrl(this.adminServer.path("/logout")))
+        http
+                .authorizeRequests(
+                        (authorizeRequests) ->
+                                authorizeRequests
+                                        .antMatchers("/docs/**").permitAll() // This is how a path can be white listed within the application
+                                        .antMatchers("/provider/**").permitAll()
+                                        .antMatchers("/product/**").permitAll()
+                                        .antMatchers(this.adminServer.path("/assets/**")).permitAll()
+                                        .antMatchers(this.adminServer.path("/login")).permitAll()
+                                        .anyRequest().authenticated()
+                ).formLogin((formLogin) -> formLogin.loginPage(this.adminServer.path("/login")).successHandler(successHandler).and())
+                .logout((logout) -> logout.logoutUrl(this.adminServer.path("/logout")))
                 .httpBasic(Customizer.withDefaults())
                 .csrf((csrf) -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringRequestMatchers(
@@ -56,7 +56,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 new AntPathRequestMatcher("/provider/**", PUT.toString()),
                                 new AntPathRequestMatcher("/product/**", PUT.toString())
                         ))
-                .rememberMe((rememberMe) -> rememberMe.key(UUID.randomUUID().toString()).tokenValiditySeconds(1209600));
+                .rememberMe((rememberMe) -> rememberMe.key(UUID.randomUUID().toString()).tokenValiditySeconds(1209600))
+                .headers()
+                .xssProtection()
+                .and()
+                .contentSecurityPolicy("script-src 'self'");
     }
 
     // Required to provide UserDetailsService for "remember functionality"
