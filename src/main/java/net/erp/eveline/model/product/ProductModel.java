@@ -1,4 +1,4 @@
-package net.erp.eveline.model;
+package net.erp.eveline.model.product;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,6 +19,7 @@ public class ProductModel {
     private OffsetDateTime lastModified;
     private String lastUser;
     private Boolean enabled;
+    private SchemaModel schemaModel;
 
     public String getId() {
         return id;
@@ -110,8 +111,17 @@ public class ProductModel {
         return this;
     }
 
+    public SchemaModel getSchemaModel() {
+        return schemaModel;
+    }
+
+    public ProductModel setSchemaModel(final SchemaModel schemaModel) {
+        this.schemaModel = schemaModel;
+        return this;
+    }
+
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
 
         if (o == null || getClass() != o.getClass()) return false;
@@ -129,6 +139,7 @@ public class ProductModel {
                 .append(lastModified, that.lastModified)
                 .append(lastUser, that.lastUser)
                 .append(enabled, that.enabled)
+                .append(schemaModel, that.schemaModel)
                 .isEquals();
     }
 
@@ -136,6 +147,16 @@ public class ProductModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
+                .append(upc)
+                .append(providerSet)
+                .append(title)
+                .append(description)
+                .append(sanitaryRegistryNumber)
+                .append(createDate)
+                .append(lastModified)
+                .append(lastUser)
+                .append(enabled)
+                .append(schemaModel)
                 .toHashCode();
     }
 
@@ -145,7 +166,7 @@ public class ProductModel {
                 .append("__class__", this.getClass().getSimpleName())
                 .append("id", id)
                 .append("upc", upc)
-                .append("providerId", providerSet)
+                .append("providerSet", providerSet)
                 .append("title", title)
                 .append("description", description)
                 .append("sanitaryRegistryNumber", sanitaryRegistryNumber)
@@ -153,6 +174,7 @@ public class ProductModel {
                 .append("lastModified", lastModified)
                 .append("lastUser", lastUser)
                 .append("enabled", enabled)
+                .append("schemaModel", schemaModel)
                 .toString();
     }
 }

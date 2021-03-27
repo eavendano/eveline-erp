@@ -396,3 +396,4 @@ The following guides illustrate how to use some features concretely:
 * [JPA Many to Many Modeling](https://www.baeldung.com/jpa-many-to-many)
 * [10 Excellent Ways to Secure Your Spring Boot Application](https://developer.okta.com/blog/2018/07/30/10-ways-to-secure-spring-boot)
 * [Preventing XSS in a Spring Application](https://www.baeldung.com/spring-prevent-xss)
+* [Enums in JPA](https://www.baeldung.com/jpa-persisting-enums-in-jpa)

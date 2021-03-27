@@ -1,7 +1,7 @@
 package net.erp.eveline.common.predicate;
 
 import net.erp.eveline.model.ActiveProductModel;
-import net.erp.eveline.model.ProductModel;
+import net.erp.eveline.model.product.ProductModel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;

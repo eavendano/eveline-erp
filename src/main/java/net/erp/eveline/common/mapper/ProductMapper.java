@@ -3,7 +3,7 @@ package net.erp.eveline.common.mapper;
 import net.erp.eveline.data.entity.Product;
 import net.erp.eveline.data.entity.Provider;
 import net.erp.eveline.model.ActiveProductModel;
-import net.erp.eveline.model.ProductModel;
+import net.erp.eveline.model.product.ProductModel;
 
 import java.util.Optional;
 import java.util.Set;

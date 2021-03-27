@@ -9,7 +9,7 @@ import net.erp.eveline.data.entity.Provider;
 import net.erp.eveline.data.repository.ProductRepository;
 import net.erp.eveline.data.repository.ProviderRepository;
 import net.erp.eveline.model.ActiveProductModel;
-import net.erp.eveline.model.ProductModel;
+import net.erp.eveline.model.product.ProductModel;
 import net.erp.eveline.service.BaseService;
 import net.erp.eveline.service.provider.ProviderServiceImpl;
 import org.slf4j.Logger;

@@ -1,7 +1,7 @@
 package net.erp.eveline.controller;
 
 import net.erp.eveline.model.ActiveProductModel;
-import net.erp.eveline.model.ProductModel;
+import net.erp.eveline.model.product.ProductModel;
 import net.erp.eveline.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;

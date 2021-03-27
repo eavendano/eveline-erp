@@ -1,7 +1,7 @@
 package net.erp.eveline.service.product;
 
 import net.erp.eveline.model.ActiveProductModel;
-import net.erp.eveline.model.ProductModel;
+import net.erp.eveline.model.product.ProductModel;
 
 import java.util.Set;
 

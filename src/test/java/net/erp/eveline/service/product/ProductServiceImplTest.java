@@ -11,7 +11,7 @@ import net.erp.eveline.data.entity.Provider;
 import net.erp.eveline.data.repository.ProductRepository;
 import net.erp.eveline.data.repository.ProviderRepository;
 import net.erp.eveline.model.ActiveProductModel;
-import net.erp.eveline.model.ProductModel;
+import net.erp.eveline.model.product.ProductModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
