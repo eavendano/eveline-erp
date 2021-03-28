@@ -25,13 +25,13 @@ public class WarehousePredicates {
     public static final String WAREHOUSE_ENABLED_INVALID_MESSAGE = "Enabled field must not be null";
 
     //TODO ADD LOCATION
-        // FOR NOW LETS HAVE IT JUST AS A STRING ->
-        //AS ADDRESS 1, ADDRESS 2 (OPTIONAL), STRING GEO POINT (THIS IS A PLACEHOLDER)
-        //PHONE NUMBER 1, PHONE NUMBER 2(OPTIONAL)
-        // NAME (INDEXED)
+    // FOR NOW LETS HAVE IT JUST AS A STRING ->
+    //AS ADDRESS 1, ADDRESS 2 (OPTIONAL), STRING GEO POINT (THIS IS A PLACEHOLDER)
+    //PHONE NUMBER 1, PHONE NUMBER 2(OPTIONAL)
+    // NAME (INDEXED)
 
     private static final Pattern warehouseIdPattern = Pattern.compile("w[0-9]{5}");
-    private static final Pattern namePattern = Pattern.compile("[\\w\\s&.-]+");
+    private static final Pattern namePattern = Pattern.compile("[\\w\\s&-]+");
 
     public static Predicate<String> isWarehouseIdValid() {
         return warehouseId -> ofNullable(warehouseId).isPresent()
@@ -48,12 +48,13 @@ public class WarehousePredicates {
 
     public static Predicate<String> isWarehouseAddressValid() {
         return address -> ofNullable(address).isPresent()
-                && texFieldPattern.matcher(address).matches();
+                && !address.isBlank()
+                && texFieldPattern.matcher(address.trim()).matches();
     }
 
     public static Predicate<String> isWarehouseOptionalAddressValid() {
         return address -> ofNullable(address).isEmpty()
-                || texFieldPattern.matcher(address).matches();
+                || texFieldPattern.matcher(address.trim()).matches();
     }
 
     public static Predicate<String> isWarehouseOptionalNotesValid() {
@@ -97,9 +98,9 @@ public class WarehousePredicates {
 
     private static boolean evaluateModel(List<String> errorList, WarehouseModel warehouseModel, boolean idValid) {
         boolean nameValid = isWarehouseNameValid().test(warehouseModel.getName().trim());
-        boolean descriptionValid = isDescriptionValid().test(warehouseModel.getDescription().trim());
-        boolean address1Valid = isWarehouseAddressValid().test(warehouseModel.getAddress1().trim());
-        boolean address2Valid = isWarehouseOptionalAddressValid().test(warehouseModel.getAddress2().trim());
+        boolean descriptionValid = isDescriptionValid().test(warehouseModel.getDescription());
+        boolean address1Valid = isWarehouseAddressValid().test(warehouseModel.getAddress1());
+        boolean address2Valid = isWarehouseOptionalAddressValid().test(warehouseModel.getAddress2());
         boolean telephone1Valid = isPhoneValid().test(warehouseModel.getTelephone1());
         boolean telephone2Valid = isOptionalPhoneValid().test(warehouseModel.getTelephone2());
         boolean notesValid = isWarehouseOptionalNotesValid().test(warehouseModel.getNotes());
