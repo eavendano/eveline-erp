@@ -2,6 +2,8 @@ package net.erp.eveline.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.time.OffsetDateTime;
 
@@ -13,6 +15,7 @@ public class WarehouseModel {
     private String address2;
     private String telephone1;
     private String telephone2;
+    private String notes;
     private String geolocation;
     private OffsetDateTime createDate;
     private OffsetDateTime lastModified;
@@ -91,6 +94,15 @@ public class WarehouseModel {
         return this;
     }
 
+    public String getNotes() {
+        return notes;
+    }
+
+    public WarehouseModel setNotes(String notes) {
+        this.notes = notes;
+        return this;
+    }
+
     public OffsetDateTime getCreateDate() {
         return createDate;
     }
@@ -150,11 +162,32 @@ public class WarehouseModel {
                 .append(address2, that.address2)
                 .append(telephone1, that.telephone1)
                 .append(telephone2, that.telephone2)
+                .append(notes, that.notes)
                 .append(geolocation, that.geolocation)
                 .append(createDate, that.createDate)
                 .append(lastModified, that.lastModified)
                 .append(lastUser, that.lastUser)
                 .append(enabled, that.enabled)
                 .isEquals();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
+                .append("__class__", this.getClass().getSimpleName())
+                .append("id", id)
+                .append("name", name)
+                .append("description", description)
+                .append("address1", address1)
+                .append("address2", address2)
+                .append("telephone1", telephone1)
+                .append("telephone2", telephone2)
+                .append("notes", notes)
+                .append("geolocation", geolocation)
+                .append("createDate", createDate)
+                .append("lastModified", lastModified)
+                .append("lastUser", lastUser)
+                .append("enabled", enabled)
+                .toString();
     }
 }

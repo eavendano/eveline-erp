@@ -20,6 +20,7 @@ public class WarehouseMapper {
                 .setTelephone1(warehouse.getTelephone1())
                 .setTelephone2(warehouse.getTelephone2())
                 .setGeolocation(warehouse.getGeolocation())
+                .setNotes(warehouse.getNotes())
                 .setCreateDate(warehouse.getCreateDate())
                 .setLastModified(warehouse.getLastModified())
                 .setLastUser(warehouse.getLastUser())
@@ -54,6 +55,7 @@ public class WarehouseMapper {
                 .setTelephone1(warehouseModel.getTelephone1())
                 .setTelephone2(warehouseModel.getTelephone2())
                 .setGeolocation(warehouseModel.getGeolocation())
+                .setNotes(warehouseModel.getNotes())
                 .setCreateDate(warehouseModel.getCreateDate())
                 .setLastModified(warehouseModel.getLastModified())
                 .setLastUser(warehouseModel.getLastUser());

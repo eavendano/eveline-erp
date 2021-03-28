@@ -1,6 +1,7 @@
 package net.erp.eveline.data.entity;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.GenericGenerator;
@@ -38,6 +39,9 @@ public class Warehouse {
 
     @Column(name = "geolocation")
     private String geolocation;
+
+    @Column(name = "notes")
+    private String notes;
 
     @Column(name = "create_date")
     private OffsetDateTime createDate;
@@ -123,6 +127,15 @@ public class Warehouse {
         return this;
     }
 
+    public String getNotes() {
+        return notes;
+    }
+
+    public Warehouse setNotes(String notes) {
+        this.notes = notes;
+        return this;
+    }
+
     public Boolean isEnabled() {
         return enabled;
     }
@@ -176,12 +189,14 @@ public class Warehouse {
                 .append(telephone1, warehouse.telephone1)
                 .append(telephone2, warehouse.telephone2)
                 .append(geolocation, warehouse.geolocation)
+                .append(notes, warehouse.notes)
                 .append(createDate, warehouse.createDate)
                 .append(enabled, warehouse.enabled)
                 .append(lastModified, warehouse.lastModified)
                 .append(lastUser, warehouse.lastUser)
                 .isEquals();
     }
+
 
     @Override
     public String toString() {
@@ -195,7 +210,9 @@ public class Warehouse {
                 .append("telephone1", telephone1)
                 .append("telephone2", telephone2)
                 .append("geolocation", geolocation)
+                .append("notes", notes)
                 .append("createDate", createDate)
+                .append("enabled", enabled)
                 .append("lastModified", lastModified)
                 .append("lastUser", lastUser)
                 .toString();

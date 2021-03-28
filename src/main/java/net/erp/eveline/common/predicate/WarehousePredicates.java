@@ -16,6 +16,7 @@ public class WarehousePredicates {
     public static final String WAREHOUSE_ID_INVALID_AT_INSERT_MESSAGE = "The warehouseId must be null if you're creating a warehouse.";
     public static final String WAREHOUSE_NAME_INVALID_MESSAGE = "The warehouse name might be null or does not match the expresion.";
     public static final String WAREHOUSE_DESCRIPTION_INVALID_MESSAGE = "The warehouse description does not match the expresion.";
+    public static final String WAREHOUSE_NOTES_INVALID_MESSAGE = "The warehouse's notes does not match the expresion.";
     public static final String WAREHOUSE_ADDRESS_INVALID_MESSAGE = "The warehouse address does not match the expresion.";
     public static final String WAREHOUSE_NULL_ADDRESS_INVALID_MESSAGE = "The warehouse address might be null or does not match the expresion.";
     public static final String WAREHOUSE_PHONE_INVALID_MESSAGE = "The warehouse phone does not match the expresion.";
@@ -31,7 +32,6 @@ public class WarehousePredicates {
 
     private static final Pattern warehouseIdPattern = Pattern.compile("w[0-9]{5}");
     private static final Pattern namePattern = Pattern.compile("[\\w\\s&.-]+");
-    static final Pattern addressPattern = Pattern.compile("[\\wáéíóúÁÉÍÓÚüÜñÑ$₡€@%|\\s()\\[\\]{}¡!¿?\";,&/.:'<>_+-]+");
 
     public static Predicate<String> isWarehouseIdValid() {
         return warehouseId -> ofNullable(warehouseId).isPresent()
@@ -48,12 +48,17 @@ public class WarehousePredicates {
 
     public static Predicate<String> isWarehouseAddressValid() {
         return address -> ofNullable(address).isPresent()
-                && addressPattern.matcher(address).matches();
+                && texFieldPattern.matcher(address).matches();
     }
 
     public static Predicate<String> isWarehouseOptionalAddressValid() {
         return address -> ofNullable(address).isEmpty()
-                || addressPattern.matcher(address).matches();
+                || texFieldPattern.matcher(address).matches();
+    }
+
+    public static Predicate<String> isWarehouseOptionalNotesValid() {
+        return notes -> ofNullable(notes).isEmpty()
+                || texFieldPattern.matcher(notes).matches();
     }
 
     public static Predicate<Boolean> isEnabledValid() {
@@ -97,6 +102,7 @@ public class WarehousePredicates {
         boolean address2Valid = isWarehouseOptionalAddressValid().test(warehouseModel.getAddress2().trim());
         boolean telephone1Valid = isPhoneValid().test(warehouseModel.getTelephone1());
         boolean telephone2Valid = isOptionalPhoneValid().test(warehouseModel.getTelephone2());
+        boolean notesValid = isWarehouseOptionalNotesValid().test(warehouseModel.getNotes());
         boolean lastUserValid = isLastUserValid().test(warehouseModel.getLastUser());
 
         if (!nameValid) {
@@ -117,6 +123,9 @@ public class WarehousePredicates {
         if (!telephone2Valid) {
             errorList.add(WAREHOUSE_PHONE_INVALID_MESSAGE);
         }
+        if (!notesValid) {
+            errorList.add(WAREHOUSE_PHONE_INVALID_MESSAGE);
+        }
         if (!lastUserValid) {
             errorList.add(WAREHOUSE_LAST_USER_INVALID_MESSAGE);
         }
@@ -128,6 +137,7 @@ public class WarehousePredicates {
                 && address2Valid
                 && telephone1Valid
                 && telephone2Valid
+                && notesValid
                 && lastUserValid;
     }
 
