@@ -172,3 +172,60 @@ CREATE TABLE product_provider_assignation (
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON product_provider_assignation TO "eveline-erp";
 GRANT USAGE, SELECT ON SEQUENCE product_provider_assignation_id_seq TO "eveline-erp";
+
+
+DROP SEQUENCE IF EXISTS warehouse_id_seq;
+CREATE SEQUENCE warehouse_id_seq MINVALUE 1 INCREMENT 1 MAXVALUE 99999;
+GRANT USAGE, SELECT ON SEQUENCE warehouse_id_seq TO "eveline-erp";
+
+DROP TABLE IF EXISTS warehouse;
+CREATE TABLE warehouse (
+                         warehouse_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 'w'||lpad(nextval('warehouse_id_seq'::regclass)::TEXT,9,'0'),
+                         name varchar(100) NOT NULL,
+                         description TEXT DEFAULT NULL,
+                         address1 TEXT NOT NULL,
+                         address2 TEXT DEFAULT NULL,
+                         last_user varchar(100) NOT NULL,
+                         telephone1 varchar(25) NOT NULL,
+                         telephone2 varchar(25) DEFAULT NULL,
+                         geolocation TEXT DEFAULT NULL,
+                         notes TEXT DEFAULT NULL,
+                         enabled boolean DEFAULT false,
+                         create_date timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+                         last_modified timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+                         UNIQUE (warehouse_id)
+);
+GRANT SELECT, INSERT, UPDATE, DELETE ON warehouse TO "eveline-erp";
+
+DROP INDEX IF EXISTS warehouse_id_index;
+CREATE INDEX warehouse_id_index ON warehouse(warehouse_id);
+
+DROP INDEX IF EXISTS warehouse_id_active_index;
+CREATE INDEX warehouse_id_active_index ON warehouse USING btree(warehouse_id) WHERE enabled IS TRUE;
+
+DROP INDEX IF EXISTS warehouse_name_index;
+CREATE INDEX warehouse_name_index ON warehouse(name);
+
+DROP INDEX IF EXISTS warehouse_last_modified_index;
+CREATE INDEX warehouse_last_modified_index ON warehouse USING btree (last_modified DESC NULLS LAST);
+
+DROP TRIGGER IF EXISTS warehouse_insert_create_date ON warehouse;
+CREATE TRIGGER warehouse_insert_create_date
+    BEFORE INSERT
+    ON warehouse
+    FOR EACH ROW
+EXECUTE PROCEDURE insert_create_date();
+
+DROP TRIGGER IF EXISTS warehouse_update_create_date ON warehouse;
+CREATE TRIGGER warehouse_update_create_date
+    BEFORE UPDATE
+    ON warehouse
+    FOR EACH ROW
+EXECUTE PROCEDURE update_create_date();
+
+DROP TRIGGER IF EXISTS warehouse_last_modified ON warehouse;
+CREATE TRIGGER warehouse_last_modified
+    BEFORE INSERT OR UPDATE
+    ON warehouse
+    FOR EACH ROW
+EXECUTE PROCEDURE update_last_modified();

@@ -125,7 +125,7 @@ public class WarehousePredicates {
             errorList.add(WAREHOUSE_PHONE_INVALID_MESSAGE);
         }
         if (!notesValid) {
-            errorList.add(WAREHOUSE_PHONE_INVALID_MESSAGE);
+            errorList.add(WAREHOUSE_NOTES_INVALID_MESSAGE);
         }
         if (!lastUserValid) {
             errorList.add(WAREHOUSE_LAST_USER_INVALID_MESSAGE);
