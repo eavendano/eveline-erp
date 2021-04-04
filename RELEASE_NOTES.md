@@ -6,6 +6,11 @@ Release [SEMANTIC_VERSION] (dd/mm/aaaa) [Responsible engineer name]
 * [User Story ID if possible] - First chage name or description.
 * [User Story ID if possible] - Second chage name or description.
 ```
+Release 1.3.2 (21/03/21) Emanuel Avendaño
+* Security improvements:
+  * Prevent XSS with filters and headers.
+  * Implement ESAPI for cleaning input.
+  
 Release 1.3.1 (12/03/21) Emanuel Avendaño
 * New Provider Activate endpoint that supports a set instead of single values.
 

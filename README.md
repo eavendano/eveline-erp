@@ -1,7 +1,7 @@
 Eveline ERP
 ---
 
-[![Eveline ERP Version](https://img.shields.io/badge/version-1.3.1-blue?style=for-the-badge)](https://img.shields.io/badge/version-1.3.1-blue?style=for-the-badge)
+[![Eveline ERP Version](https://img.shields.io/badge/version-1.3.2-blue?style=for-the-badge)](https://img.shields.io/badge/version-1.3.2-blue?style=for-the-badge)
 
 ## Purpose
 
@@ -258,6 +258,7 @@ graph TD;
 
 ### Monitoring
 
+- [Dependency Monitoring](https://app.snyk.io/org/eavendano/projects)
 - This bundles a [JMX to Prometheus agent](https://github.com/prometheus/jmx_exporter) which scrapes and exports JMX
   targets via HTTP server.
 - [SUMO API Log Dashboard](#)
@@ -393,3 +394,5 @@ The following guides illustrate how to use some features concretely:
 * [Programmatic Transaction Management](https://www.baeldung.com/spring-programmatic-transaction-management)
 * [Overview of identifiers in Hibernate/JPA](https://www.baeldung.com/hibernate-identifiers)
 * [JPA Many to Many Modeling](https://www.baeldung.com/jpa-many-to-many)
+* [10 Excellent Ways to Secure Your Spring Boot Application](https://developer.okta.com/blog/2018/07/30/10-ways-to-secure-spring-boot)
+* [Preventing XSS in a Spring Application](https://www.baeldung.com/spring-prevent-xss)
