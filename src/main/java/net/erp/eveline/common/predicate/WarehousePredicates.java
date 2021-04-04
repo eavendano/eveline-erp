@@ -24,12 +24,6 @@ public class WarehousePredicates {
     public static final String WAREHOUSE_LAST_USER_INVALID_MESSAGE = "The lastUser field might be null or is not a valid input.";
     public static final String WAREHOUSE_ENABLED_INVALID_MESSAGE = "Enabled field must not be null";
 
-    //TODO ADD LOCATION
-    // FOR NOW LETS HAVE IT JUST AS A STRING ->
-    //AS ADDRESS 1, ADDRESS 2 (OPTIONAL), STRING GEO POINT (THIS IS A PLACEHOLDER)
-    //PHONE NUMBER 1, PHONE NUMBER 2(OPTIONAL)
-    // NAME (INDEXED)
-
     private static final Pattern warehouseIdPattern = Pattern.compile("w[0-9]{5}");
     private static final Pattern namePattern = Pattern.compile("[\\w\\s&-]+");
 

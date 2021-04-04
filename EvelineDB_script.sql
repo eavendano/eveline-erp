@@ -193,7 +193,8 @@ CREATE TABLE warehouse (
                          enabled boolean DEFAULT false,
                          create_date timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
                          last_modified timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
-                         UNIQUE (warehouse_id)
+                         UNIQUE (warehouse_id),
+                         UNIQUE (name)
 );
 GRANT SELECT, INSERT, UPDATE, DELETE ON warehouse TO "eveline-erp";
 

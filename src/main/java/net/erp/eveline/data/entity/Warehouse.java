@@ -15,7 +15,7 @@ public class Warehouse {
     @Id
     @GeneratedValue(generator = "warehouseIdGenerator")
     @GenericGenerator(name = "warehouseIdGenerator", strategy = "net.erp.eveline.data.generators.CustomGenerator",
-            parameters = {@org.hibernate.annotations.Parameter(name = "prefix", value = "s"), @org.hibernate.annotations.Parameter(name = "sequence", value = "warehouse_id_seq")})
+            parameters = {@org.hibernate.annotations.Parameter(name = "prefix", value = "w"), @org.hibernate.annotations.Parameter(name = "sequence", value = "warehouse_id_seq")})
     private String warehouseId;
 
 

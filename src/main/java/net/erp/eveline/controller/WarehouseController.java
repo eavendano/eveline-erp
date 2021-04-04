@@ -22,6 +22,13 @@ public class WarehouseController {
         return warehouseService.getWarehouseModel(warehouseId);
     }
 
+    @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public WarehouseModel upsertWarehouse(@RequestBody final WarehouseModel warehouseModel) {
+        return warehouseService.upsertWarehouseModel(warehouseModel);
+    }
+
+
 
     @Autowired
     public void setWarehouseService(WarehouseService warehouseService) {
