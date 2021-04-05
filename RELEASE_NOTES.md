@@ -6,6 +6,11 @@ Release [SEMANTIC_VERSION] (dd/mm/aaaa) [Responsible engineer name]
 * [User Story ID if possible] - First chage name or description.
 * [User Story ID if possible] - Second chage name or description.
 ```
+Release 1.3.3 (04/03/21) Emanuel Avendaño
+* Security improvements:
+  * Updagrade ESAPI dependency.
+  * Update deprecated constant for XSS filtering.
+
 Release 1.3.2 (21/03/21) Emanuel Avendaño
 * Security improvements:
   * Prevent XSS with filters and headers.
