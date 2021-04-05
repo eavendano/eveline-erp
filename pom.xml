@@ -10,7 +10,7 @@
     </parent>
     <groupId>net.erp</groupId>
     <artifactId>eveline</artifactId>
-    <version>1.3.2</version>
+    <version>1.3.3</version>
     <name>eveline</name>
     <description>Eveline ERP Backend Application</description>
 
