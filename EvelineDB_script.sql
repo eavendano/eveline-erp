@@ -2,6 +2,8 @@ CREATE DATABASE evelinedb;
 CREATE USER "eveline-erp" WITH ENCRYPTED PASSWORD 'TEwZn;V#3?roLBA6i=2pw8Zo';
 GRANT CONNECT ON DATABASE evelinedb TO "eveline-erp";
 
+CREATE EXTENSION postgis;
+
 DROP SEQUENCE IF EXISTS provider_id_seq;
 CREATE SEQUENCE provider_id_seq MINVALUE 1 INCREMENT 1 MAXVALUE 99999;
 GRANT USAGE, SELECT ON SEQUENCE provider_id_seq TO "eveline-erp";
@@ -179,8 +181,11 @@ CREATE SEQUENCE warehouse_id_seq MINVALUE 1 INCREMENT 1 MAXVALUE 99999;
 GRANT USAGE, SELECT ON SEQUENCE warehouse_id_seq TO "eveline-erp";
 
 DROP TABLE IF EXISTS warehouse;
+
+-- postgis 3.1.1
+
 CREATE TABLE warehouse (
-                         warehouse_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 'w'||lpad(nextval('warehouse_id_seq'::regclass)::TEXT,9,'0'),
+                         warehouse_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 'w'||lpad(nextval('warehouse_id_seq'::regclass)::TEXT,5,'0'),
                          name varchar(100) NOT NULL,
                          description TEXT DEFAULT NULL,
                          address1 TEXT NOT NULL,
@@ -188,7 +193,7 @@ CREATE TABLE warehouse (
                          last_user varchar(100) NOT NULL,
                          telephone1 varchar(25) NOT NULL,
                          telephone2 varchar(25) DEFAULT NULL,
-                         geolocation TEXT DEFAULT NULL,
+                         geolocation GEOGRAPHY(Point) NOT NULL,
                          notes TEXT DEFAULT NULL,
                          enabled boolean DEFAULT false,
                          create_date timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
@@ -197,6 +202,8 @@ CREATE TABLE warehouse (
                          UNIQUE (name)
 );
 GRANT SELECT, INSERT, UPDATE, DELETE ON warehouse TO "eveline-erp";
+
+INSERT INTO warehouse (name, address1, last_user, telephone1, geolocation, notes, enabled) VALUES ( 'test','test','user','123', 'POINT(-118.4079 33.9434)', 'notes', true);
 
 DROP INDEX IF EXISTS warehouse_id_index;
 CREATE INDEX warehouse_id_index ON warehouse(warehouse_id);

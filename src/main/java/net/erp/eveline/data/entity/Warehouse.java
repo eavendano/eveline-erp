@@ -1,12 +1,14 @@
 package net.erp.eveline.data.entity;
 
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.geo.Point;
 
 import javax.persistence.*;
+
 import java.time.OffsetDateTime;
 
 @Entity
@@ -16,8 +18,10 @@ public class Warehouse {
     @GeneratedValue(generator = "warehouseIdGenerator")
     @GenericGenerator(name = "warehouseIdGenerator", strategy = "net.erp.eveline.data.generators.CustomGenerator",
             parameters = {@org.hibernate.annotations.Parameter(name = "prefix", value = "w"), @org.hibernate.annotations.Parameter(name = "sequence", value = "warehouse_id_seq")})
-    private String warehouseId;
 
+    @Column(name = "warehouse_id")
+
+    private String warehouseId;
 
     @Column(name = "name")
     private String name;
@@ -38,7 +42,7 @@ public class Warehouse {
     private String telephone2;
 
     @Column(name = "geolocation")
-    private String geolocation;
+    private Point geolocation;
 
     @Column(name = "notes")
     private String notes;
@@ -118,11 +122,11 @@ public class Warehouse {
         return this;
     }
 
-    public String getGeolocation() {
+    public Point getGeolocation() {
         return geolocation;
     }
 
-    public Warehouse setGeolocation(String geolocation) {
+    public Warehouse setGeolocation(Point geolocation) {
         this.geolocation = geolocation;
         return this;
     }
@@ -196,7 +200,6 @@ public class Warehouse {
                 .append(lastUser, warehouse.lastUser)
                 .isEquals();
     }
-
 
     @Override
     public String toString() {

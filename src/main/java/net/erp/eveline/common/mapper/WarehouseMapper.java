@@ -56,6 +56,7 @@ public class WarehouseMapper {
                 .setTelephone2(warehouseModel.getTelephone2())
                 .setGeolocation(warehouseModel.getGeolocation())
                 .setNotes(warehouseModel.getNotes())
+                .setName(warehouseModel.getName())
                 .setCreateDate(warehouseModel.getCreateDate())
                 .setLastModified(warehouseModel.getLastModified())
                 .setLastUser(warehouseModel.getLastUser());
@@ -73,10 +74,10 @@ public class WarehouseMapper {
                 .collect(Collectors.toSet());
     }
 
-    public static Warehouse toEntity(final Warehouse warehouse, final ActiveWarehouseModel activeactiveWarehouseModelModel) {
+    public static Warehouse toEntity(final Warehouse warehouse, final ActiveWarehouseModel activeWarehouseModelModel) {
         return warehouse
-                .setLastUser(activeactiveWarehouseModelModel.getLastUser())
-                .setEnabled(activeactiveWarehouseModelModel.isEnabled());
+                .setLastUser(activeWarehouseModelModel.getLastUser())
+                .setEnabled(activeWarehouseModelModel.isEnabled());
     }
 
     public static Set<Warehouse> toEntity(final Set<Warehouse> warehouseSet, final Set<ActiveWarehouseModel> activeWarehouseModelSet) {

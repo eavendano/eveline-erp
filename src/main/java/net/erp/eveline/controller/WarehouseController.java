@@ -1,6 +1,5 @@
 package net.erp.eveline.controller;
 
-import net.erp.eveline.data.entity.Warehouse;
 import net.erp.eveline.model.WarehouseModel;
 import net.erp.eveline.service.warehouse.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,6 @@ public class WarehouseController {
     public WarehouseModel upsertWarehouse(@RequestBody final WarehouseModel warehouseModel) {
         return warehouseService.upsertWarehouseModel(warehouseModel);
     }
-
-
 
     @Autowired
     public void setWarehouseService(WarehouseService warehouseService) {

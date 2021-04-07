@@ -5,5 +5,5 @@ import net.erp.eveline.model.WarehouseModel;
 public interface WarehouseService {
     WarehouseModel getWarehouseModel(final String warehouseId);
 
-    WarehouseModel upsertWarehouseModel(WarehouseModel warehouseModel);
+    WarehouseModel upsertWarehouseModel(final WarehouseModel warehouseModel);
 }

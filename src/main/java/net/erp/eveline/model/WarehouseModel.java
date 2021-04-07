@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.data.geo.Point;
 
 import java.time.OffsetDateTime;
 
@@ -16,7 +17,8 @@ public class WarehouseModel {
     private String telephone1;
     private String telephone2;
     private String notes;
-    private String geolocation;
+    private Double latitude;
+    private Double longitude;
     private OffsetDateTime createDate;
     private OffsetDateTime lastModified;
     private String lastUser;
@@ -85,13 +87,36 @@ public class WarehouseModel {
         return this;
     }
 
-    public String getGeolocation() {
-        return geolocation;
+    public Point getGeolocation() {
+        return new Point(latitude, longitude);
     }
 
-    public WarehouseModel setGeolocation(String geolocation) {
-        this.geolocation = geolocation;
+    public WarehouseModel setGeolocation(Point geolocation) {
+        this.latitude = geolocation.getX();
+        this.longitude = geolocation.getY();
         return this;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public WarehouseModel setLatitude(Double latitude) {
+        this.latitude = latitude;
+        return this;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public WarehouseModel setLongitude(Double longitude) {
+        this.longitude = longitude;
+        return this;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
     }
 
     public String getNotes() {
@@ -163,7 +188,8 @@ public class WarehouseModel {
                 .append(telephone1, that.telephone1)
                 .append(telephone2, that.telephone2)
                 .append(notes, that.notes)
-                .append(geolocation, that.geolocation)
+                .append(latitude, that.latitude)
+                .append(longitude, that.longitude)
                 .append(createDate, that.createDate)
                 .append(lastModified, that.lastModified)
                 .append(lastUser, that.lastUser)
@@ -183,7 +209,8 @@ public class WarehouseModel {
                 .append("telephone1", telephone1)
                 .append("telephone2", telephone2)
                 .append("notes", notes)
-                .append("geolocation", geolocation)
+                .append("latitude", latitude)
+                .append("longitude", longitude)
                 .append("createDate", createDate)
                 .append("lastModified", lastModified)
                 .append("lastUser", lastUser)
