@@ -1,10 +1,14 @@
 package net.erp.eveline.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 
 import java.time.OffsetDateTime;
 
@@ -87,13 +91,18 @@ public class WarehouseModel {
         return this;
     }
 
+    @JsonIgnore
     public Point getGeolocation() {
-        return new Point(latitude, longitude);
+        if (latitude == null || longitude == null) return null;
+        GeometryFactory factory = new GeometryFactory(new PrecisionModel(), 4326);
+        return factory.createPoint(new Coordinate(longitude,latitude));
     }
 
     public WarehouseModel setGeolocation(Point geolocation) {
-        this.latitude = geolocation.getX();
-        this.longitude = geolocation.getY();
+        if (geolocation != null) {
+            this.latitude = geolocation.getX();
+            this.longitude = geolocation.getY();
+        }
         return this;
     }
 
