@@ -27,6 +27,7 @@ public class WarehouseModel {
     private OffsetDateTime lastModified;
     private String lastUser;
     private Boolean enabled;
+    GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
     public String getId() {
         return id;
@@ -94,8 +95,7 @@ public class WarehouseModel {
     @JsonIgnore
     public Point getGeolocation() {
         if (latitude == null || longitude == null) return null;
-        GeometryFactory factory = new GeometryFactory(new PrecisionModel(), 4326);
-        return factory.createPoint(new Coordinate(longitude,latitude));
+        return geometryFactory.createPoint(new Coordinate(longitude,latitude));
     }
 
     public WarehouseModel setGeolocation(Point geolocation) {

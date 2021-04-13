@@ -8,4 +8,6 @@ import java.util.Set;
 
 public interface WarehouseRepository extends JpaRepository<Warehouse, String> {
 
+    boolean existsAllByWarehouseIdIn(final Set<String> providerIds);
+
 }
