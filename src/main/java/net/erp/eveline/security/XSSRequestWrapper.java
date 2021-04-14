@@ -1,6 +1,5 @@
 package net.erp.eveline.security;
 
-import org.apache.commons.codec.Charsets;
 import org.apache.commons.io.IOUtils;
 
 import javax.servlet.ReadListener;
@@ -27,6 +26,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
     private byte[] rawData;
     private final HttpServletRequest request;
     private final ResettableServletInputStream servletStream;
+    private final String UTF8ENCODING = "UTF-8";
 
     public XSSRequestWrapper(final HttpServletRequest request) {
         super(request);
@@ -42,7 +42,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public ServletInputStream getInputStream() throws IOException {
         if (rawData == null) {
-            rawData = IOUtils.toByteArray(this.request.getReader(), Charsets.UTF_8);
+            rawData = IOUtils.toByteArray(this.request.getReader(), UTF8ENCODING);
             servletStream.stream = new ByteArrayInputStream(rawData);
         }
         return servletStream;
@@ -51,7 +51,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public BufferedReader getReader() throws IOException {
         if (rawData == null) {
-            rawData = IOUtils.toByteArray(this.request.getReader(), Charsets.UTF_8);
+            rawData = IOUtils.toByteArray(this.request.getReader(), UTF8ENCODING);
             servletStream.stream = new ByteArrayInputStream(rawData);
         }
         return new BufferedReader(new InputStreamReader(servletStream));
