@@ -48,6 +48,7 @@ public class ProductMapper {
     public static Product toEntity(final ProductModel productModel, final Set<Provider> providers) {
         final Product entity = new Product()
                 .setProductId(productModel.getId())
+
                 .setProviderSet(providers)
                 .setUpc(productModel.getUpc())
                 .setTitle(productModel.getTitle())

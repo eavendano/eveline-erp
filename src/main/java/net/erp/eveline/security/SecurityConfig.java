@@ -55,7 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 new AntPathRequestMatcher(this.adminServer.path("/actuator/**")),
                                 new AntPathRequestMatcher("/provider/**", PUT.toString()),
                                 new AntPathRequestMatcher("/product/**", PUT.toString()),
-                                new AntPathRequestMatcher("/warehouse/**", PUT.toString())
+                                new AntPathRequestMatcher("/warehouse/**", PUT.toString()),
+                                new AntPathRequestMatcher("/brand/**", PUT.toString())
                         ))
                 .rememberMe((rememberMe) -> rememberMe.key(UUID.randomUUID().toString()).tokenValiditySeconds(1209600))
                 .headers()

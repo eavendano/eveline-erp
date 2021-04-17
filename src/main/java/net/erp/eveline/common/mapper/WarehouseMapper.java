@@ -49,6 +49,7 @@ public class WarehouseMapper {
 
     public static Warehouse toEntity(final WarehouseModel warehouseModel) {
         final Warehouse entity = new Warehouse()
+                .setWarehouseId(warehouseModel.getId())
                 .setDescription(warehouseModel.getDescription())
                 .setAddress1(warehouseModel.getAddress1())
                 .setAddress2(warehouseModel.getAddress2())

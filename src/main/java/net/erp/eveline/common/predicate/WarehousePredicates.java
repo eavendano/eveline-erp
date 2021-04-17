@@ -1,6 +1,5 @@
 package net.erp.eveline.common.predicate;
 
-import net.erp.eveline.model.ActiveProviderModel;
 import net.erp.eveline.model.ActiveWarehouseModel;
 import net.erp.eveline.model.WarehouseModel;
 

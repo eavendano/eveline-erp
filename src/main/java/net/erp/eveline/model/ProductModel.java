@@ -10,6 +10,7 @@ import java.util.Set;
 
 public class ProductModel {
     private String id;
+    private String brandId;
     private String upc;
     private Set<String> providerSet;
     private String title;
@@ -26,6 +27,15 @@ public class ProductModel {
 
     public ProductModel setId(final String id) {
         this.id = id;
+        return this;
+    }
+
+    public String getBrandId() {
+        return brandId;
+    }
+
+    public ProductModel setBrandId(String brandId) {
+        this.brandId = brandId;
         return this;
     }
 
@@ -120,6 +130,7 @@ public class ProductModel {
 
         return new EqualsBuilder()
                 .append(id, that.id)
+                .append(brandId, that.brandId)
                 .append(upc, that.upc)
                 .append(providerSet, that.providerSet)
                 .append(title, that.title)
@@ -144,6 +155,7 @@ public class ProductModel {
         return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
                 .append("__class__", this.getClass().getSimpleName())
                 .append("id", id)
+                .append("brandId", brandId)
                 .append("upc", upc)
                 .append("providerId", providerSet)
                 .append("title", title)

@@ -103,7 +103,55 @@ CREATE TRIGGER provider_last_modified
 EXECUTE PROCEDURE update_last_modified();
 
 
+-- Brand
+DROP SEQUENCE IF EXISTS brand_id_seq;
+CREATE SEQUENCE brand_id_seq MINVALUE 1 INCREMENT 1 MAXVALUE 99999;
+GRANT USAGE, SELECT ON SEQUENCE brand_id_seq TO "eveline-erp";
 
+DROP TABLE IF EXISTS brand;
+CREATE TABLE brand (
+                       brand_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 'b'||lpad(nextval('brand_id_seq'::regclass)::TEXT,9,'0'),
+                       name varchar(12) UNIQUE NOT NULL,
+                       description TEXT DEFAULT NULL,
+                       enabled boolean DEFAULT false,
+                       last_user varchar(100) NOT NULL,
+                       create_date timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+                       last_modified timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+                       UNIQUE (brand_id)
+);
+GRANT SELECT, INSERT, UPDATE, DELETE ON brand TO "eveline-erp";
+
+DROP INDEX IF EXISTS brand_id_index;
+CREATE INDEX brand_id_index ON brand(brand_id);
+
+DROP INDEX IF EXISTS brand_id_active_index;
+CREATE INDEX brand_id_active_index ON brand USING btree(brand_id) WHERE enabled IS TRUE;
+
+DROP INDEX IF EXISTS brand_last_modified_index;
+CREATE INDEX brand_last_modified_index ON brand USING btree (last_modified DESC NULLS LAST);
+
+DROP TRIGGER IF EXISTS brand_insert_create_date ON brand;
+CREATE TRIGGER brand_insert_create_date
+    BEFORE INSERT
+    ON brand
+    FOR EACH ROW
+EXECUTE PROCEDURE insert_create_date();
+
+DROP TRIGGER IF EXISTS brand_update_create_date ON brand;
+CREATE TRIGGER brand_update_create_date
+    BEFORE UPDATE
+    ON brand
+    FOR EACH ROW
+EXECUTE PROCEDURE update_create_date();
+
+DROP TRIGGER IF EXISTS brand_last_modified ON brand;
+CREATE TRIGGER brand_last_modified
+    BEFORE INSERT OR UPDATE
+    ON brand
+    FOR EACH ROW
+EXECUTE PROCEDURE update_last_modified();
+
+-- Product
 DROP SEQUENCE IF EXISTS product_id_seq;
 CREATE SEQUENCE product_id_seq MINVALUE 1 INCREMENT 1 MAXVALUE 99999;
 GRANT USAGE, SELECT ON SEQUENCE product_id_seq TO "eveline-erp";
@@ -111,6 +159,10 @@ GRANT USAGE, SELECT ON SEQUENCE product_id_seq TO "eveline-erp";
 DROP TABLE IF EXISTS product;
 CREATE TABLE product (
   product_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 's'||lpad(nextval('product_id_seq'::regclass)::TEXT,9,'0'),
+  brand_id varchar(6),
+  CONSTRAINT brand_id_fk
+      FOREIGN KEY(brand_id)
+          REFERENCES brand(brand_id),
   upc varchar(12) UNIQUE NOT NULL,
   title varchar(100) NOT NULL,
   description TEXT DEFAULT NULL,
@@ -175,6 +227,7 @@ CREATE TABLE product_provider_assignation (
 GRANT SELECT, INSERT, UPDATE, DELETE ON product_provider_assignation TO "eveline-erp";
 GRANT USAGE, SELECT ON SEQUENCE product_provider_assignation_id_seq TO "eveline-erp";
 
+-- warehouse
 
 DROP SEQUENCE IF EXISTS warehouse_id_seq;
 CREATE SEQUENCE warehouse_id_seq MINVALUE 1 INCREMENT 1 MAXVALUE 99999;
@@ -202,8 +255,6 @@ CREATE TABLE warehouse (
                          UNIQUE (name)
 );
 GRANT SELECT, INSERT, UPDATE, DELETE ON warehouse TO "eveline-erp";
-
-INSERT INTO warehouse (name, address1, last_user, telephone1, geolocation, notes, enabled) VALUES ( 'test','test','user','123', 'POINT(-118.4079 33.9434)', 'notes', true);
 
 DROP INDEX IF EXISTS warehouse_id_index;
 CREATE INDEX warehouse_id_index ON warehouse(warehouse_id);
