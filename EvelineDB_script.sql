@@ -158,8 +158,8 @@ GRANT USAGE, SELECT ON SEQUENCE product_id_seq TO "eveline-erp";
 
 DROP TABLE IF EXISTS product;
 CREATE TABLE product (
-  product_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 's'||lpad(nextval('product_id_seq'::regclass)::TEXT,9,'0'),
-  brand_id varchar(6),
+  product_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 's'||lpad(nextval('product_id_seq'::regclass)::TEXT,5,'0'),
+  brand_id varchar(6) NOT NULL,
   CONSTRAINT brand_id_fk
       FOREIGN KEY(brand_id)
           REFERENCES brand(brand_id),

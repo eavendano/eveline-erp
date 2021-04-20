@@ -1,6 +1,7 @@
 package net.erp.eveline.common.predicate;
 
 import net.erp.eveline.model.ActiveProductModel;
+import net.erp.eveline.model.BrandModel;
 import net.erp.eveline.model.ProductModel;
 
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import static java.util.Optional.ofNullable;
+import static net.erp.eveline.common.predicate.BrandPredicates.BRAND_ID_INVALID_MESSAGE;
+import static net.erp.eveline.common.predicate.BrandPredicates.isBrandIdValid;
 import static net.erp.eveline.common.predicate.CommonPredicates.*;
 import static net.erp.eveline.common.predicate.ProviderPredicates.isProviderSetValid;
 
@@ -83,6 +86,11 @@ public class ProductPredicates {
                 && productTitlePattern.matcher(title.trim()).matches();
     }
 
+    public static Predicate<BrandModel> isBrandValid() {
+        return brand -> ofNullable(brand).isPresent()
+                && isBrandIdValid().test(brand.getId());
+    }
+
     public static Predicate<Boolean> isEnabledValid() {
         return enabled -> ofNullable(enabled).isPresent();
     }
@@ -96,6 +104,7 @@ public class ProductPredicates {
 
     private static boolean evaluateModel(final List<String> errorList, final ProductModel productModel, boolean idValid) {
         boolean titleValid = isProductTitleValid().test(productModel.getTitle().trim());
+        boolean brandValid = isBrandValid().test(productModel.getBrand());
         boolean descriptionValid = isDescriptionValid().test(productModel.getDescription());
         boolean lastUserValid = isLastUserValid().test(productModel.getLastUser());
         boolean upcValid = isProductUpcValid().test(productModel.getUpc());
@@ -103,6 +112,9 @@ public class ProductPredicates {
 
         if (!titleValid) {
             errorList.add(PRODUCT_TITLE_INVALID_MESSAGE);
+        }
+        if (!brandValid) {
+            errorList.add(BRAND_ID_INVALID_MESSAGE);
         }
         if (!descriptionValid) {
             errorList.add(PRODUCT_DESCRIPTION_INVALID_MESSAGE);
@@ -119,6 +131,7 @@ public class ProductPredicates {
 
         return idValid
                 && titleValid
+                && brandValid
                 && descriptionValid
                 && upcValid
                 && lastUserValid

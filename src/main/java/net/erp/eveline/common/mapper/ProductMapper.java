@@ -19,6 +19,7 @@ public class ProductMapper {
     public static ProductModel toModel(final Product product) {
         return new ProductModel()
                 .setId(product.getProductId())
+                .setBrand(BrandMapper.toModel(product.getBrand()))
                 .setProviderSet(product.getProviderSet()
                         .stream()
                         .map(Provider::getProviderId)
@@ -48,7 +49,7 @@ public class ProductMapper {
     public static Product toEntity(final ProductModel productModel, final Set<Provider> providers) {
         final Product entity = new Product()
                 .setProductId(productModel.getId())
-
+                .setBrand(BrandMapper.toEntity(productModel.getBrand()))
                 .setProviderSet(providers)
                 .setUpc(productModel.getUpc())
                 .setTitle(productModel.getTitle())
