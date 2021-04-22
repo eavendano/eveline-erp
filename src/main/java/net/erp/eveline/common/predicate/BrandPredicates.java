@@ -71,7 +71,7 @@ public class BrandPredicates {
     }
 
     private static boolean evaluateModel(List<String> errorList, BrandModel brandModel, boolean idValid) {
-        boolean nameValid = isBrandNameValid().test(brandModel.getName().trim());
+        boolean nameValid = isBrandNameValid().test(brandModel.getName());
         boolean descriptionValid = isDescriptionValid().test(brandModel.getDescription());
         boolean lastUserValid = isLastUserValid().test(brandModel.getLastUser());
 
