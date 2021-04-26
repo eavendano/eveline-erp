@@ -1,7 +1,7 @@
 Eveline ERP
 ---
 
-[![Eveline ERP Version](https://img.shields.io/badge/version-1.3.3-blue?style=for-the-badge)](https://img.shields.io/badge/version-1.3.3-blue?style=for-the-badge)
+[![Eveline ERP Version](https://img.shields.io/badge/version-1.4.0-blue?style=for-the-badge)](https://img.shields.io/badge/version-1.4.0-blue?style=for-the-badge)
 
 ## Purpose
 

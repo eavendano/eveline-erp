@@ -2,7 +2,7 @@ info:
   app:
     name: &name Eveline ERP
     decription: Backend application for Eveline ERP UI.
-    version: 1.3.3
+    version: 1.4.0
 
 server:
   port: 8080
