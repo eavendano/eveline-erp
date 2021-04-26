@@ -6,11 +6,13 @@ import net.erp.eveline.common.exception.BadRequestException;
 import net.erp.eveline.common.exception.NonRetryableException;
 import net.erp.eveline.common.exception.NotFoundException;
 import net.erp.eveline.common.exception.RetryableException;
+import net.erp.eveline.data.entity.Brand;
 import net.erp.eveline.data.entity.Product;
 import net.erp.eveline.data.entity.Provider;
 import net.erp.eveline.data.repository.ProductRepository;
 import net.erp.eveline.data.repository.ProviderRepository;
 import net.erp.eveline.model.ActiveProductModel;
+import net.erp.eveline.model.BrandModel;
 import net.erp.eveline.model.ProductModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -480,7 +482,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void upsertProductModelThrowsNonRetryableExceptionOnInvalidModel() {
+    void upsertProductModelThrowsBadRequestExceptionOnInvalidModel() {
         //Initialization
         final String providerId = "p99999";
         final ProductModel product = mockProductModel("invalidId", providerId);
@@ -494,13 +496,13 @@ class ProductServiceImplTest {
                 .thenReturn(List.of(provider));
 
         //Execution
-        assertThrows(NonRetryableException.class,
+        assertThrows(BadRequestException.class,
                 () -> service.upsertProductModel(product));
 
         //Validation
-        verify(providerRepository, times(1))
+        verify(providerRepository, times(0))
                 .existsById(any());
-        verify(providerRepository, times(1))
+        verify(providerRepository, times(0))
                 .findAllById(any());
         verify(productRepository, times(0))
                 .findById(any());
@@ -949,6 +951,7 @@ class ProductServiceImplTest {
         providerSet.add(providerId);
         return new ProductModel()
                 .setId(productId)
+                .setBrand(mockBrandModel())
                 .setTitle("title")
                 .setProviderSet(providerSet)
                 .setUpc("123456789012")
@@ -962,10 +965,23 @@ class ProductServiceImplTest {
                 .setProviderId("p00001");
     }
 
+    BrandModel mockBrandModel() {
+        return new BrandModel()
+                .setId("b00001")
+                .setEnabled(true);
+    }
+
+    Brand mockBrand() {
+        return new Brand()
+                .setBrandId("b00001")
+                .setEnabled(true);
+    }
+
     private Product mockProduct(final Provider expectedProvider) {
         return new Product()
                 .setUpc("123456789012")
                 .setProductId("s00001")
+                .setBrand(mockBrand())
                 .setProviderSet(Set.of(expectedProvider));
     }
 }

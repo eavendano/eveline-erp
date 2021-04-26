@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import static java.util.Optional.ofNullable;
+import static net.erp.eveline.common.predicate.CommonPredicates.*;
 
 public class ProviderPredicates {
 
@@ -25,10 +26,7 @@ public class ProviderPredicates {
 
     private static final Pattern providerIdPattern = Pattern.compile("p[0-9]{5}");
     private static final Pattern namePattern = Pattern.compile("[\\w\\s&.-]+");
-    private static final Pattern descriptionPattern = Pattern.compile("[\\wáéíóúÁÉÍÓÚüÜñÑ$₡€@%|\\s()\\[\\]{}¡!¿?\";,&/.:'<>_+-]+");
     private static final Pattern emailPattern = Pattern.compile("^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
-    private static final Pattern phonePattern = Pattern.compile("\\d{8,25}");
-    private static final Pattern lastUserPattern = Pattern.compile("[\\w.]+");
 
     public static Predicate<ProviderModel> isProviderModelValid() {
         return providerModel -> isProviderIdValid().test(providerModel.getId());
@@ -56,11 +54,11 @@ public class ProviderPredicates {
 
     private static boolean evaluateModel(List<String> errorList, ProviderModel providerModel, boolean idValid) {
         boolean nameValid = isProviderNameValid().test(providerModel.getName().trim());
-        boolean descriptionValid = isProviderDescriptionValid().test(providerModel.getDescription().trim());
+        boolean descriptionValid = isDescriptionValid().test(providerModel.getDescription().trim());
         boolean emailValid = isProviderEmailValid().test(providerModel.getEmail().trim());
-        boolean telephone1Valid = isProviderPhoneValid().test(providerModel.getTelephone1());
-        boolean telephone2Valid = isProviderOptionalPhoneValid().test(providerModel.getTelephone2());
-        boolean telephone3Valid = isProviderOptionalPhoneValid().test(providerModel.getTelephone3());
+        boolean telephone1Valid = isPhoneValid().test(providerModel.getTelephone1());
+        boolean telephone2Valid = isOptionalPhoneValid().test(providerModel.getTelephone2());
+        boolean telephone3Valid = isOptionalPhoneValid().test(providerModel.getTelephone3());
         boolean lastUserValid = isLastUserValid().test(providerModel.getLastUser());
 
         if (!nameValid) {
@@ -136,33 +134,13 @@ public class ProviderPredicates {
                 && namePattern.matcher(name.trim()).matches();
     }
 
-    public static Predicate<String> isProviderDescriptionValid() {
-        return description -> ofNullable(description).isEmpty()
-                || descriptionPattern.matcher(description.trim()).matches();
-    }
+
 
     public static Predicate<String> isProviderEmailValid() {
         return email -> ofNullable(email).isPresent()
                 && email.length() >= 3
                 && email.length() <= 100
                 && emailPattern.matcher(email.trim()).matches();
-    }
-
-    public static Predicate<String> isProviderPhoneValid() {
-        return telephone -> ofNullable(telephone).isPresent()
-                && phonePattern.matcher(telephone).matches();
-    }
-
-    public static Predicate<String> isProviderOptionalPhoneValid() {
-        return telephone -> ofNullable(telephone).isEmpty()
-                || phonePattern.matcher(telephone).matches();
-    }
-
-    public static Predicate<String> isLastUserValid() {
-        return lastUser -> ofNullable(lastUser).isPresent()
-                && lastUser.length() >= 3
-                && lastUser.length() <= 100
-                && lastUserPattern.matcher(lastUser).matches();
     }
 
     public static Predicate<Boolean> isEnabledValid() {

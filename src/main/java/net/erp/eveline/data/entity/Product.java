@@ -6,14 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.Set;
 
@@ -28,6 +21,10 @@ public class Product {
     @GenericGenerator(name = "productIdGenerator", strategy = "net.erp.eveline.data.generators.CustomGenerator",
             parameters = {@org.hibernate.annotations.Parameter(name = "prefix", value = "s"), @org.hibernate.annotations.Parameter(name = "sequence", value = "product_id_seq")})
     private String productId;
+
+    @ManyToOne
+    @JoinColumn(name="brand_id", nullable=false)
+    private Brand brand;
 
     @OneToMany(cascade = MERGE, fetch = LAZY)
     @JoinTable(
@@ -66,6 +63,15 @@ public class Product {
 
     public Product setProductId(final String productId) {
         this.productId = productId;
+        return this;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public Product setBrand(Brand brand) {
+        this.brand = brand;
         return this;
     }
 
@@ -160,6 +166,7 @@ public class Product {
 
         return new EqualsBuilder()
                 .append(productId, product.productId)
+                .append(brand, product.brand)
                 .append(providerSet, product.providerSet)
                 .append(upc, product.upc)
                 .append(title, product.title)
@@ -176,6 +183,7 @@ public class Product {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(productId)
+                .append(brand)
                 .append(providerSet)
                 .append(upc)
                 .append(title)
@@ -193,6 +201,7 @@ public class Product {
         return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
                 .append("__class__", this.getClass().getSimpleName())
                 .append("productId", productId)
+                .append("brand", brand)
                 .append("upc", upc)
                 .append("title", title)
                 .append("description", description)

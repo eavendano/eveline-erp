@@ -95,10 +95,15 @@ public class ProductServiceImpl extends BaseService implements ProductService {
         logger.info("Upsert operation for model: {}", productModel);
         requireNonNull(productModel, "Model provided cannot be null or empty.");
         List<String> errorList = new ArrayList<>();
+        final var productId = ofNullable(productModel.getId());
+        if (productId.isPresent()) {
+            validate(productModel, isProductModelValidForUpdate(errorList), errorList);
+        } else {
+            validate(productModel, isProductModelValidForInsert(errorList), errorList);
+        }
 
         return transactionService.performWriteTransaction(status -> {
             logger.info("Performing upsert transaction for model: {}", productModel);
-            final var productId = ofNullable(productModel.getId());
             ProductModel result;
 
             final boolean allProvidersExist = productModel.getProviderSet()
@@ -115,7 +120,6 @@ public class ProductServiceImpl extends BaseService implements ProductService {
 
             if (productId.isPresent()) {
                 // Try to perform the update
-                validate(productModel, isProductModelValidForUpdate(errorList), errorList);
 
                 final var optionalProduct = productRepository.findById(productId.get());
                 if (optionalProduct.isEmpty()) {
@@ -129,7 +133,6 @@ public class ProductServiceImpl extends BaseService implements ProductService {
 
             } else {
                 // Try to perform insert if the rest of the values is valid
-                validate(productModel, isProductModelValidForInsert(errorList), errorList);
                 logger.info("Preparing to insert product: {}", productModel);
                 result = ProductMapper.toModel(productRepository.save(toEntity(productModel, providerEntitySet)));
                 logger.info("Successful insert operation for product: {}", productModel);
