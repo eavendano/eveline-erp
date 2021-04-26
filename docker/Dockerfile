@@ -27,7 +27,7 @@ RUN keytool -importcert -trustcacerts -alias "GeoTrust DV SSL CA G3" -file $JAVA
 # ----------------------------------
 # APPLICATION DEPLOYMENT
 # ----------------------------------
-ADD target/eveline-1.4.0.jar /root/eveline.jar
+ADD target/eveline-1.4.1.jar /root/eveline.jar
 CMD ["/usr/bin/sh",\
       "-c",\
       "java $JAVA_OPTIONS -jar /root/eveline.jar"]
