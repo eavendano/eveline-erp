@@ -49,7 +49,7 @@ public class ServiceTestConfiguration {
 
         // Backoff Policy (*in seconds): 3, 6, 9, 12, 15
         ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-        backOffPolicy.setInitialInterval(3000L);
+        backOffPolicy.setInitialInterval(100L);
         backOffPolicy.setMultiplier(1);//This multiplier was updated to speedup testing and project building.
         backOffPolicy.setMaxInterval(15000);
 

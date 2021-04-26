@@ -6,16 +6,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.time.OffsetDateTime;
-import java.util.Set;
 
-public class ProductModel {
+public class BrandModel {
     private String id;
-    private BrandModel brand;
-    private String upc;
-    private Set<String> providerSet;
-    private String title;
+    private String name;
     private String description;
-    private String sanitaryRegistryNumber;
     private OffsetDateTime createDate;
     private OffsetDateTime lastModified;
     private String lastUser;
@@ -25,44 +20,17 @@ public class ProductModel {
         return id;
     }
 
-    public ProductModel setId(final String id) {
+    public BrandModel setId(String id) {
         this.id = id;
         return this;
     }
 
-    public BrandModel getBrand() {
-        return brand;
+    public String getName() {
+        return name;
     }
 
-    public ProductModel setBrand(BrandModel brand) {
-        this.brand = brand;
-        return this;
-    }
-
-    public String getUpc() {
-        return upc;
-    }
-
-    public ProductModel setUpc(final String upc) {
-        this.upc = upc;
-        return this;
-    }
-
-    public Set<String> getProviderSet() {
-        return providerSet;
-    }
-
-    public ProductModel setProviderSet(final Set<String> providerSet) {
-        this.providerSet = providerSet;
-        return this;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public ProductModel setTitle(final String title) {
-        this.title = title;
+    public BrandModel setName(String name) {
+        this.name = name;
         return this;
     }
 
@@ -70,17 +38,8 @@ public class ProductModel {
         return description;
     }
 
-    public ProductModel setDescription(final String description) {
+    public BrandModel setDescription(String description) {
         this.description = description;
-        return this;
-    }
-
-    public String getSanitaryRegistryNumber() {
-        return sanitaryRegistryNumber;
-    }
-
-    public ProductModel setSanitaryRegistryNumber(final String sanitaryRegistryNumber) {
-        this.sanitaryRegistryNumber = sanitaryRegistryNumber;
         return this;
     }
 
@@ -88,7 +47,7 @@ public class ProductModel {
         return createDate;
     }
 
-    public ProductModel setCreateDate(final OffsetDateTime createDate) {
+    public BrandModel setCreateDate(OffsetDateTime createDate) {
         this.createDate = createDate;
         return this;
     }
@@ -97,7 +56,7 @@ public class ProductModel {
         return lastModified;
     }
 
-    public ProductModel setLastModified(final OffsetDateTime lastModified) {
+    public BrandModel setLastModified(OffsetDateTime lastModified) {
         this.lastModified = lastModified;
         return this;
     }
@@ -106,41 +65,18 @@ public class ProductModel {
         return lastUser;
     }
 
-    public ProductModel setLastUser(final String lastUser) {
+    public BrandModel setLastUser(String lastUser) {
         this.lastUser = lastUser;
         return this;
     }
 
-    public Boolean isEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 
-    public ProductModel setEnabled(final Boolean enabled) {
+    public BrandModel setEnabled(Boolean enabled) {
         this.enabled = enabled;
         return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ProductModel that = (ProductModel) o;
-
-        return new EqualsBuilder()
-                .append(id, that.id)
-                .append(brand, that.brand)
-                .append(upc, that.upc)
-                .append(providerSet, that.providerSet)
-                .append(title, that.title)
-                .append(description, that.description)
-                .append(sanitaryRegistryNumber, that.sanitaryRegistryNumber)
-                .append(createDate, that.createDate)
-                .append(lastModified, that.lastModified)
-                .append(lastUser, that.lastUser)
-                .append(enabled, that.enabled)
-                .isEquals();
     }
 
     @Override
@@ -151,16 +87,31 @@ public class ProductModel {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BrandModel that = (BrandModel) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(description, that.description)
+                .append(createDate, that.createDate)
+                .append(lastModified, that.lastModified)
+                .append(lastUser, that.lastUser)
+                .append(enabled, that.enabled)
+                .isEquals();
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
                 .append("__class__", this.getClass().getSimpleName())
                 .append("id", id)
-                .append("brand", brand.toString())
-                .append("upc", upc)
-                .append("providerId", providerSet)
-                .append("title", title)
+                .append("name", name)
                 .append("description", description)
-                .append("sanitaryRegistryNumber", sanitaryRegistryNumber)
                 .append("createDate", createDate)
                 .append("lastModified", lastModified)
                 .append("lastUser", lastUser)

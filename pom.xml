@@ -10,7 +10,7 @@
     </parent>
     <groupId>net.erp</groupId>
     <artifactId>eveline</artifactId>
-    <version>1.3.3</version>
+    <version>1.4.0</version>
     <name>eveline</name>
     <description>Eveline ERP Backend Application</description>
 
@@ -104,8 +104,11 @@
             <artifactId>jsoup</artifactId>
             <version>1.13.1</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-spatial</artifactId>
+            <version>5.4.28.Final</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
