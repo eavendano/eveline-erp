@@ -6,14 +6,14 @@ Release [SEMANTIC_VERSION] (dd/mm/aaaa) [Responsible engineer name]
 * [User Story ID if possible] - First chage name or description.
 * [User Story ID if possible] - Second chage name or description.
 ```
-Release 1.4.1 (04/03/21) Emanuel Avendaño
+Release 1.4.1 (04/25/21) Emanuel Avendaño
   * Security Improvements:
     * Upgrade Commons-Lang versioning. 
 
   Notes from SNYK:
     * fix: upgrade org.apache.commons:commons-lang3 from 3.11 to 3.12.0
 
-Release 1.4.0 (04/03/21) Byron Miranda, Luis Daniel Cordero, Emanuel Avendaño
+Release 1.4.0 (04/25/21) Byron Miranda, Luis Daniel Cordero, Emanuel Avendaño
 * Added Warehouse capabilities:
   * Warehouse CRUD operations implemented.
   * Warehouse testing, SQL validations and endpoint implemented.
