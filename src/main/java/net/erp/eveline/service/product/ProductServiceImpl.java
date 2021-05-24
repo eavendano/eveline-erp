@@ -48,6 +48,18 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     private TransactionService transactionService;
 
     @Override
+    public Set<ProductModel> findAll() {
+        logger.info("Obtaining all products.");
+        return transactionService.performReadOnlyTransaction(status -> {
+            logger.info("Requesting all products.");
+            Set<Product> products = Set.copyOf(productRepository.findAll());
+            logger.info("Retrieved all products successfully.");
+            return ProductMapper.toModel(products);
+        }, null);
+    }
+
+
+    @Override
     public Set<ProductModel> findAllByProvider(final String providerId) {
         logger.info("Requesting all products for provider {}.", providerId);
         validate(providerId, isProviderIdValid(), PROVIDER_ID_INVALID_MESSAGE);

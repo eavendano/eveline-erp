@@ -39,7 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 authorizeRequests
                                         .antMatchers("/docs/**").permitAll() // This is how a path can be white listed within the application
                                         .antMatchers("/provider/**").permitAll()
+                                        .antMatchers("/warehouse/**").permitAll()
                                         .antMatchers("/product/**").permitAll()
+                                        .antMatchers("/brand/**").permitAll()
                                         .antMatchers(this.adminServer.path("/assets/**")).permitAll()
                                         .antMatchers(this.adminServer.path("/login")).permitAll()
                                         .anyRequest().authenticated()

@@ -68,7 +68,7 @@ public class WarehousePredicates {
     }
 
     public static Predicate<Double> isAxisValid() {
-        return axis -> ofNullable(axis).isEmpty();
+        return axis -> ofNullable(axis).isPresent();
     }
 
     public static Predicate<WarehouseModel> isWarehouseModelValid() {

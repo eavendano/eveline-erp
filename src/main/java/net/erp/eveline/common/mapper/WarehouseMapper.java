@@ -14,6 +14,7 @@ public class WarehouseMapper {
     public static WarehouseModel toModel(final Warehouse warehouse) {
         return new WarehouseModel()
                 .setId(warehouse.getWarehouseId())
+                .setName(warehouse.getName())
                 .setDescription(warehouse.getDescription())
                 .setAddress1(warehouse.getAddress1())
                 .setAddress2(warehouse.getAddress2())
