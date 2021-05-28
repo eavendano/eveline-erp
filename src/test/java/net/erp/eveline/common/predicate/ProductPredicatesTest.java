@@ -3,6 +3,7 @@ package net.erp.eveline.common.predicate;
 import net.erp.eveline.model.ActiveProductModel;
 import net.erp.eveline.model.BrandModel;
 import net.erp.eveline.model.ProductModel;
+import net.erp.eveline.model.ProviderModel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -27,7 +28,7 @@ class ProductPredicatesTest {
                 .setUpc("123456789012")
                 .setLastUser("valid")
                 .setDescription("Valid Desc")
-                .setProviderSet(of("p12345"));
+                .setProviderSet(of(generateProviderModel().setId("p12345")));
 
         assertTrue(ProductPredicates.isProductModelValidForInsert(errorList).test(productModel));
         assertEquals(0, errorList.size());
@@ -43,7 +44,7 @@ class ProductPredicatesTest {
                 .setUpc("123456789012")
                 .setLastUser("valid")
                 .setDescription("Valid Desc")
-                .setProviderSet(of("p12345"));
+                .setProviderSet(of(generateProviderModel().setId("p12345")));
 
         assertFalse(ProductPredicates.isProductModelValidForInsert(errorList).test(productModel));
         assertEquals(1, errorList.size());
@@ -58,7 +59,7 @@ class ProductPredicatesTest {
                 .setUpc("123456789012")
                 .setLastUser("valid")
                 .setDescription("Valid Desc")
-                .setProviderSet(of("p12345"));
+                .setProviderSet(of(generateProviderModel().setId("p12345")));
 
         assertFalse(ProductPredicates.isProductModelValidForInsert(errorList).test(productModel));
         assertEquals(1, errorList.size());
@@ -72,7 +73,7 @@ class ProductPredicatesTest {
                 .setBrand(generateBrandModel())
                 .setUpc("123456789012")
                 .setLastUser("valid")
-                .setProviderSet(of("p12345"))
+                .setProviderSet(of(generateProviderModel().setId("p12345")))
                 .setDescription("ö");
 
         assertFalse(ProductPredicates.isProductModelValidForInsert(errorList).test(productModel));
@@ -87,7 +88,7 @@ class ProductPredicatesTest {
                 .setBrand(generateBrandModel())
                 .setLastUser("valid")
                 .setDescription("Valid Desc")
-                .setProviderSet(of("p12345"))
+                .setProviderSet(of(generateProviderModel().setId("p12345").setId("p12345")))
                 .setUpc("abc");
 
         assertFalse(ProductPredicates.isProductModelValidForInsert(errorList).test(productModel));
@@ -96,12 +97,14 @@ class ProductPredicatesTest {
 
     @Test
     void isProductModelValidForInsertFailsOnInvalidProvider() {
+        ProviderModel provider = generateProviderModel().setId("p12345");
+        provider.setId("p1234");
         final List<String> errorList = new ArrayList<>();
         final ProductModel productModel = new ProductModel()
                 .setTitle("valid")
                 .setBrand(generateBrandModel())
                 .setLastUser("valid")
-                .setProviderSet(of("p1234"))
+                .setProviderSet(of(provider))
                 .setDescription("Valid Desc")
                 .setUpc("123456789012");
 
@@ -115,7 +118,7 @@ class ProductPredicatesTest {
         final ProductModel productModel = new ProductModel()
                 .setTitle("valid")
                 .setBrand(generateBrandModel())
-                .setProviderSet(of("p12345"))
+                .setProviderSet(of(generateProviderModel().setId("p12345")))
                 .setDescription("Valid Desc")
                 .setUpc("123456789012");
 
@@ -131,7 +134,7 @@ class ProductPredicatesTest {
         final ProductModel productModel = new ProductModel()
                 .setTitle("valid")
                 .setBrand(brandModel)
-                .setProviderSet(of("p12345"))
+                .setProviderSet(of(generateProviderModel().setId("p12345").setId("p12345")))
                 .setDescription("Valid Desc")
                 .setLastUser("valid")
                 .setUpc("123456789012");
@@ -148,7 +151,7 @@ class ProductPredicatesTest {
         final ProductModel productModel = new ProductModel()
                 .setTitle("valid")
                 .setBrand(brandModel)
-                .setProviderSet(of("p12345"))
+                .setProviderSet(of(generateProviderModel().setId("p12345")))
                 .setDescription("Valid Desc")
                 .setLastUser("valid")
                 .setUpc("123456789012");
@@ -168,7 +171,7 @@ class ProductPredicatesTest {
                 .setUpc("123456789012")
                 .setLastUser("valid")
                 .setDescription("Valid Desc")
-                .setProviderSet(of("p12345"));
+                .setProviderSet(of(generateProviderModel().setId("p12345")));
 
         assertTrue(ProductPredicates.isProductModelValidForUpdate(errorList).test(productModel));
         assertEquals(0, errorList.size());
@@ -184,7 +187,7 @@ class ProductPredicatesTest {
                 .setUpc("123456789012")
                 .setLastUser("valid")
                 .setDescription("Valid Desc")
-                .setProviderSet(of("p12345"));
+                .setProviderSet(of(generateProviderModel().setId("p12345").setId("p12345")));
 
         assertFalse(ProductPredicates.isProductModelValidForUpdate(errorList).test(productModel));
         assertEquals(1, errorList.size());
@@ -321,5 +324,14 @@ class ProductPredicatesTest {
                 .setId("b00001")
                 .setName("name")
                 .setDescription("description");
+    }
+
+    ProviderModel generateProviderModel() {
+        return new ProviderModel()
+                .setName("valid")
+                .setDescription("Esta es una descripción totalmente válida. Por eso no puede fa$har.")
+                .setEmail("test@test.com")
+                .setTelephone1("12345678")
+                .setLastUser("valid");
     }
 }

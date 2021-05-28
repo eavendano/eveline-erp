@@ -341,31 +341,53 @@ public class ProviderPredicateTest {
 
     @Test
     public void isProviderSetValidOnSingleValueSet() {
-        Set<String> providerSet = Set.of("p00001");
+        ProviderModel provider1 = new ProviderModel();
+        provider1.setId("p00001");
+        Set<ProviderModel> providerSet = Set.of(provider1);
         assertTrue(ProviderPredicates.isProviderSetValid().test(providerSet));
     }
 
     @Test
     public void isProviderSetValidOnMultipleValueSet() {
-        Set<String> providerSet = Set.of("p00001", "p00002", "p00003");
+        ProviderModel provider1 = new ProviderModel();
+        ProviderModel provider2 = new ProviderModel();
+        ProviderModel provider3 = new ProviderModel();
+        provider1.setId("p00001");
+        provider2.setId("p00002");
+        provider3.setId("p00003");
+        Set<ProviderModel> providerSet = Set.of(provider1, provider2, provider3);
         assertTrue(ProviderPredicates.isProviderSetValid().test(providerSet));
     }
 
     @Test
     public void isProviderSetInvalidOnSingleValueSet() {
-        Set<String> providerSet = Set.of("p0001");
+        ProviderModel provider1 = new ProviderModel();
+        provider1.setId("p0001");
+        Set<ProviderModel> providerSet = Set.of(provider1);
         assertFalse(ProviderPredicates.isProviderSetValid().test(providerSet));
     }
 
     @Test
     public void isProviderSetInvalidOnMiddleValueSet() {
-        Set<String> providerSet = Set.of("p00001", "p0002", "p00003");
+        ProviderModel provider1 = new ProviderModel();
+        ProviderModel provider2 = new ProviderModel();
+        ProviderModel provider3 = new ProviderModel();
+        provider1.setId("p00001");
+        provider2.setId("p0002");
+        provider3.setId("p00003");
+        Set<ProviderModel> providerSet = Set.of(provider1, provider2, provider3);
         assertFalse(ProviderPredicates.isProviderSetValid().test(providerSet));
     }
 
     @Test
     public void isProviderSetInvalidOnLastValueSet() {
-        Set<String> providerSet = Set.of("p00001", "p00002", "p0003");
+        ProviderModel provider1 = new ProviderModel();
+        ProviderModel provider2 = new ProviderModel();
+        ProviderModel provider3 = new ProviderModel();
+        provider1.setId("p00001");
+        provider2.setId("p00002");
+        provider3.setId("p0003");
+        Set<ProviderModel> providerSet = Set.of(provider1, provider2, provider3);
         assertFalse(ProviderPredicates.isProviderSetValid().test(providerSet));
     }
 
