@@ -288,3 +288,60 @@ CREATE TRIGGER warehouse_last_modified
     ON warehouse
     FOR EACH ROW
 EXECUTE PROCEDURE update_last_modified();
+
+
+-- inventory
+DROP TABLE IF EXISTS inventory;
+DROP SEQUENCE IF EXISTS inventory_id_seq;
+CREATE SEQUENCE inventory_id_seq MINVALUE 1 INCREMENT 1 MAXVALUE 99999;
+GRANT USAGE, SELECT ON SEQUENCE inventory_id_seq TO "eveline-erp";
+
+CREATE TABLE inventory (
+                           inventory_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 'i'||lpad(nextval('inventory_id_seq'::regclass)::TEXT,5,'0'),
+                           product_id varchar(6) NOT NULL,
+                           CONSTRAINT product_id_fk
+                               FOREIGN KEY(product_id)
+                                   REFERENCES product(product_id),
+                           warehouse_id varchar(6) NOT NULL,
+                           CONSTRAINT warehouse_id_fk
+                               FOREIGN KEY(warehouse_id)
+                                   REFERENCES warehouse(warehouse_id),
+                           quantity TEXT DEFAULT NULL,
+                           enabled boolean DEFAULT false,
+                           last_user varchar(100) NOT NULL,
+                           create_date timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+                           last_modified timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+                           UNIQUE (inventory_id),
+                           UNIQUE (product_id, warehouse_id)
+);
+GRANT SELECT, INSERT, UPDATE, DELETE ON inventory TO "eveline-erp";
+
+DROP INDEX IF EXISTS inventory_id_index;
+CREATE INDEX inventory_id_index ON inventory(inventory_id);
+
+DROP INDEX IF EXISTS inventory_last_modified_index;
+CREATE INDEX inventory_last_modified_index ON inventory USING btree (last_modified DESC NULLS LAST);
+
+DROP INDEX IF EXISTS inventory_id_active_index;
+CREATE INDEX inventory_id_active_index ON inventory USING btree(warehouse_id) WHERE enabled IS TRUE;
+
+DROP TRIGGER IF EXISTS inventory_insert_create_date ON inventory;
+CREATE TRIGGER inventory_insert_create_date
+    BEFORE INSERT
+    ON inventory
+    FOR EACH ROW
+EXECUTE PROCEDURE insert_create_date();
+
+DROP TRIGGER IF EXISTS inventory_update_create_date ON inventory;
+CREATE TRIGGER inventory_update_create_date
+    BEFORE UPDATE
+    ON inventory
+    FOR EACH ROW
+EXECUTE PROCEDURE update_create_date();
+
+DROP TRIGGER IF EXISTS inventory_last_modified ON inventory;
+CREATE TRIGGER inventory_last_modified
+    BEFORE INSERT OR UPDATE
+    ON inventory
+    FOR EACH ROW
+EXECUTE PROCEDURE update_last_modified();

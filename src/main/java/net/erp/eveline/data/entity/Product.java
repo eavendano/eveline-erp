@@ -55,7 +55,7 @@ public class Product {
     private String lastUser;
 
     @Column(name = "enabled")
-    private Boolean enabled;
+    private Boolean enabled = true;
 
     public String getProductId() {
         return productId;

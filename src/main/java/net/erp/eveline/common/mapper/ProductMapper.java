@@ -53,7 +53,6 @@ public class ProductMapper {
                 .setDescription(productModel.getDescription())
                 .setCreateDate(productModel.getCreateDate())
                 .setLastModified(productModel.getLastModified())
-                .setEnabled(productModel.isEnabled())
                 .setLastUser(productModel.getLastUser());
 
         if (Optional.ofNullable(productModel.isEnabled()).isPresent()) {
