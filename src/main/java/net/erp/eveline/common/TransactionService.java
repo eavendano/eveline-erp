@@ -1,5 +1,6 @@
 package net.erp.eveline.common;
 
+import io.sentry.Sentry;
 import net.erp.eveline.common.exception.NonRetryableException;
 import net.erp.eveline.common.exception.RetryableException;
 import net.erp.eveline.common.exception.ServiceException;
@@ -64,14 +65,20 @@ public class TransactionService {
             var message = String.format("Unable to process request probably due to exhaust for: %s", parameterSanitized);
             logger.warn(message, ex);
             if (ex instanceof RetryableException) {
-                throw new RetryableException(message, ex);
+                var retryableEx = new RetryableException(message, ex);
+                Sentry.captureException(retryableEx);
+                throw retryableEx;
             } else {
-                throw new NonRetryableException(message, ex);
+                var nonRetryableEx = new NonRetryableException(message, ex);
+                Sentry.captureException(nonRetryableEx);
+                throw nonRetryableEx;
             }
         } catch (Throwable ex) {
             var message = String.format("Unexpected exception occurred. Unable to perform transaction for: %s | Cause: %s", parameterSanitized, ex.getMessage());
             logger.warn(message, ex);
-            throw new ServiceException(message, ex);
+            var serviceEx = new ServiceException(message, ex);
+            Sentry.captureException(serviceEx);
+            throw serviceEx;
         }
     }
 
@@ -100,14 +107,20 @@ public class TransactionService {
             var message = String.format("Unable to process request probably due to exhaust for: %s", parameterSanitized);
             logger.warn(message, ex);
             if (ex instanceof RetryableException) {
-                throw new RetryableException(message, ex);
+                var retryableEx = new RetryableException(message, ex);
+                Sentry.captureException(retryableEx);
+                throw retryableEx;
             } else {
-                throw new NonRetryableException(message, ex);
+                var nonRetryableEx = new NonRetryableException(message, ex);
+                Sentry.captureException(nonRetryableEx);
+                throw nonRetryableEx;
             }
         } catch (Throwable ex) {
             var message = String.format("Unexpected exception occurred. Unable to perform transaction for: %s | Cause: %s", parameterSanitized, ex.getMessage());
             logger.warn(message, ex);
-            throw new ServiceException(message, ex);
+            var serviceEx = new ServiceException(message, ex);
+            Sentry.captureException(serviceEx);
+            throw serviceEx;
         }
     }
 

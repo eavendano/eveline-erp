@@ -14,6 +14,7 @@ import net.erp.eveline.data.repository.ProviderRepository;
 import net.erp.eveline.model.ActiveProductModel;
 import net.erp.eveline.model.BrandModel;
 import net.erp.eveline.model.ProductModel;
+import net.erp.eveline.model.ProviderModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -380,11 +382,13 @@ class ProductServiceImplTest {
         final ProductModel product = mockProductModel(null, providerId);
         final Provider provider = mockProvider()
                 .setProviderId(providerId);
+        final Set<String> providerSet = product.getProviderSet().stream()
+                .map(ProviderModel::getId).collect(Collectors.toSet());
 
         //Set up
         when(providerRepository.existsById(anyString()))
                 .thenReturn(true);
-        when(providerRepository.findAllById(product.getProviderSet()))
+        when(providerRepository.findAllById(providerSet))
                 .thenReturn(List.of(provider));
         when(productRepository.save(any()))
                 .thenReturn(toEntity(product, Set.of(provider)));
@@ -412,11 +416,13 @@ class ProductServiceImplTest {
         final ProductModel product = mockProductModel(productId, providerId);
         final Provider provider = mockProvider()
                 .setProviderId(providerId);
+        final Set<String> providerSet = product.getProviderSet().stream()
+                .map(ProviderModel::getId).collect(Collectors.toSet());
 
         //Set up
         when(providerRepository.existsById(anyString()))
                 .thenReturn(true);
-        when(providerRepository.findAllById(product.getProviderSet()))
+        when(providerRepository.findAllById(providerSet))
                 .thenReturn(List.of(provider));
         when(productRepository.findById(any()))
                 .thenReturn(Optional.of(toEntity(product)));
@@ -459,9 +465,12 @@ class ProductServiceImplTest {
     void upsertProductModelThrowsNonRetryableExceptionOnNotFoundProvider() {
         //Initialization
         final ProductModel product = mockProductModel("s00001", "p99999");
-
+        ProviderModel provider1 = generateProviderModel();
+        provider1.setId("p99999");
+        ProviderModel provider2 = generateProviderModel();
+        provider2.setId("p00002");
         //Set up
-        product.getProviderSet().add("p00002");//let's force a failure in the second call.
+        product.setProviderSet(Set.of(provider1, provider2));//let's force a failure in the second call.
         when(providerRepository.existsById(anyString()))
                 .thenReturn(true)
                 .thenReturn(false);
@@ -488,11 +497,13 @@ class ProductServiceImplTest {
         final ProductModel product = mockProductModel("invalidId", providerId);
         final Provider provider = mockProvider()
                 .setProviderId(providerId);
+        final Set<String> providerSet = product.getProviderSet().stream()
+                .map(ProviderModel::getId).collect(Collectors.toSet());
 
         //Set up
         when(providerRepository.existsById(anyString()))
                 .thenReturn(true);
-        when(providerRepository.findAllById(product.getProviderSet()))
+        when(providerRepository.findAllById(providerSet))
                 .thenReturn(List.of(provider));
 
         //Execution
@@ -516,13 +527,15 @@ class ProductServiceImplTest {
         final String productId = "s00001";
         final String providerId = "p99999";
         final ProductModel product = mockProductModel(productId, providerId);
+        final Set<String> providerSet = product.getProviderSet().stream()
+                .map(ProviderModel::getId).collect(Collectors.toSet());
         final Provider provider = mockProvider()
                 .setProviderId(providerId);
 
         //Set up
         when(providerRepository.existsById(anyString()))
                 .thenReturn(true);
-        when(providerRepository.findAllById(product.getProviderSet()))
+        when(providerRepository.findAllById(providerSet))
                 .thenReturn(List.of(provider));
         when(productRepository.findById(any()))
                 .thenReturn(Optional.empty());
@@ -573,11 +586,13 @@ class ProductServiceImplTest {
         final String productId = "s00001";
         final String providerId = "p99999";
         final ProductModel product = mockProductModel(productId, providerId);
+        final Set<String> providerSet = product.getProviderSet().stream()
+                .map(ProviderModel::getId).collect(Collectors.toSet());
 
         //Set up
         when(providerRepository.existsById(anyString()))
                 .thenReturn(true);
-        when(providerRepository.findAllById(product.getProviderSet()))
+        when(providerRepository.findAllById(providerSet))
                 .thenThrow(new OptimisticLockException("Optimistic lock test"));
 
         //Execution
@@ -600,13 +615,15 @@ class ProductServiceImplTest {
         final String productId = "s00001";
         final String providerId = "p99999";
         final ProductModel product = mockProductModel(productId, providerId);
+        final Set<String> providerSet = product.getProviderSet().stream()
+                .map(ProviderModel::getId).collect(Collectors.toSet());
         final Provider provider = mockProvider()
                 .setProviderId(providerId);
 
         //Set up
         when(providerRepository.existsById(anyString()))
                 .thenReturn(true);
-        when(providerRepository.findAllById(product.getProviderSet()))
+        when(providerRepository.findAllById(providerSet))
                 .thenReturn(List.of(provider));
         when(productRepository.findById(any()))
                 .thenThrow(new OptimisticLockException("Optimistic lock test"));
@@ -631,13 +648,15 @@ class ProductServiceImplTest {
         final String productId = "s00001";
         final String providerId = "p99999";
         final ProductModel product = mockProductModel(productId, providerId);
+        final Set<String> providerSet = product.getProviderSet().stream()
+                .map(ProviderModel::getId).collect(Collectors.toSet());
         final Provider provider = mockProvider()
                 .setProviderId(providerId);
 
         //Set up
         when(providerRepository.existsById(anyString()))
                 .thenReturn(true);
-        when(providerRepository.findAllById(product.getProviderSet()))
+        when(providerRepository.findAllById(providerSet))
                 .thenReturn(List.of(provider));
         when(productRepository.findById(any()))
                 .thenReturn(Optional.of(toEntity(product)));
@@ -690,11 +709,12 @@ class ProductServiceImplTest {
         final String productId = "s00001";
         final String providerId = "p99999";
         final ProductModel product = mockProductModel(productId, providerId);
-
+        final Set<String> providerSet = product.getProviderSet().stream()
+                .map(ProviderModel::getId).collect(Collectors.toSet());
         //Set up
         when(providerRepository.existsById(anyString()))
                 .thenReturn(true);
-        when(providerRepository.findAllById(product.getProviderSet()))
+        when(providerRepository.findAllById(providerSet))
                 .thenThrow(new PermissionDeniedDataAccessException("Optimistic lock test",
                         new Throwable()));
 
@@ -718,13 +738,15 @@ class ProductServiceImplTest {
         final String productId = "s00001";
         final String providerId = "p99999";
         final ProductModel product = mockProductModel(productId, providerId);
+        final Set<String> providerSet = product.getProviderSet().stream()
+                .map(ProviderModel::getId).collect(Collectors.toSet());
         final Provider provider = mockProvider()
                 .setProviderId(providerId);
 
         //Set up
         when(providerRepository.existsById(anyString()))
                 .thenReturn(true);
-        when(providerRepository.findAllById(product.getProviderSet()))
+        when(providerRepository.findAllById(providerSet))
                 .thenReturn(List.of(provider));
         when(productRepository.findById(any()))
                 .thenThrow(new PermissionDeniedDataAccessException("Optimistic lock test",
@@ -750,13 +772,15 @@ class ProductServiceImplTest {
         final String productId = "s00001";
         final String providerId = "p99999";
         final ProductModel product = mockProductModel(productId, providerId);
+        final Set<String> providerSet = product.getProviderSet().stream()
+                .map(ProviderModel::getId).collect(Collectors.toSet());
         final Provider provider = mockProvider()
                 .setProviderId(providerId);
 
         //Set up
         when(providerRepository.existsById(anyString()))
                 .thenReturn(true);
-        when(providerRepository.findAllById(product.getProviderSet()))
+        when(providerRepository.findAllById(providerSet))
                 .thenReturn(List.of(provider));
         when(productRepository.findById(any()))
                 .thenReturn(Optional.of(toEntity(product)));
@@ -947,13 +971,13 @@ class ProductServiceImplTest {
 
     private ProductModel mockProductModel(final String productId, final String providerId){
 
-        final TreeSet<String> providerSet = new TreeSet<>();
-        providerSet.add(providerId);
+        ProviderModel provider1 = new ProviderModel();
+        provider1.setId(providerId);
         return new ProductModel()
                 .setId(productId)
                 .setBrand(mockBrandModel())
                 .setTitle("title")
-                .setProviderSet(providerSet)
+                .setProviderSet(Set.of(provider1))
                 .setUpc("123456789012")
                 .setEnabled(true)
                 .setLastUser("test");
@@ -983,5 +1007,14 @@ class ProductServiceImplTest {
                 .setProductId("s00001")
                 .setBrand(mockBrand())
                 .setProviderSet(Set.of(expectedProvider));
+    }
+
+    ProviderModel generateProviderModel() {
+        return new ProviderModel()
+                .setName("valid")
+                .setDescription("Esta es una descripción totalmente válida. Por eso no puede fa$har.")
+                .setEmail("test@test.com")
+                .setTelephone1("12345678")
+                .setLastUser("valid");
     }
 }

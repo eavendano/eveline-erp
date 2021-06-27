@@ -118,9 +118,9 @@ public class ProviderPredicates {
                 && providerIdPattern.matcher(providerId.trim()).matches();
     }
 
-    public static Predicate<Set<String>> isProviderSetValid() {
-        return providerIds -> ofNullable(providerIds).isPresent()
-                && providerIds.stream().allMatch(providerId -> isProviderIdValid().test(providerId));
+    public static Predicate<Set<ProviderModel>> isProviderSetValid() {
+        return providers -> ofNullable(providers).isPresent()
+                && providers.stream().allMatch(provider -> isProviderIdValid().test(provider.getId()));
     }
 
     public static Predicate<String> isProviderIdValidAtInsert() {

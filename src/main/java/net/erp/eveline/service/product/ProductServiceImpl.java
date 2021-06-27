@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptySet;
@@ -120,7 +121,7 @@ public class ProductServiceImpl extends BaseService implements ProductService {
 
             final boolean allProvidersExist = productModel.getProviderSet()
                     .stream()
-                    .allMatch(providerId -> providerRepository.existsById(providerId));
+                    .allMatch(provider -> providerRepository.existsById(provider.getId()));
 
             if (!allProvidersExist) {
                 String message = format("Unable to process operation since not all providers are valid or exist for product: %s", productModel);
@@ -128,7 +129,8 @@ public class ProductServiceImpl extends BaseService implements ProductService {
                 throw new BadRequestException(message);
             }
 
-            final var providerEntitySet = Set.copyOf(providerRepository.findAllById(productModel.getProviderSet()));
+            final var providerIds = productModel.getProviderSet().stream().map((providerModel -> providerModel.getId()));
+            final var providerEntitySet = Set.copyOf(providerRepository.findAllById(providerIds.collect(Collectors.toSet())));
 
             if (productId.isPresent()) {
                 // Try to perform the update
