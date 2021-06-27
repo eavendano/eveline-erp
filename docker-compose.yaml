@@ -2,7 +2,7 @@ version: "3.8"
 services:
   eveline-erp-default:
     build:
-      context: ../eveline
+      context: ../eveline-erp
       dockerfile: docker/Dockerfile
     environment:
       - "TZ=America/Costa_Rica"
@@ -13,6 +13,7 @@ services:
     ports:
       - 8080:8080
       - 9010:9010
+      - 5432:5432
     networks:
       - connections-backend
 networks:

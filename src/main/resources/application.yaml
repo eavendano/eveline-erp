@@ -2,11 +2,14 @@ info:
   app:
     name: &name Eveline ERP
     decription: Backend application for Eveline ERP UI.
-    version: 1.4.1
+    version: 1.5.0
 
 server:
   port: 8080
   servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
     context-path: /eveline-erp
   error:
     whitelabel:
@@ -28,18 +31,15 @@ server:
       max: 100
       min-spare: 3
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: ALWAYS
-
 spring:
   application:
     name: *name
+
+---
+spring:
+  config:
+    activate:
+      on-profile: development,default
   boot:
     admin:
       context-path: sba
@@ -49,8 +49,9 @@ spring:
         password: "26AROUNDyearSOFT4411"   #can register at the protected server api
         instance:
           metadata:
-            user.name: "admin"                    #These two are needed so that the server
-            user.password: "26AROUNDyearSOFT4411" #can access the protected client endpoints
+            user:
+              name: "admin"                    #These two are needed so that the server
+              password: "26AROUNDyearSOFT4411" #can access the protected client endpoints
         period: 300000
       monitor:
         status-interval: 300000
@@ -61,11 +62,9 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: "jdbc:postgresql://localhost:5432/evelinedb"
-    username: "eveline-erp"
+    #    url: "jdbc:postgresql://evelinedb.cvrettwnyoca.us-east-2.rds.amazonaws.com:5432/evelinedb"
+    username: "evelineerp"
     password: "TEwZn;V#3?roLBA6i=2pw8Zo"
-    #    url: "jdbc:postgresql://database-1.cbeng1ekqdjf.us-east-1.rds.amazonaws.com:5432/evelinedb"
-    #    username: "eveline-erp"
-    #    password: "TEwZn;V#3?roLBA6i=2pw8Zo"
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       connection-timeout: 20000 #maximum number of milliseconds that a client will wait for a connection
@@ -90,3 +89,89 @@ spring:
     user:
       name: "admin"
       password: "26AROUNDyearSOFT4411"
+
+sentry:
+  environment: development
+  dsn: https://1371b4c6dc744652bfeda31896b03ec5@o817015.ingest.sentry.io/5807466
+  logging:
+    minimum-breadcrumb-level: debug
+    minimum-event-level: info
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+---
+spring:
+  config:
+    activate:
+      on-profile: integration
+  boot:
+    admin:
+      context-path: sba
+      client:
+        url: http://localhost:8080/eveline-erp/sba
+        username: "admin"                  #These two are needed so that the client
+        password: "26AROUNDyearSOFT4411"   #can register at the protected server api
+        instance:
+          metadata:
+            user:
+              name: "admin"                    #These two are needed so that the server
+              password: "26AROUNDyearSOFT4411" #can access the protected client endpoints
+        period: 300000
+      monitor:
+        status-interval: 300000
+        status-lifetime: 300000
+      ui:
+        brand: '<img src="assets/img/icon-spring-boot-admin.svg"><span>Eveline ERP</span>'
+        title: "Eveline ERP"
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: "jdbc:postgresql://evelinedb.cvrettwnyoca.us-east-2.rds.amazonaws.com:5432/evelinedb"
+    username: "evelineerp"
+    password: "TEwZn;V#3?roLBA6i=2pw8Zo"
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-timeout: 20000 #maximum number of milliseconds that a client will wait for a connection
+      minimum-idle: 3 #minimum number of idle connections maintained by HikariCP in a connection pool
+      maximum-pool-size: 10 #maximum pool size
+      idle-timeout: 10000 #maximum idle time for connection
+      max-lifetime: 1000 # maximum lifetime in milliseconds of a connection in the pool after it is closed.
+      auto-commit: true #default auto-commit behavior.
+      pool-name: "EvelineDBPool"
+  jmx:
+    enabled: true
+  jpa:
+    database: postgresql
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: "org.hibernate.spatial.dialect.postgis.PostgisDialect"
+    show-sql: true
+  security:
+    user:
+      name: "admin"
+      password: "26AROUNDyearSOFT4411"
+
+sentry:
+  environment: integration
+  dsn: https://1371b4c6dc744652bfeda31896b03ec5@o817015.ingest.sentry.io/5807466
+  logging:
+    minimum-breadcrumb-level: debug
+    minimum-event-level: info
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS

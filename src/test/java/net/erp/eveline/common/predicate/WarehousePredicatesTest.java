@@ -122,7 +122,9 @@ public class WarehousePredicatesTest {
                 .setName("name")
                 .setAddress1("address")
                 .setTelephone1("12345678")
-                .setLastUser("valid");
+                .setLastUser("valid")
+                .setLongitude(0.0)
+                .setLatitude(0.0);
         assertTrue(WarehousePredicates.isWarehouseModelValidForInsert(errorList).test(warehouseModel));
         assertEquals(0, errorList.size());
     }
@@ -135,7 +137,9 @@ public class WarehousePredicatesTest {
                 .setName("name")
                 .setAddress1("address")
                 .setTelephone1("12345678")
-                .setLastUser("valid");
+                .setLastUser("valid")
+                .setLongitude(0.0)
+                .setLatitude(0.0);
         assertFalse(WarehousePredicates.isWarehouseModelValidForInsert(errorList).test(warehouseModel));
         assertEquals(1, errorList.size());
     }
@@ -147,7 +151,9 @@ public class WarehousePredicatesTest {
                 .setName("+++++=====!")
                 .setAddress1("address")
                 .setTelephone1("12345678")
-                .setLastUser("valid");
+                .setLastUser("valid")
+                .setLongitude(0.0)
+                .setLatitude(0.0);
         assertFalse(WarehousePredicates.isWarehouseModelValidForInsert(errorList).test(warehouseModel));
         assertEquals(1, errorList.size());
     }
@@ -158,7 +164,9 @@ public class WarehousePredicatesTest {
         final WarehouseModel warehouseModel = new WarehouseModel()
                 .setName("name")
                 .setTelephone1("12345678")
-                .setLastUser("valid");
+                .setLastUser("valid")
+                .setLongitude(0.0)
+                .setLatitude(0.0);
         assertFalse(WarehousePredicates.isWarehouseModelValidForInsert(errorList).test(warehouseModel));
         assertEquals(1, errorList.size());
     }
@@ -171,7 +179,9 @@ public class WarehousePredicatesTest {
                 .setAddress1("address")
                 .setAddress2("\\")
                 .setTelephone1("12345678")
-                .setLastUser("valid");
+                .setLastUser("valid")
+                .setLongitude(0.0)
+                .setLatitude(0.0);
         assertFalse(WarehousePredicates.isWarehouseModelValidForInsert(errorList).test(warehouseModel));
         assertEquals(1, errorList.size());
     }
@@ -182,7 +192,9 @@ public class WarehousePredicatesTest {
         final WarehouseModel warehouseModel = new WarehouseModel()
                 .setName("name")
                 .setAddress1("address")
-                .setLastUser("valid");
+                .setLastUser("valid")
+                .setLongitude(0.0)
+                .setLatitude(0.0);
         assertFalse(WarehousePredicates.isWarehouseModelValidForInsert(errorList).test(warehouseModel));
         assertEquals(1, errorList.size());
     }
@@ -194,7 +206,9 @@ public class WarehousePredicatesTest {
                 .setName("name")
                 .setAddress1("address")
                 .setTelephone1("abcs")
-                .setLastUser("valid");
+                .setLastUser("valid")
+                .setLongitude(0.0)
+                .setLatitude(0.0);
         assertFalse(WarehousePredicates.isWarehouseModelValidForInsert(errorList).test(warehouseModel));
         assertEquals(1, errorList.size());
     }
@@ -207,7 +221,9 @@ public class WarehousePredicatesTest {
                 .setAddress1("address")
                 .setNotes("\\")
                 .setTelephone1("12345678")
-                .setLastUser("valid");
+                .setLastUser("valid")
+                .setLongitude(0.0)
+                .setLatitude(0.0);
         assertFalse(WarehousePredicates.isWarehouseModelValidForInsert(errorList).test(warehouseModel));
         assertEquals(1, errorList.size());
     }
@@ -218,7 +234,9 @@ public class WarehousePredicatesTest {
         final WarehouseModel warehouseModel = new WarehouseModel()
                 .setName("name")
                 .setTelephone1("12345678")
-                .setAddress1("address");
+                .setAddress1("address")
+                .setLongitude(0.0)
+                .setLatitude(0.0);
         assertFalse(WarehousePredicates.isWarehouseModelValidForInsert(errorList).test(warehouseModel));
         assertEquals(1, errorList.size());
     }
@@ -232,7 +250,9 @@ public class WarehousePredicatesTest {
                 .setName("name")
                 .setAddress1("address")
                 .setTelephone1("12345678")
-                .setLastUser("valid");
+                .setLastUser("valid")
+                .setLongitude(0.0)
+                .setLatitude(0.0);
         assertTrue(WarehousePredicates.isWarehouseModelValidForUpdate(errorList).test(warehouseModel));
         assertEquals(0, errorList.size());
     }
@@ -245,7 +265,9 @@ public class WarehousePredicatesTest {
                 .setName("name")
                 .setAddress1("address")
                 .setTelephone1("12345678")
-                .setLastUser("valid");
+                .setLastUser("valid")
+                .setLongitude(0.0)
+                .setLatitude(0.0);
         assertFalse(WarehousePredicates.isWarehouseModelValidForUpdate(errorList).test(warehouseModel));
         assertEquals(1, errorList.size());
     }

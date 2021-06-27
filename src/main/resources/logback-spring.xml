@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false" scan="true">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
     <contextName>eveline-erp-test</contextName>
 
@@ -49,6 +51,8 @@
 
     </appender>
 
+    <appender name="SENTRY" class="io.sentry.logback.SentryAppender" />
+
     <!--The main Spring MVC Servlet informs when the application is up and running-->
     <logger name="org.springframework.web.servlet.DispatcherServlet" level="INFO"/>
 
@@ -76,6 +80,6 @@
         <appender-ref ref="FILE"/>
         <appender-ref ref="ERROR-FILE"/>
         <appender-ref ref="CONSOLE"/>
-
+        <appender-ref ref="SENTRY" />
     </root>
 </configuration>

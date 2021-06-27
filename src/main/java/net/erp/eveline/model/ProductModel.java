@@ -12,7 +12,7 @@ public class ProductModel {
     private String id;
     private BrandModel brand;
     private String upc;
-    private Set<String> providerSet;
+    private Set<ProviderModel> providerSet;
     private String title;
     private String description;
     private String sanitaryRegistryNumber;
@@ -48,11 +48,11 @@ public class ProductModel {
         return this;
     }
 
-    public Set<String> getProviderSet() {
+    public Set<ProviderModel> getProviderSet() {
         return providerSet;
     }
 
-    public ProductModel setProviderSet(final Set<String> providerSet) {
+    public ProductModel setProviderSet(final Set<ProviderModel> providerSet) {
         this.providerSet = providerSet;
         return this;
     }
