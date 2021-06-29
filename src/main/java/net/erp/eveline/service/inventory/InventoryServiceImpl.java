@@ -15,6 +15,7 @@ import net.erp.eveline.service.provider.ProviderServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ import static net.erp.eveline.common.predicate.InventoryPredicates.isActiveInven
 import static net.erp.eveline.common.predicate.ProviderPredicates.PROVIDER_ID_INVALID_MESSAGE;
 import static net.erp.eveline.common.predicate.WarehousePredicates.isWarehouseIdValid;
 
+@Service
 public class InventoryServiceImpl extends BaseService implements InventoryService {
     private static final Logger logger = LoggerFactory.getLogger(ProviderServiceImpl.class);
 
@@ -177,4 +179,8 @@ public class InventoryServiceImpl extends BaseService implements InventoryServic
         this.productRepository = productRepository;
     }
 
+    @Autowired
+    public void setTransactionService(final TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
 }

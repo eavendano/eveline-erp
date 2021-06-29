@@ -42,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                         .antMatchers("/warehouse/**").permitAll()
                                         .antMatchers("/product/**").permitAll()
                                         .antMatchers("/brand/**").permitAll()
+                                        .antMatchers("/inventory/**").permitAll()
                                         .antMatchers(this.adminServer.path("/assets/**")).permitAll()
                                         .antMatchers(this.adminServer.path("/login")).permitAll()
                                         .anyRequest().authenticated()
@@ -58,7 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 new AntPathRequestMatcher("/provider/**", PUT.toString()),
                                 new AntPathRequestMatcher("/product/**", PUT.toString()),
                                 new AntPathRequestMatcher("/warehouse/**", PUT.toString()),
-                                new AntPathRequestMatcher("/brand/**", PUT.toString())
+                                new AntPathRequestMatcher("/brand/**", PUT.toString()),
+                                new AntPathRequestMatcher("/inventory/**", PUT.toString())
                         ))
                 .rememberMe((rememberMe) -> rememberMe.key(UUID.randomUUID().toString()).tokenValiditySeconds(1209600))
                 .headers()

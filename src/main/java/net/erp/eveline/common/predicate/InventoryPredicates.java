@@ -30,7 +30,7 @@ public class InventoryPredicates {
     }
 
     public static Predicate<Integer> isQuantityValid() {
-        return inventoryId -> ofNullable(inventoryId).isEmpty();
+        return quantity -> ofNullable(quantity).isPresent();
     }
 
 
