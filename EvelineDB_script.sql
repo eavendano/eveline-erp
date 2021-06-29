@@ -294,7 +294,7 @@ EXECUTE PROCEDURE update_last_modified();
 DROP TABLE IF EXISTS inventory;
 DROP SEQUENCE IF EXISTS inventory_id_seq;
 CREATE SEQUENCE inventory_id_seq MINVALUE 1 INCREMENT 1 MAXVALUE 99999;
-GRANT USAGE, SELECT ON SEQUENCE inventory_id_seq TO "eveline-erp";
+GRANT USAGE, SELECT ON SEQUENCE inventory_id_seq TO "evelineerp";
 
 CREATE TABLE inventory (
                            inventory_id varchar(6) PRIMARY KEY NOT NULL DEFAULT 'i'||lpad(nextval('inventory_id_seq'::regclass)::TEXT,5,'0'),
@@ -314,7 +314,7 @@ CREATE TABLE inventory (
                            UNIQUE (inventory_id),
                            UNIQUE (product_id, warehouse_id)
 );
-GRANT SELECT, INSERT, UPDATE, DELETE ON inventory TO "eveline-erp";
+GRANT SELECT, INSERT, UPDATE, DELETE ON inventory TO "evelineerp";
 
 DROP INDEX IF EXISTS inventory_id_index;
 CREATE INDEX inventory_id_index ON inventory(inventory_id);
