@@ -3,7 +3,7 @@
   "info": {
     "title": "Eveline ERP Backend",
     "description": "Eveline ERP backend project. This project provides an interface for other Backend or Frontend internal projects to communicate with the ERP database and provide insights and operation contracts for a better user experience for our customers.",
-    "version": "1.4.1",
+    "version": "1.5.0",
     "contact": {
       "email": "eavendano.ic@gmail.com"
     }

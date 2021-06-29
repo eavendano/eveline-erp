@@ -6,6 +6,17 @@ Release [SEMANTIC_VERSION] (dd/mm/aaaa) [Responsible engineer name]
 * [User Story ID if possible] - First chage name or description.
 * [User Story ID if possible] - Second chage name or description.
 ```
+Release 1.5.0 (06/21/21) Emanuel Avendaño, Luis Daniel Cordero
+* Upgrade to Java 16
+* Update project dependencies in general.
+  * Spring Boot Admin works smoothly with XSS, issues might still appear.
+* Implement Sentry for monitoring.
+  * Using free tier, environments are working.
+  * Not implemented on the frontend yet.
+* Implement properties for different environments.
+  * Implement database in AWS for integration environment.
+* Update product model to add providerSet from UI.
+
 Release 1.4.1 (04/25/21) Emanuel Avendaño
   * Security Improvements:
     * Upgrade Commons-Lang versioning. 

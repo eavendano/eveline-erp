@@ -178,6 +178,8 @@ public class WarehouseServiceImplTest {
                 .setAddress2("Address2")
                 .setDescription("warehouse description")
                 .setNotes("notes")
+                .setLatitude(0.0)
+                .setLongitude(0.0)
                 .setEnabled(true);
 
         final Warehouse warehouse = mockWarehouseList(1).get(0);
@@ -220,6 +222,8 @@ public class WarehouseServiceImplTest {
                 .setAddress2("Address2")
                 .setDescription("warehouse description")
                 .setNotes("notes")
+                .setLatitude(0.0)
+                .setLongitude(0.0)
                 .setEnabled(true);
 
         when(warehouseRepository.save(any(Warehouse.class))).thenThrow(new OptimisticLockException("Optimistic lock test"));
@@ -243,6 +247,8 @@ public class WarehouseServiceImplTest {
                 .setAddress2("Address2")
                 .setDescription("warehouse description")
                 .setNotes("notes")
+                .setLongitude(0.0)
+                .setLatitude(0.0)
                 .setEnabled(true);
         when(warehouseRepository.existsById("w00001")).thenReturn(true);
         when(warehouseRepository.save(any(Warehouse.class))).thenThrow(new RuntimeException("Regular exception test."));
@@ -265,6 +271,8 @@ public class WarehouseServiceImplTest {
                 .setAddress2("Address2")
                 .setDescription("warehouse description")
                 .setNotes("notes")
+                .setLatitude(0.0)
+                .setLongitude(0.0)
                 .setEnabled(true);
 
         when(warehouseRepository.existsById("w00001")).thenThrow(new OptimisticLockException("Optimistic lock test"));
@@ -287,6 +295,8 @@ public class WarehouseServiceImplTest {
                 .setAddress2("Address2")
                 .setDescription("warehouse description")
                 .setNotes("notes")
+                .setLongitude(0.0)
+                .setLatitude(0.0)
                 .setEnabled(true);
         when(warehouseRepository.existsById("w00001")).thenThrow(new RuntimeException("Regular exception test."));
 

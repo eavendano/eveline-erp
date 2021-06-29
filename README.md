@@ -1,7 +1,7 @@
 Eveline ERP
 ---
 
-[![Eveline ERP Version](https://img.shields.io/badge/version-1.4.1-blue?style=for-the-badge)](https://img.shields.io/badge/version-1.4.1-blue?style=for-the-badge)
+[![Eveline ERP Version](https://img.shields.io/badge/version-1.5.0-blue?style=for-the-badge)](https://img.shields.io/badge/version-1.5.0-blue?style=for-the-badge)
 
 ## Purpose
 
@@ -15,16 +15,17 @@ customers.
 
 ### Technology Stack
 
-- [Java 15](https://www.oracle.com/technetwork/java/archive-139210.html)
-- [Spring Boot 2.4.0](https://spring.io/projects/spring-boot)
+- [Java 16](https://www.oracle.com/technetwork/java/archive-139210.html)
+- [Spring Boot 2.5.1](https://spring.io/projects/spring-boot)
 - [HikariCP](https://github.com/brettwooldridge/HikariCP)
 
 ### Installation Guide
 
 #### Local PosgreSQL installation
 
-Installation instructions for posgresql in MacOSX with Homebrew can be
-found [here.](https://wiki.postgresql.org/wiki/Homebrew)
+Installation instructions for Postico in MacOSX can be found [here.](https://eggerapps.at/postico/)
+To configure your local installation of Postico with Docker, follow this [steps.](https://www.upnxtblog.com/index.php/2019/06/03/how-do-i-connect-to-postgresql-running-on-host-from-docker-container/)
+You can find the files in the previous doc in the path `/usr/local/var/postgres`.
 
 ### Build
 
@@ -336,8 +337,6 @@ applied by the log manager.
 
 | **Team Member**                                                 | **Role**                           |
 | ----------------------------------------------------------------|------------------------------------|
-|[:envelope: Mariana Olivares](mailto:marianapoh@gmail.com)       | :cop: Associate / Manager          |
-|[:envelope: Jose Pablo Arata](mailto:josepablo191290@gmail.com)  | :monkey_face: Associate / Engineer |
 |[:envelope: Emanuel Avendano](mailto:eavendano.ic@gmail.com)     | :monkey_face: Associate / Engineer |
 
 ### Reference Documentation

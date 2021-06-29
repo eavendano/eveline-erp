@@ -1,12 +1,12 @@
 CREATE DATABASE evelinedb;
-CREATE USER "eveline-erp" WITH ENCRYPTED PASSWORD 'TEwZn;V#3?roLBA6i=2pw8Zo';
-GRANT CONNECT ON DATABASE evelinedb TO "eveline-erp";
+CREATE USER "evelineerp" WITH ENCRYPTED PASSWORD 'TEwZn;V#3?roLBA6i=2pw8Zo';
+GRANT CONNECT ON DATABASE evelinedb TO "evelineerp";
 
 CREATE EXTENSION postgis;
 
 DROP SEQUENCE IF EXISTS provider_id_seq;
 CREATE SEQUENCE provider_id_seq MINVALUE 1 INCREMENT 1 MAXVALUE 99999;
-GRANT USAGE, SELECT ON SEQUENCE provider_id_seq TO "eveline-erp";
+GRANT USAGE, SELECT ON SEQUENCE provider_id_seq TO "evelineerp";
 
 DROP TABLE IF EXISTS provider;
 CREATE TABLE provider (
@@ -23,7 +23,7 @@ CREATE TABLE provider (
   last_modified timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
   UNIQUE (provider_id)
 );
-GRANT SELECT, INSERT, UPDATE, DELETE ON provider TO "eveline-erp";
+GRANT SELECT, INSERT, UPDATE, DELETE ON provider TO "evelineerp";
 
 DROP INDEX IF EXISTS provider_id_index;
 CREATE INDEX provider_id_index ON provider(provider_id);
@@ -46,7 +46,7 @@ BEGIN
     RETURN NEW;
 END;
 $BODY$;
-GRANT EXECUTE ON FUNCTION insert_create_date() TO "eveline-erp";
+GRANT EXECUTE ON FUNCTION insert_create_date() TO "evelineerp";
 
 DROP FUNCTION IF EXISTS update_create_date();
 CREATE FUNCTION update_create_date()
@@ -60,9 +60,9 @@ BEGIN
     RETURN NEW;
 END;
 $BODY$;
-GRANT EXECUTE ON FUNCTION update_create_date() TO "eveline-erp";
+GRANT EXECUTE ON FUNCTION update_create_date() TO "evelineerp";
 
-DROP FUNCTION update_last_modified();
+DROP FUNCTION IF EXISTS update_last_modified();
 CREATE FUNCTION update_last_modified()
     RETURNS trigger
     LANGUAGE 'plpgsql'
@@ -79,7 +79,7 @@ BEGIN
     RETURN NEW;
 END;
 $BODY$;
-GRANT EXECUTE ON FUNCTION update_last_modified() TO "eveline-erp";
+GRANT EXECUTE ON FUNCTION update_last_modified() TO "evelineerp";
 
 DROP TRIGGER IF EXISTS provider_insert_create_date ON provider;
 CREATE TRIGGER provider_insert_create_date
@@ -106,7 +106,7 @@ EXECUTE PROCEDURE update_last_modified();
 -- Brand
 DROP SEQUENCE IF EXISTS brand_id_seq;
 CREATE SEQUENCE brand_id_seq MINVALUE 1 INCREMENT 1 MAXVALUE 99999;
-GRANT USAGE, SELECT ON SEQUENCE brand_id_seq TO "eveline-erp";
+GRANT USAGE, SELECT ON SEQUENCE brand_id_seq TO "evelineerp";
 
 DROP TABLE IF EXISTS brand;
 CREATE TABLE brand (
@@ -119,7 +119,7 @@ CREATE TABLE brand (
                        last_modified timestamp(0) with time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
                        UNIQUE (brand_id)
 );
-GRANT SELECT, INSERT, UPDATE, DELETE ON brand TO "eveline-erp";
+GRANT SELECT, INSERT, UPDATE, DELETE ON brand TO "evelineerp";
 
 DROP INDEX IF EXISTS brand_id_index;
 CREATE INDEX brand_id_index ON brand(brand_id);
@@ -154,7 +154,7 @@ EXECUTE PROCEDURE update_last_modified();
 -- Product
 DROP SEQUENCE IF EXISTS product_id_seq;
 CREATE SEQUENCE product_id_seq MINVALUE 1 INCREMENT 1 MAXVALUE 99999;
-GRANT USAGE, SELECT ON SEQUENCE product_id_seq TO "eveline-erp";
+GRANT USAGE, SELECT ON SEQUENCE product_id_seq TO "evelineerp";
 
 DROP TABLE IF EXISTS product;
 CREATE TABLE product (
@@ -176,7 +176,7 @@ CREATE TABLE product (
   UNIQUE (sanitary_registry_number),
   CONSTRAINT check_upc_length CHECK (length(upc) = 12)
 );
-GRANT SELECT, INSERT, UPDATE, DELETE ON product TO "eveline-erp";
+GRANT SELECT, INSERT, UPDATE, DELETE ON product TO "evelineerp";
 
 DROP INDEX IF EXISTS product_id_index;
 CREATE INDEX product_id_index ON product(product_id);
@@ -224,14 +224,14 @@ CREATE TABLE product_provider_assignation (
             REFERENCES provider(provider_id)
 );
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON product_provider_assignation TO "eveline-erp";
-GRANT USAGE, SELECT ON SEQUENCE product_provider_assignation_id_seq TO "eveline-erp";
+GRANT SELECT, INSERT, UPDATE, DELETE ON product_provider_assignation TO "evelineerp";
+GRANT USAGE, SELECT ON SEQUENCE product_provider_assignation_id_seq TO "evelineerp";
 
 -- warehouse
 
 DROP SEQUENCE IF EXISTS warehouse_id_seq;
 CREATE SEQUENCE warehouse_id_seq MINVALUE 1 INCREMENT 1 MAXVALUE 99999;
-GRANT USAGE, SELECT ON SEQUENCE warehouse_id_seq TO "eveline-erp";
+GRANT USAGE, SELECT ON SEQUENCE warehouse_id_seq TO "evelineerp";
 
 DROP TABLE IF EXISTS warehouse;
 
@@ -254,7 +254,7 @@ CREATE TABLE warehouse (
                          UNIQUE (warehouse_id),
                          UNIQUE (name)
 );
-GRANT SELECT, INSERT, UPDATE, DELETE ON warehouse TO "eveline-erp";
+GRANT SELECT, INSERT, UPDATE, DELETE ON warehouse TO "evelineerp";
 
 DROP INDEX IF EXISTS warehouse_id_index;
 CREATE INDEX warehouse_id_index ON warehouse(warehouse_id);
