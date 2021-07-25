@@ -1,8 +1,7 @@
 package net.erp.eveline.common.predicate;
 
-import net.erp.eveline.model.*;
+import net.erp.eveline.model.ActiveInventoryModel;
 import net.erp.eveline.model.InventoryModel;
-
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -30,7 +29,8 @@ public class InventoryPredicates {
     }
 
     public static Predicate<Integer> isQuantityValid() {
-        return quantity -> ofNullable(quantity).isPresent();
+        return quantity -> ofNullable(quantity).isPresent()
+                && quantity >= 0;
     }
 
 
@@ -86,6 +86,7 @@ public class InventoryPredicates {
 
         return idValid
                 && warehouseIdValid
+                && productIdValid
                 && quantityValid
                 && lastUserValid;
     }

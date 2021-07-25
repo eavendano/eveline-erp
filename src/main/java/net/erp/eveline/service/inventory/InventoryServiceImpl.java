@@ -16,12 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import static java.lang.String.format;
 import static java.util.Collections.emptySet;
 import static java.util.Objects.requireNonNull;
@@ -29,12 +27,12 @@ import static java.util.Optional.ofNullable;
 import static net.erp.eveline.common.mapper.InventoryMapper.toModel;
 import static net.erp.eveline.common.mapper.InventoryMapper.toEntity;
 import static net.erp.eveline.common.mapper.InventoryMapper.toActiveModel;
-import static net.erp.eveline.common.predicate.BrandPredicates.BRAND_ID_INVALID_MESSAGE;
-import static net.erp.eveline.common.predicate.BrandPredicates.isBrandIdValid;
+import static net.erp.eveline.common.predicate.InventoryPredicates.INVENTORY_ID_INVALID_MESSAGE;
+import static net.erp.eveline.common.predicate.InventoryPredicates.isActiveInventoryModelValid;
+import static net.erp.eveline.common.predicate.InventoryPredicates.isInventoryIdValid;
 import static net.erp.eveline.common.predicate.InventoryPredicates.isInventoryModelValidForInsert;
 import static net.erp.eveline.common.predicate.InventoryPredicates.isInventoryModelValidForUpdate;
-import static net.erp.eveline.common.predicate.InventoryPredicates.isActiveInventoryModelValid;
-import static net.erp.eveline.common.predicate.ProviderPredicates.PROVIDER_ID_INVALID_MESSAGE;
+import static net.erp.eveline.common.predicate.WarehousePredicates.WAREHOUSE_ID_INVALID_MESSAGE;
 import static net.erp.eveline.common.predicate.WarehousePredicates.isWarehouseIdValid;
 
 @Service
@@ -60,7 +58,7 @@ public class InventoryServiceImpl extends BaseService implements InventoryServic
     @Override
     public Set<InventoryModel> findAllByWarehouse(String warehouseId) {
         logger.info("Requesting inventory for warehouse {}.", warehouseId);
-        validate(warehouseId, isWarehouseIdValid(), PROVIDER_ID_INVALID_MESSAGE);
+        validate(warehouseId, isWarehouseIdValid(), WAREHOUSE_ID_INVALID_MESSAGE);
         return transactionService.performReadOnlyTransaction(status -> {
             final Optional<Warehouse> optionalWarehouse = warehouseRepository.findById(warehouseId);
             Set<Inventory> inventories;
@@ -77,7 +75,7 @@ public class InventoryServiceImpl extends BaseService implements InventoryServic
     @Override
     public InventoryModel getInventoryModel(String inventoryId) {
         logger.info("Requesting inventory record matching id {}.", inventoryId);
-        validate(inventoryId, isBrandIdValid(), BRAND_ID_INVALID_MESSAGE);
+        validate(inventoryId, isInventoryIdValid(), INVENTORY_ID_INVALID_MESSAGE);
         return transactionService.performReadOnlyTransaction(status -> {
             Inventory inventory = inventoryRepository.findById(inventoryId)
                     .orElseThrow(() -> new NotFoundException(format("Unable to find a inventory record with the id specified: %s", inventoryId)));

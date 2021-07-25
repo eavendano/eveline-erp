@@ -40,9 +40,12 @@ public class ProviderMapper {
     }
 
     public static Set<ProviderModel> toModel(final Set<Provider> providers) {
-        return providers.stream()
-                .map(ProviderMapper::toModel)
-                .collect(toSet());
+        if (providers != null) {
+            return providers.stream()
+                    .map(ProviderMapper::toModel)
+                    .collect(toSet());
+        }
+        else return Set.of();
     }
 
     public static Provider toEntity(final ProviderModel providerModel) {

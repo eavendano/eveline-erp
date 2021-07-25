@@ -64,6 +64,7 @@ public class ProductMapper {
     public static Product toEntity(final ProductModel productModel) {
         final Product entity = new Product()
                 .setProductId(productModel.getId())
+                .setBrand(BrandMapper.toEntity(productModel.getBrand()))
                 .setUpc(productModel.getUpc())
                 .setTitle(productModel.getTitle())
                 .setDescription(productModel.getDescription())
